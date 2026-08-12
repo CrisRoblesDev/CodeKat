@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeKat | Desarrollo Web y Landing Pages en Chile</title>
+  <meta name="description" content="Creamos landing pages, páginas informativas y soluciones web enfocadas en captar clientes, mejorar tu presencia online y hacer crecer tu negocio." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://codekat.store/" />
+  <meta name="theme-color" content="#8B5CF6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://codekat.store/" />
+  <meta property="og:title" content="CodeKat | Desarrollo Web y Landing Pages en Chile" />
+  <meta property="og:description" content="Diseñamos páginas web modernas, rápidas y enfocadas en convertir visitantes en clientes." />
+  <meta property="og:image" content="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" />
+  <meta property="og:locale" content="es_CL" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238B5CF6'/%3E%3Cpath d='M20 28 L12 36 L20 44 M44 28 L52 36 L44 44' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='32' cy='36' r='4' fill='%23fff'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root{
+      --bg:#0A0A0F; --bg-elevated:#111119; --surface:#17171F; --surface-2:#1F1F2B; --surface-3:#27273A;
+      --border:rgba(167,139,250,.14); --border-strong:rgba(167,139,250,.32);
+      --purple:#A78BFA; --purple-light:#C4B5FD; --purple-soft:#8B5CF6; --purple-dark:#7C3AED;
+      --purple-glow:rgba(167,139,250,.35); --purple-bg:rgba(167,139,250,.08);
+      --white:#FFFFFF; --text:#FFFFFF; --text-muted:#A8A5B8; --text-dim:#6E6A85;
+      --glass-bg:rgba(23,23,31,.55); --glass-bg-strong:rgba(23,23,31,.78); --glass-border:rgba(167,139,250,.25);
+      --pattern-color:rgba(167,139,250,.08); --shadow-color:rgba(0,0,0,.5);
+      --wa:#25D366; --wa-dark:#128C7E;
+      --font-body:'Inter',system-ui,sans-serif; --font-display:'Space Grotesk','Inter',sans-serif;
+      --space-xl:2.5rem; --space-2xl:4rem; --space-3xl:6rem;
+      --radius-md:14px; --radius-lg:22px;
+      --shadow-lg:0 24px 60px var(--shadow-color);
+      --ease:cubic-bezier(.2,.7,.2,1); --t-fast:220ms; --t-slow:480ms;
+    }
+    [data-theme="light"]{
+      --bg:#F7F5FB; --bg-elevated:#FFFFFF; --surface:#FFFFFF; --surface-2:#F0ECF7; --surface-3:#E8E2F0;
+      --border:rgba(139,92,246,.15); --border-strong:rgba(139,92,246,.35);
+      --purple:#8B5CF6; --purple-light:#A78BFA; --purple-soft:#7C3AED; --purple-dark:#6D28D9;
+      --purple-glow:rgba(139,92,246,.25); --purple-bg:rgba(139,92,246,.08);
+      --white:#1A1A2E; --text:#1A1A2E; --text-muted:#5C5875; --text-dim:#8E88A0;
+      --glass-bg:rgba(255,255,255,.65); --glass-bg-strong:rgba(255,255,255,.88); --glass-border:rgba(139,92,246,.25);
+      --pattern-color:rgba(139,92,246,.1); --shadow-color:rgba(139,92,246,.12);
+    }
+    *,*::before,*::after{box-sizing:border-box;}
+    html{scroll-behavior:smooth;scrollbar-gutter:stable;}
+    body{margin:0;font-family:var(--font-body);color:var(--text);background:var(--bg);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background var(--t-slow) var(--ease),color var(--t-slow) var(--ease);background-image:radial-gradient(circle at 1px 1px,var(--pattern-color) 1px,transparent 0);background-size:28px 28px;}
+    body.menu-open{overflow:hidden;}
+    img,svg{max-width:100%;display:block;}
+    a{color:inherit;text-decoration:none;}
+    button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+    h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;line-height:1.2;letter-spacing:-0.01em;}
+    p{margin:0;} ul{list-style:none;padding:0;margin:0;}
+    ::selection{background:var(--purple);color:#fff;}
+    :focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:4px;}
+    ::-webkit-scrollbar{width:10px;height:10px;} ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:5px;} ::-webkit-scrollbar-thumb:hover{background:var(--purple-soft);}
+
+    .bg-aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+    .bg-aurora::before{content:'';position:absolute;inset:-60%;background:conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(139,92,246,.07) 80deg, transparent 160deg, rgba(167,139,250,.05) 240deg, transparent 320deg);animation:bgRotate 50s linear infinite;}
+    @keyframes bgRotate{to{transform:rotate(360deg);}}
+    .aurora{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;}
+    .a1{width:560px;height:560px;background:radial-gradient(circle,rgba(139,92,246,.5),transparent 70%);top:-14%;left:-12%;animation:aur1 16s ease-in-out infinite alternate;}
+    .a2{width:480px;height:480px;background:radial-gradient(circle,rgba(124,58,237,.45),transparent 70%);top:30%;right:-12%;animation:aur2 20s ease-in-out infinite alternate;}
+    .a3{width:520px;height:520px;background:radial-gradient(circle,rgba(167,139,250,.4),transparent 70%);bottom:-16%;left:20%;animation:aur3 24s ease-in-out infinite alternate;}
+    .a4{width:420px;height:420px;background:radial-gradient(circle,rgba(196,181,253,.32),transparent 70%);top:55%;left:-12%;animation:aur4 22s ease-in-out infinite alternate;}
+    @keyframes aur1{to{transform:translate(130px,90px) scale(1.15);}}
+    @keyframes aur2{to{transform:translate(-110px,70px) scale(1.1);}}
+    @keyframes aur3{to{transform:translate(90px,-80px) scale(1.2);}}
+    @keyframes aur4{to{transform:translate(120px,-60px) scale(1.1);}}
+
+    .container{width:100%;max-width:1200px;margin:0 auto;padding:0 1.25rem;}
+    section{padding:var(--space-3xl) 0;position:relative;}
+    .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));z-index:130;box-shadow:0 0 10px var(--purple-glow);}
+    .grad-anim{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark),var(--purple-soft));background-size:200% 200%;animation:gradShift 6s ease infinite;}
+    @keyframes gradShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+    .grad-text{background:linear-gradient(135deg,var(--purple-light),var(--purple),var(--purple-light));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:textShift 5s linear infinite;}
+    @keyframes textShift{to{background-position:200% center;}}
+
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:.75rem 0;background:var(--glass-bg);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid transparent;transition:border-color var(--t-fast) var(--ease),background var(--t-fast) var(--ease),padding var(--t-fast) var(--ease);}
+    .navbar.scrolled{border-bottom-color:var(--border);background:var(--glass-bg-strong);padding:.55rem 0;}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+    .brand{display:flex;align-items:center;gap:.65rem;font-weight:700;font-size:1.1rem;}
+    .brand-logo{width:38px;height:38px;border-radius:10px;object-fit:contain;background:var(--surface);padding:3px;border:1px solid var(--border);}
+    .brand-name{font-family:var(--font-display);} .brand-name span{color:var(--purple-light);}
+    .nav-right{display:flex;align-items:center;gap:.5rem;}
+    .theme-toggle-mini{width:42px;height:42px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;color:var(--white);font-size:1rem;transition:all var(--t-fast) var(--ease);}
+    .theme-toggle-mini:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+    .burger{width:46px;height:46px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;transition:all var(--t-fast) var(--ease);z-index:110;position:relative;}
+    .burger:hover{background:var(--purple-bg);border-color:var(--purple);}
+    .burger-lines{position:relative;width:20px;height:14px;}
+    .burger-lines span{position:absolute;left:0;height:2px;width:100%;background:var(--white);border-radius:2px;transition:all var(--t-fast) var(--ease);}
+    .burger-lines span:nth-child(1){top:0;} .burger-lines span:nth-child(2){top:6px;width:14px;} .burger-lines span:nth-child(3){top:12px;width:16px;}
+    .burger.active .burger-lines span:nth-child(1){top:6px;transform:rotate(45deg);}
+    .burger.active .burger-lines span:nth-child(2){opacity:0;transform:translateX(10px);}
+    .burger.active .burger-lines span:nth-child(3){top:6px;transform:rotate(-45deg);width:20px;}
+
+    .nav-menu{position:fixed;top:0;right:0;width:100%;height:100vh;height:100dvh;z-index:105;background:var(--bg);overflow-y:auto;padding:6rem 1.5rem 2rem;transform:translateX(100%);transition:transform .5s var(--ease),visibility 0s .5s;visibility:hidden;}
+    .nav-menu.open{transform:translateX(0);visibility:visible;transition:transform .5s var(--ease),visibility 0s 0s;}
+    .menu-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);position:relative;gap:.75rem;}
+    .menu-back{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;border-radius:999px;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--white);font-size:.85rem;font-weight:600;transition:all var(--t-fast) var(--ease);}
+    .menu-back:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+    .menu-theme{display:flex;align-items:center;gap:.35rem;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:999px;padding:.25rem;}
+    .theme-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--text-dim);font-size:.9rem;transition:all var(--t-fast) var(--ease);}
+    .theme-btn.active{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;box-shadow:0 4px 12px var(--purple-glow);}
+    .theme-btn:hover:not(.active){color:var(--white);}
+    .nav-menu .menu-links>li{opacity:0;transform:translateX(24px);}
+    .nav-menu.open .menu-links>li{animation:menuItemIn .5s var(--ease) forwards;}
+    .nav-menu.open .menu-links>li:nth-child(1){animation-delay:.08s;}
+    .nav-menu.open .menu-links>li:nth-child(2){animation-delay:.16s;}
+    .nav-menu.open .menu-links>li:nth-child(3){animation-delay:.24s;}
+    .nav-menu.open .menu-links>li:nth-child(4){animation-delay:.32s;}
+    .nav-menu .menu-contact-card{opacity:0;transform:translateX(24px);}
+    .nav-menu.open .menu-contact-card{animation:menuItemIn .5s var(--ease) forwards;}
+    .nav-menu.open .menu-contact-card:nth-child(1){animation-delay:.42s;}
+    .nav-menu.open .menu-contact-card:nth-child(2){animation-delay:.5s;}
+    @keyframes menuItemIn{to{opacity:1;transform:translateX(0);}}
+    .menu-links{display:flex;flex-direction:column;gap:.4rem;margin-bottom:2rem;position:relative;}
+    .menu-link{display:flex;align-items:center;justify-content:space-between;padding:1rem 1rem;border:1px solid transparent;border-radius:var(--radius-md);font-family:var(--font-display);font-size:1.25rem;font-weight:500;color:var(--white);transition:all var(--t-fast) var(--ease);}
+    .menu-link:hover,.menu-link.active{background:var(--purple-bg);border-color:var(--border-strong);transform:translateX(4px);}
+    .menu-link .link-left{display:flex;align-items:center;gap:1rem;flex:1;min-width:0;}
+    .menu-link .link-text{display:flex;flex-direction:column;gap:.1rem;min-width:0;}
+    .menu-link .num{font-family:var(--font-body);font-size:.68rem;color:var(--text-dim);letter-spacing:.12em;}
+    .menu-link .link-title{font-size:1.25rem;}
+    .menu-link .link-desc{font-family:var(--font-body);font-size:.78rem;color:var(--text-muted);font-weight:400;margin-top:.15rem;}
+    .menu-link .link-icon{width:42px;height:42px;border-radius:12px;background:var(--purple-bg);border:1px solid var(--border);display:grid;place-items:center;color:var(--purple);font-size:1.05rem;flex-shrink:0;transition:all var(--t-fast) var(--ease);}
+    .menu-link:hover .link-icon,.menu-link.active .link-icon{background:var(--purple);color:#fff;border-color:var(--purple);}
+    .menu-link .link-arrow{color:var(--text-dim);font-size:.95rem;transition:transform var(--t-fast) var(--ease),color var(--t-fast) var(--ease);margin-left:.75rem;}
+    .menu-link:hover .link-arrow{transform:translateX(6px);color:var(--purple-light);}
+    .menu-footer{padding-top:1.5rem;border-top:1px solid var(--border);display:grid;gap:.75rem;position:relative;}
+
+    .menu-contact-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);transition:all var(--t-fast) var(--ease);position:relative;overflow:hidden;}
+    .menu-contact-card:hover{border-color:var(--purple);transform:translateY(-2px);box-shadow:0 10px 24px var(--purple-glow);}
+    .mcc-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:1.25rem;flex-shrink:0;box-shadow:0 6px 16px rgba(0,0,0,.25);}
+    .menu-contact-card.wa .mcc-icon{background:linear-gradient(135deg,var(--wa),var(--wa-dark));}
+    .menu-contact-card.mail .mcc-icon{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));}
+    .mcc-body{display:flex;flex-direction:column;gap:.15rem;flex:1;min-width:0;}
+    .mcc-title{font-size:.95rem;font-weight:600;color:var(--white);}
+    .mcc-sub{font-size:.8rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .mcc-arrow{color:var(--text-dim);font-size:.9rem;transition:all var(--t-fast) var(--ease);flex-shrink:0;}
+    .menu-contact-card:hover .mcc-arrow{color:var(--purple-light);transform:translate(2px,-2px);}
+
+    /* FLECHA SUBIR — misma posición que WhatsApp (se alternan) */
+    .back-to-top{position:fixed;bottom:1.4rem;right:1.4rem;width:52px;height:52px;border-radius:50%;background:var(--glass-bg-strong);border:1px solid var(--glass-border);color:var(--white);font-size:1.05rem;display:grid;place-items:center;backdrop-filter:blur(16px);z-index:120;opacity:0;transform:translateY(16px);pointer-events:none;transition:all .4s var(--ease);box-shadow:0 8px 20px var(--shadow-color);}
+    .back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+    .back-to-top:hover{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;border-color:var(--purple);transform:translateY(-3px);}
+
+    /* BOTÓN FLOTANTE WHATSAPP */
+    .wa-float{position:fixed;bottom:1.4rem;right:1.4rem;z-index:120;display:flex;align-items:center;gap:.65rem;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease);}
+    .wa-float.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+    .wa-tooltip{background:var(--surface);border:1px solid var(--border-strong);padding:.55rem .95rem;border-radius:999px;font-size:.85rem;font-weight:600;color:var(--white);box-shadow:0 8px 24px var(--shadow-color);opacity:0;transform:translateX(10px);transition:opacity .6s var(--ease),transform .6s var(--ease);pointer-events:none;white-space:nowrap;}
+    .wa-float:hover .wa-tooltip,.wa-float.show-tip .wa-tooltip{opacity:1;transform:translateX(0);}
+    .wa-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--wa),var(--wa-dark));display:grid;place-items:center;color:#fff;font-size:1.7rem;animation:waPulse 2.6s infinite;transition:transform .3s var(--ease);flex-shrink:0;}
+    .wa-float:hover .wa-icon{transform:scale(1.06);}
+    @keyframes waPulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.45),0 8px 24px rgba(37,211,102,.4);}70%{box-shadow:0 0 0 16px rgba(37,211,102,0),0 8px 24px rgba(37,211,102,.4);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0),0 8px 24px rgba(37,211,102,.4);}}
+
+    .section-head{margin-bottom:var(--space-2xl);max-width:760px;position:relative;}
+    .section-accent{display:block;width:56px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));margin-bottom:1.1rem;box-shadow:0 0 12px var(--purple-glow);}
+    .section-title{font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:1rem;color:var(--white);letter-spacing:-0.02em;}
+    .section-subtitle{color:var(--text-muted);font-size:clamp(0.95rem,2.4vw,1.05rem);max-width:620px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.9rem 1.4rem;border-radius:var(--radius-md);font-weight:600;font-size:.95rem;transition:all var(--t-fast) var(--ease);white-space:nowrap;max-width:100%;position:relative;}
+    .btn i{font-size:1.05em;}
+    .btn-glass{background:var(--glass-bg);color:var(--white);border:1px solid var(--glass-border);backdrop-filter:blur(16px);box-shadow:0 4px 16px var(--shadow-color);}
+    .btn-glass:hover{background:var(--glass-bg-strong);border-color:var(--purple);transform:translateY(-2px);}
+    .btn-glass i{color:var(--purple-light);}
+    .btn-primary{color:#fff;box-shadow:0 8px 24px var(--purple-glow);overflow:hidden;}
+    .btn-primary:hover{transform:translateY(-2px);}
+    .btn-primary::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);pointer-events:none;}
+    .btn-primary:hover::after{animation:shine .9s var(--ease);}
+    @keyframes shine{from{left:-80%;}to{left:130%;}}
+
+    .hero{padding-top:calc(5.5rem + var(--space-2xl));padding-bottom:var(--space-3xl);position:relative;overflow:hidden;}
+    .hero-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,#000 15%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at center,#000 15%,transparent 75%);opacity:.5;}
+    .hero-conic{position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(139,92,246,.25),transparent 60%);animation:spin 24s linear infinite;filter:blur(30px);z-index:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .hero-intro{max-width:660px;position:relative;z-index:1;}
+    .hero-title{font-size:clamp(2.2rem,7vw,4.2rem);line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.25rem;color:var(--white);}
+    .hero-subtitle{font-size:clamp(1rem,2.6vw,1.15rem);color:var(--text-muted);max-width:560px;margin-bottom:2rem;}
+    .hero-ctas{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;}
+    .hero-contact-row{display:grid;grid-template-columns:1fr;gap:.6rem;margin-top:2rem;}
+    .hero-contact-pill{display:flex;align-items:center;gap:.75rem;padding:.65rem .9rem .65rem .65rem;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:999px;transition:all var(--t-fast) var(--ease);}
+    .hero-contact-pill:hover{background:var(--glass-bg-strong);border-color:var(--purple);transform:translateX(4px);}
+    .hero-contact-pill-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;display:grid;place-items:center;font-size:.9rem;flex-shrink:0;}
+    .hero-contact-pill-text{flex:1;font-size:.88rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .hero-contact-pill-arrow{color:var(--text-dim);font-size:.85rem;}
+    .hero-scroll-hint{display:none;}
+    @media(min-width:960px){
+      .hero-scroll-hint{display:flex;position:absolute;bottom:1.25rem;left:50%;transform:translateX(-50%);flex-direction:column;align-items:center;gap:.35rem;color:var(--text-dim);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7;z-index:1;}
+      .hero-scroll-hint i{color:var(--purple);animation:hintBounce 1.8s ease-in-out infinite;}
+    }
+    @keyframes hintBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+    .hero-steps{position:relative;z-index:1;margin-top:var(--space-2xl);}
+    .hero-steps-title{font-family:var(--font-body);font-size:.78rem;color:var(--text-dim);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.5rem;font-weight:600;text-align:center;}
+    .steps-flow{display:grid;gap:1rem;grid-template-columns:1fr;position:relative;}
+    .step-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:1.25rem;position:relative;transition:all var(--t-slow) var(--ease);overflow:hidden;display:flex;flex-direction:column;}
+    .step-card:hover{transform:translateY(-5px);border-color:var(--purple);box-shadow:0 14px 34px var(--purple-glow);}
+    .step-visual{border-radius:var(--radius-md);overflow:hidden;margin-bottom:1rem;border:1px solid var(--border);}
+    .step-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;}
+    .step-num{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;font-weight:700;font-size:.95rem;flex-shrink:0;}
+    .step-card h3{font-size:1.05rem;color:var(--white);}
+    .step-card p{font-size:.85rem;color:var(--text-muted);}
+    .step-arrow{display:none;color:var(--purple);font-size:1.4rem;align-self:center;justify-self:center;opacity:.7;}
+    .step-arrow-down{display:flex;justify-content:center;color:var(--purple);font-size:1.2rem;opacity:.6;}
+    @keyframes arrowBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+    .step-arrow-down i{animation:arrowBounce 1.8s ease-in-out infinite;}
+
+    .value-section{position:relative;overflow:hidden;}
+    .value-carousel{position:relative;margin-top:var(--space-xl);}
+    .value-track{display:flex;gap:1.5rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.5rem .25rem 1rem;scrollbar-width:none;}
+    .value-track::-webkit-scrollbar{display:none;}
+    .value-card{flex:0 0 88%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;position:relative;overflow:hidden;transition:all var(--t-slow) var(--ease);display:flex;flex-direction:column;}
+    @media(min-width:640px){.value-card{flex:0 0 58%;}}
+    @media(min-width:1024px){.value-card{flex:0 0 38%;}}
+    .value-card:hover{transform:translateY(-5px);border-color:var(--border-strong);box-shadow:0 20px 50px var(--purple-glow);}
+    .value-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));opacity:0;transition:opacity var(--t-slow) var(--ease);}
+    .value-card:hover::before{opacity:1;}
+    .value-top{display:flex;align-items:center;gap:.85rem;margin-bottom:1rem;}
+    .value-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:1.2rem;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));box-shadow:0 6px 18px var(--purple-glow);flex-shrink:0;transition:transform .3s var(--ease);}
+    .value-card:hover .value-icon{transform:scale(1.1) rotate(-5deg);}
+    .value-card h3{font-size:1.15rem;color:var(--white);}
+    .value-card p{font-size:.9rem;color:var(--text-muted);margin-bottom:1rem;}
+    .value-list{display:flex;flex-direction:column;gap:.6rem;margin:0 0 1.15rem;}
+    .value-list li{display:flex;align-items:flex-start;gap:.6rem;font-size:.86rem;color:var(--text-muted);line-height:1.45;}
+    .value-list li i{color:var(--purple);font-size:.8rem;margin-top:.22rem;flex-shrink:0;}
+    .value-stat{display:flex;align-items:center;gap:.5rem;margin-top:auto;padding-top:1rem;border-top:1px solid var(--border);font-size:.85rem;color:var(--purple-light);font-weight:600;}
+    .value-stat i{color:var(--purple);}
+    .value-controls{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:.5rem;}
+    .value-dots{display:flex;gap:.4rem;}
+    .v-dot{width:8px;height:8px;border-radius:50%;background:var(--surface-3);transition:all .3s;}
+    .v-dot.active{background:var(--purple-light);width:22px;border-radius:4px;box-shadow:0 0 8px var(--purple-glow);}
+    .value-arrows{display:flex;gap:.5rem;}
+
+    .tpl-section{position:relative;overflow:hidden;}
+    .tpl-carousel{position:relative;margin-top:var(--space-xl);}
+    .tpl-track{display:flex;gap:1.5rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:1rem .25rem 1.5rem;scrollbar-width:none;cursor:grab;}
+    .tpl-track::-webkit-scrollbar{display:none;}
+    .tpl-track.dragging{scroll-snap-type:none;cursor:grabbing;}
+    .tpl-card{flex:0 0 86%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all var(--t-slow) var(--ease);display:flex;flex-direction:column;position:relative;}
+    @media(min-width:640px){.tpl-card{flex:0 0 55%;}}
+    @media(min-width:1024px){.tpl-card{flex:0 0 400px;}}
+    .tpl-card:hover{transform:translateY(-6px);border-color:var(--border-strong);box-shadow:0 24px 60px var(--purple-glow);}
+    .tpl-preview{aspect-ratio:4/3;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+    .tpl-preview svg{width:100%;height:100%;display:block;transition:transform .6s var(--ease);}
+    .tpl-card:hover .tpl-preview svg{transform:scale(1.05);}
+    .tpl-tag{position:absolute;top:.75rem;left:.75rem;background:rgba(10,10,15,.85);color:#fff;padding:.35rem .75rem;border-radius:999px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;z-index:2;}
+    .tpl-badge{position:absolute;top:.75rem;right:.75rem;z-index:2;display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .65rem;border-radius:999px;font-size:.68rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#FF8A4C,#F4511E);box-shadow:0 4px 12px rgba(244,81,30,.35);}
+    .tpl-badge i{font-size:.66rem;}
+    .tpl-body{padding:1.25rem;flex-grow:1;display:flex;flex-direction:column;}
+    .tpl-body h3{font-size:1.15rem;color:var(--white);margin-bottom:.4rem;display:flex;align-items:center;gap:.6rem;}
+    .tpl-ico{width:36px;height:36px;border-radius:10px;background:var(--purple-bg);border:1px solid var(--border);display:grid;place-items:center;color:var(--purple);font-size:1rem;flex-shrink:0;}
+    .tpl-body p{font-size:.88rem;color:var(--text-muted);margin-bottom:1rem;}
+    .tpl-features{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.1rem;}
+    .tpl-features li{font-size:.7rem;padding:.3rem .6rem;background:var(--purple-bg);border:1px solid var(--border);border-radius:999px;color:var(--purple-light);}
+    .tpl-action{margin-top:auto;display:inline-flex;align-items:center;gap:.55rem;padding:.75rem 1.1rem;border-radius:12px;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;font-weight:600;font-size:.88rem;align-self:flex-start;transition:all var(--t-fast) var(--ease);box-shadow:0 4px 16px var(--purple-glow);}
+    .tpl-action:hover{transform:translateY(-2px);}
+    .tpl-controls{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:.5rem;}
+    .tpl-meta{display:flex;align-items:center;gap:1rem;flex:1;}
+    .tpl-count{font-family:var(--font-display);font-size:.9rem;color:var(--text-muted);font-weight:600;white-space:nowrap;}
+    .tpl-count b{color:var(--white);}
+    .tpl-progress{flex:1;height:3px;background:var(--surface-3);border-radius:2px;overflow:hidden;max-width:240px;}
+    .tpl-progress span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));transition:width .2s;}
+    .tpl-arrows{display:flex;gap:.5rem;}
+    .tpl-arrow,.value-arrow{width:46px;height:46px;border-radius:50%;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;color:var(--white);font-size:1rem;transition:all var(--t-fast) var(--ease);}
+    .tpl-arrow:hover,.value-arrow:hover{background:var(--purple);color:#fff;border-color:var(--purple);}
+
+    .contact{position:relative;}
+    .contact-grid{display:grid;gap:1rem;grid-template-columns:1fr;margin-top:var(--space-2xl);position:relative;}
+    .contact-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:1.75rem;transition:all var(--t-slow) var(--ease);position:relative;overflow:hidden;}
+    .contact-card:hover{border-color:var(--purple);transform:translateY(-4px);box-shadow:0 20px 50px var(--purple-glow);}
+    .contact-card-icon{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;display:grid;place-items:center;font-size:1.3rem;margin-bottom:1rem;}
+    .contact-card h3{color:var(--white);font-size:1.2rem;margin-bottom:.4rem;}
+    .contact-card p{color:var(--text-muted);font-size:.9rem;margin-bottom:1.1rem;}
+    .contact-card-value{display:block;font-size:1rem;font-weight:500;color:var(--white);margin-bottom:1.1rem;word-break:break-word;font-family:var(--font-display);}
+    .contact-time{display:inline-flex;align-items:center;gap:.45rem;margin-top:.85rem;font-size:.78rem;color:var(--text-dim);}
+    .contact-time i{color:var(--purple);font-size:.8rem;}
+
+    .footer{position:relative;border-top:1px solid var(--border);overflow:hidden;}
+    .footer-cta{padding:var(--space-3xl) 0 var(--space-2xl);text-align:center;position:relative;}
+    .footer-title{font-size:clamp(2rem,6vw,3.5rem);color:var(--white);letter-spacing:-0.02em;margin-bottom:1rem;}
+    .footer-sub{color:var(--text-muted);font-size:1.05rem;margin-bottom:2rem;}
+    .footer-actions{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;}
+    .footer-marquee{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.1rem 0;background:var(--surface);}
+    .marquee-track{display:flex;gap:3rem;width:max-content;animation:marquee 32s linear infinite;}
+    .marquee-track span{font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:3rem;white-space:nowrap;}
+    .marquee-track i{color:var(--purple);font-size:.7rem;}
+    @keyframes marquee{to{transform:translateX(-50%);}}
+    .footer-bottom{display:flex;flex-direction:column;gap:1.5rem;padding:2rem 0;align-items:center;text-align:center;}
+    .footer-brand-mini{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.05rem;color:var(--white);}
+    .footer-brand-mini img{width:32px;height:32px;border-radius:8px;background:var(--surface);padding:2px;border:1px solid var(--border);}
+    .footer-links{display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;}
+    .footer-links a{font-size:.88rem;color:var(--text-muted);transition:color var(--t-fast) var(--ease);}
+    .footer-links a:hover{color:var(--purple-light);}
+    .footer-copy{font-size:.82rem;color:var(--text-dim);}
+
+    .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(5,5,10,.88);backdrop-filter:blur(12px);display:grid;place-items:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity var(--t-slow) var(--ease);}
+    .modal-backdrop.open{opacity:1;pointer-events:auto;}
+    .modal{background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:var(--radius-lg);width:100%;max-width:1000px;max-height:calc(100vh - 2rem);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:translateY(24px);opacity:0;transition:transform var(--t-slow) var(--ease),opacity var(--t-slow) var(--ease);backface-visibility:hidden;}
+    .modal-backdrop.open .modal{transform:translateY(0);opacity:1;}
+    .modal-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--surface);}
+    .modal-title{font-size:1.15rem;color:var(--white);font-family:var(--font-display);font-weight:600;}
+    .modal-title small{display:block;font-family:var(--font-body);font-size:.75rem;color:var(--text-dim);font-weight:400;margin-top:.15rem;}
+    .modal-close{width:38px;height:38px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:grid;place-items:center;color:var(--white);font-size:1rem;transition:all var(--t-fast) var(--ease);flex-shrink:0;}
+    .modal-close:hover{background:#ef4444;color:#fff;border-color:#ef4444;}
+    .modal-body{overflow-y:auto;padding:1.25rem;}
+    .modal-preview-carousel{position:relative;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);margin-bottom:1.25rem;background:var(--surface);}
+    .modal-preview-track{display:flex;transition:transform .5s var(--ease);}
+    .modal-preview-slide{min-width:100%;aspect-ratio:16/10;}
+    .modal-preview-slide svg{width:100%;height:100%;display:block;}
+    .modal-preview-controls{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 .5rem;pointer-events:none;}
+    .modal-preview-btn{pointer-events:auto;width:40px;height:40px;border-radius:50%;background:rgba(10,10,15,.85);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;color:#fff;font-size:1rem;}
+    .modal-preview-btn:hover{background:var(--purple-soft);border-color:var(--purple);}
+    .modal-preview-dots{position:absolute;bottom:.75rem;left:50%;transform:translateX(-50%);display:flex;gap:.4rem;padding:.4rem .8rem;background:rgba(10,10,15,.8);border-radius:999px;}
+    .modal-preview-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);transition:all var(--t-fast) var(--ease);}
+    .modal-preview-dot.active{background:var(--purple-light);width:16px;border-radius:3px;}
+    .modal-section{margin-bottom:1.5rem;}
+    .modal-section-title{font-size:.78rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.75rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
+    .modal-section-title i{color:var(--purple);}
+    .modal-desc{color:var(--text-muted);font-size:.95rem;margin-bottom:.5rem;}
+    .modal-advantages{display:grid;gap:.6rem;grid-template-columns:1fr;}
+    .modal-advantage{display:flex;align-items:flex-start;gap:.75rem;padding:.9rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+    .modal-advantage i{color:var(--purple-light);font-size:1rem;width:34px;height:34px;display:grid;place-items:center;background:var(--purple-bg);border-radius:8px;flex-shrink:0;}
+    .modal-advantage div{flex:1;}
+    .modal-advantage strong{color:var(--white);font-size:.9rem;display:block;margin-bottom:.15rem;}
+    .modal-advantage span{font-size:.82rem;color:var(--text-muted);}
+    .modal-audience{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .modal-audience-tag{font-size:.78rem;padding:.4rem .85rem;background:var(--surface);border:1px solid var(--border);border-radius:999px;color:var(--text-muted);display:inline-flex;align-items:center;gap:.4rem;}
+    .modal-audience-tag i{color:var(--purple);font-size:.7rem;}
+    .modal-cta{margin-top:1.5rem;padding:1.25rem;background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(167,139,250,.06));border:1px solid var(--border-strong);border-radius:var(--radius-md);display:flex;flex-direction:column;gap:.85rem;align-items:flex-start;}
+    .modal-cta-text{color:var(--white);font-weight:600;font-size:1.05rem;}
+    .modal-cta-sub{color:var(--text-muted);font-size:.88rem;margin-top:-.4rem;}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal.delay-1{transition-delay:120ms;} .reveal.delay-2{transition-delay:240ms;}
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
+      .reveal{opacity:1;transform:none;}
+    }
+    @media (min-width:640px){
+      .container{padding:0 2rem;}
+      .hero-contact-row{grid-template-columns:1fr 1fr;}
+      .contact-grid{grid-template-columns:repeat(2,1fr);}
+      .modal-advantages{grid-template-columns:1fr 1fr;}
+      .modal-cta{flex-direction:row;align-items:center;justify-content:space-between;}
+      .footer-bottom{flex-direction:row;justify-content:space-between;text-align:left;}
+    }
+    @media (min-width:960px){
+      .hero{padding-top:calc(7.5rem + var(--space-3xl));}
+      .hero-intro{max-width:720px;}
+      .steps-flow{grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:1rem;}
+      .step-arrow{display:flex;} .step-arrow-down{display:none;}
+      .modal{max-height:calc(100vh - 4rem);}
+      .modal-body{padding:1.75rem;} .modal-head{padding:1.25rem 1.75rem;}
+      .menu-link .link-title{font-size:1.6rem;}
+    }
+    @media (min-width:1200px){
+      .hero-title{font-size:clamp(2.8rem,5vw,4.6rem);}
+      .section-title{font-size:clamp(2rem,4vw,3rem);}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <div class="bg-aurora" aria-hidden="true"><span class="aurora a1"></span><span class="aurora a2"></span><span class="aurora a3"></span><span class="aurora a4"></span></div>
+
+  <header class="navbar" id="navbar" role="banner">
+    <div class="container nav-inner">
+      <a href="#inicio" class="brand" aria-label="CodeKat — Inicio">
+        <img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="Logotipo de CodeKat" class="brand-logo" />
+        <span class="brand-name">Code<span>Kat</span></span>
+      </a>
+      <div class="nav-right">
+        <button class="theme-toggle-mini" id="themeToggleMini" aria-label="Cambiar tema"><i class="fa-solid fa-moon" id="themeIconMini"></i></button>
+        <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
+          <span class="burger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-menu" id="navMenu" aria-label="Menú principal" aria-hidden="true">
+    <div class="menu-header">
+      <button class="menu-back" id="menuBack" aria-label="Volver y cerrar el menú"><i class="fa-solid fa-arrow-left"></i><span>Volver</span></button>
+      <div class="menu-theme" role="group" aria-label="Cambiar tema">
+        <button class="theme-btn" data-theme-set="dark" aria-label="Tema oscuro"><i class="fa-solid fa-moon"></i></button>
+        <button class="theme-btn active" data-theme-set="light" aria-label="Tema claro"><i class="fa-solid fa-sun"></i></button>
+      </div>
+    </div>
+    <ul class="menu-links">
+      <li><a class="menu-link active" href="#inicio"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-house"></i></span><span class="link-text"><span class="num">01 — Inicio</span><span class="link-title">Bienvenida</span><span class="link-desc">Tu próxima web comienza aquí</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+      <li><a class="menu-link" href="#servicios"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-star"></i></span><span class="link-text"><span class="num">02 — Servicios</span><span class="link-title">Qué ofrecemos</span><span class="link-desc">Soluciones que hacen crecer tu negocio</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+      <li><a class="menu-link" href="#plantillas"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-palette"></i></span><span class="link-text"><span class="num">03 — Plantillas</span><span class="link-title">Modelos de web</span><span class="link-desc">Estructuras listas para adaptar</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+      <li><a class="menu-link" href="#contacto"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-paper-plane"></i></span><span class="link-text"><span class="num">04 — Contacto</span><span class="link-title">Conversemos</span><span class="link-desc">Cuéntanos sobre tu proyecto</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+    </ul>
+    <div class="menu-footer">
+      <a href="https://wa.me/56933465843" target="_blank" rel="noopener" class="menu-contact-card wa">
+        <span class="mcc-icon"><i class="fa-brands fa-whatsapp"></i></span>
+        <span class="mcc-body"><span class="mcc-title">WhatsApp</span><span class="mcc-sub">+56 9 3346 5843 · Respuesta rápida</span></span>
+        <span class="mcc-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+      </a>
+      <a href="mailto:crisdev.chile@gmail.com" class="menu-contact-card mail">
+        <span class="mcc-icon"><i class="fa-regular fa-envelope"></i></span>
+        <span class="mcc-body"><span class="mcc-title">Correo</span><span class="mcc-sub">crisdev.chile@gmail.com</span></span>
+        <span class="mcc-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- FLECHA SUBIR (se alterna con WhatsApp) -->
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba"><i class="fa-solid fa-arrow-up"></i></button>
+
+  <!-- BOTÓN FLOTANTE WHATSAPP -->
+  <a href="https://wa.me/56933465843" class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="Asesórate con nosotros por WhatsApp">
+    <span class="wa-tooltip" id="waTooltip">Asesórate con nosotros</span>
+    <span class="wa-icon"><i class="fa-brands fa-whatsapp"></i></span>
+  </a>
+
+  <main>
+    <section class="hero" id="inicio" aria-label="Inicio">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-conic" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero-intro reveal">
+          <h1 class="hero-title">Tu próxima página web <em class="grad-text">comienza aquí</em>.</h1>
+          <p class="hero-subtitle">Diseñamos páginas web modernas, rápidas y enfocadas en convertir visitantes en clientes. Presencia profesional, claridad y resultados para tu negocio.</p>
+          <div class="hero-ctas">
+            <a href="https://wa.me/56933465843" class="btn btn-primary grad-anim" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp</a>
+            <a href="#contacto" class="btn btn-glass">Solicitar información <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+          <div class="hero-contact-row">
+            <a href="tel:+56933465843" class="hero-contact-pill"><span class="hero-contact-pill-icon"><i class="fa-solid fa-phone"></i></span><span class="hero-contact-pill-text">Llámanos cuando quieras</span><i class="fa-solid fa-arrow-right hero-contact-pill-arrow"></i></a>
+            <a href="mailto:crisdev.chile@gmail.com" class="hero-contact-pill"><span class="hero-contact-pill-icon"><i class="fa-regular fa-envelope"></i></span><span class="hero-contact-pill-text">Escríbenos un correo</span><i class="fa-solid fa-arrow-right hero-contact-pill-arrow"></i></a>
+          </div>
+        </div>
+
+        <div class="hero-steps reveal delay-1">
+          <h2 class="hero-steps-title">Cómo trabajamos</h2>
+          <div class="steps-flow">
+            <article class="step-card">
+              <div class="step-visual">
+                <svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conversación inicial por WhatsApp">
+                  <rect width="240" height="140" rx="12" fill="#111119"/>
+                  <rect x="0" y="0" width="240" height="30" rx="12" fill="#17171F"/>
+                  <circle cx="20" cy="15" r="8" fill="#25D366"/>
+                  <text x="20" y="19" fill="#fff" font-family="sans-serif" font-size="10" font-weight="700" text-anchor="middle">W</text>
+                  <text x="36" y="20" fill="#A8A5B8" font-family="sans-serif" font-size="10">CodeKat</text>
+                  <rect x="16" y="44" width="150" height="26" rx="12" fill="#27273A"/>
+                  <text x="26" y="61" fill="#C9C6D4" font-family="sans-serif" font-size="9">Hola, quiero una web 🙂</text>
+                  <rect x="74" y="80" width="150" height="26" rx="12" fill="#7C3AED"/>
+                  <text x="84" y="97" fill="#fff" font-family="sans-serif" font-size="9">¡Hola! ¿De qué es tu negocio?</text>
+                </svg>
+              </div>
+              <div class="step-head"><span class="step-num">1</span><h3>Ponte en contacto</h3></div>
+              <p>Escríbenos por WhatsApp o correo y conversemos sobre tu negocio.</p>
+            </article>
+            <div class="step-arrow" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="step-arrow-down" aria-hidden="true"><i class="fa-solid fa-arrow-down"></i></div>
+
+            <article class="step-card">
+              <div class="step-visual">
+                <svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="El cliente cuenta su idea">
+                  <rect width="240" height="140" rx="12" fill="#111119"/>
+                  <rect x="0" y="0" width="240" height="30" rx="12" fill="#17171F"/>
+                  <circle cx="20" cy="15" r="8" fill="#25D366"/>
+                  <text x="36" y="20" fill="#A8A5B8" font-family="sans-serif" font-size="10">CodeKat</text>
+                  <rect x="16" y="42" width="182" height="32" rx="12" fill="#27273A"/>
+                  <text x="26" y="56" fill="#C9C6D4" font-family="sans-serif" font-size="8.5">Tengo una cafetería. Quiero mostrar</text>
+                  <text x="26" y="68" fill="#C9C6D4" font-family="sans-serif" font-size="8.5">mi menú y que me encuentren.</text>
+                  <rect x="56" y="82" width="168" height="32" rx="12" fill="#7C3AED"/>
+                  <text x="66" y="96" fill="#fff" font-family="sans-serif" font-size="8.5">¡Perfecto! Te propongo una web con</text>
+                  <text x="66" y="108" fill="#fff" font-family="sans-serif" font-size="8.5">menú, fotos y botón de contacto.</text>
+                  <text x="26" y="132" font-family="sans-serif" font-size="16">☕</text>
+                </svg>
+              </div>
+              <div class="step-head"><span class="step-num">2</span><h3>Cuéntanos tu idea</h3></div>
+              <p>Nos dices qué haces y qué necesitas. Nosotros lo traducimos a una propuesta clara.</p>
+            </article>
+            <div class="step-arrow" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="step-arrow-down" aria-hidden="true"><i class="fa-solid fa-arrow-down"></i></div>
+
+            <article class="step-card">
+              <div class="step-visual">
+                <svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="La página web ya creada">
+                  <rect width="240" height="140" rx="12" fill="#111119"/>
+                  <rect x="12" y="12" width="216" height="116" rx="8" fill="#0F0F14" stroke="#27273A"/>
+                  <rect x="12" y="12" width="216" height="18" rx="8" fill="#17171F"/>
+                  <circle cx="22" cy="21" r="3" fill="#ef4444"/><circle cx="32" cy="21" r="3" fill="#f59e0b"/><circle cx="42" cy="21" r="3" fill="#22c55e"/>
+                  <text x="24" y="52" fill="#C4B5FD" font-family="sans-serif" font-size="12" font-weight="700">Café Aurora ☕</text>
+                  <text x="24" y="68" fill="#6E6A85" font-family="sans-serif" font-size="7">El mejor café de tu barrio</text>
+                  <rect x="24" y="78" width="52" height="16" rx="8" fill="#8B5CF6"/>
+                  <text x="50" y="89" fill="#fff" font-family="sans-serif" font-size="7" text-anchor="middle">Ver menú</text>
+                  <rect x="82" y="78" width="46" height="16" rx="8" fill="none" stroke="#8B5CF6"/>
+                  <text x="105" y="89" fill="#C4B5FD" font-family="sans-serif" font-size="7" text-anchor="middle">Pedir</text>
+                  <rect x="150" y="44" width="66" height="50" rx="6" fill="#1F1F2B"/>
+                  <text x="183" y="76" font-family="sans-serif" font-size="24" text-anchor="middle">☕</text>
+                  <rect x="24" y="102" width="60" height="18" rx="4" fill="#1F1F2B"/>
+                  <rect x="90" y="102" width="60" height="18" rx="4" fill="#1F1F2B"/>
+                  <rect x="156" y="102" width="60" height="18" rx="4" fill="#1F1F2B"/>
+                </svg>
+              </div>
+              <div class="step-head"><span class="step-num">3</span><h3>Hazlo realidad</h3></div>
+              <p>Diseñamos, publicamos y tu negocio queda online, listo para recibir clientes.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll-hint" aria-hidden="true"><span>Desliza</span><i class="fa-solid fa-chevron-down"></i></div>
+    </section>
+
+    <!-- LO QUE OFRECEMOS -->
+    <section class="value-section" id="servicios" aria-labelledby="servicios-titulo">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-accent" aria-hidden="true"></span>
+          <h2 class="section-title" id="servicios-titulo">Una web pensada para <em class="grad-text">hacer crecer</em> tu negocio.</h2>
+          <p class="section-subtitle">Sin términos complicados: esto es lo que hacemos por ti y por tus clientes.</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="value-carousel reveal">
+          <div class="value-track" id="valueTrack">
+            <article class="value-card">
+              <div class="value-top"><span class="value-icon"><i class="fa-solid fa-bullseye"></i></span><h3>Una página para vender</h3></div>
+              <p>Una página corta y directa, hecha para que tus clientes te contacten o compren.</p>
+              <ul class="value-list">
+                <li><i class="fa-solid fa-check"></i> Diseño enfocado en que te contacten o compren</li>
+                <li><i class="fa-solid fa-check"></i> Botón de WhatsApp siempre a la vista</li>
+                <li><i class="fa-solid fa-check"></i> Ideal para un producto, servicio o promoción</li>
+              </ul>
+              <div class="value-stat"><i class="fa-solid fa-arrow-trend-up"></i> Más consultas y ventas</div>
+            </article>
+
+            <article class="value-card">
+              <div class="value-top"><span class="value-icon"><i class="fa-solid fa-globe"></i></span><h3>Tu negocio en Internet</h3></div>
+              <p>El lugar donde tus clientes descubren quién eres, qué haces y cómo encontrarte.</p>
+              <ul class="value-list">
+                <li><i class="fa-solid fa-check"></i> Quién eres, qué haces y cómo contactarte</li>
+                <li><i class="fa-solid fa-check"></i> Abierta para tus clientes las 24 horas</li>
+                <li><i class="fa-solid fa-check"></i> Imagen profesional de tu empresa</li>
+              </ul>
+              <div class="value-stat"><i class="fa-solid fa-clock"></i> Siempre disponible</div>
+            </article>
+
+            <article class="value-card">
+              <div class="value-top"><span class="value-icon"><i class="fa-solid fa-user-plus"></i></span><h3>Consigue más clientes</h3></div>
+              <p>Diseñamos tu página para que quien la visite dé el siguiente paso.</p>
+              <ul class="value-list">
+                <li><i class="fa-solid fa-check"></i> Visitantes que pasan a ser contactos</li>
+                <li><i class="fa-solid fa-check"></i> Formularios y botones que invitan a actuar</li>
+                <li><i class="fa-solid fa-check"></i> Mensajes claros que guían al cliente</li>
+              </ul>
+              <div class="value-stat"><i class="fa-solid fa-users"></i> 3x más contactos</div>
+            </article>
+
+            <article class="value-card">
+              <div class="value-top"><span class="value-icon"><i class="fa-solid fa-magnifying-glass"></i></span><h3>Aparece en Google</h3></div>
+              <p>Preparamos tu página para que te encuentren cuando buscan lo que ofreces.</p>
+              <ul class="value-list">
+                <li><i class="fa-solid fa-check"></i> Tu página lista para que te encuentren</li>
+                <li><i class="fa-solid fa-check"></i> Textos y estructura pensados para el buscador</li>
+                <li><i class="fa-solid fa-check"></i> Más personas viendo tu negocio</li>
+              </ul>
+              <div class="value-stat"><i class="fa-solid fa-eye"></i> Más visibilidad</div>
+            </article>
+
+            <article class="value-card">
+              <div class="value-top"><span class="value-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span><h3>Hecho a tu medida</h3></div>
+              <p>¿Necesitas algo específico? Lo construimos pensando en tu negocio.</p>
+              <ul class="value-list">
+                <li><i class="fa-solid fa-check"></i> Funciones específicas para tu negocio</li>
+                <li><i class="fa-solid fa-check"></i> Sin plantillas genéricas</li>
+                <li><i class="fa-solid fa-check"></i> Crece contigo cuando lo necesites</li>
+              </ul>
+              <div class="value-stat"><i class="fa-solid fa-heart"></i> 100% para ti</div>
+            </article>
+          </div>
+
+          <div class="value-controls">
+            <div class="value-dots" id="valueDots"></div>
+            <div class="value-arrows">
+              <button class="value-arrow" id="valuePrev" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+              <button class="value-arrow" id="valueNext" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANTILLAS -->
+    <section class="tpl-section" id="plantillas" aria-labelledby="plantillas-titulo">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-accent" aria-hidden="true"></span>
+          <h2 class="section-title" id="plantillas-titulo">Plantillas que podemos <em class="grad-text">adaptar a tu negocio</em>.</h2>
+          <p class="section-subtitle">Desliza para explorar las estructuras más demandadas. Cada una se personaliza según tu marca, servicios y objetivos.</p>
+        </div>
+        <div class="tpl-carousel reveal">
+          <div class="tpl-track" id="tplTrack">
+            <article class="tpl-card" data-template="0">
+              <div class="tpl-preview">
+                <span class="tpl-tag">Gastronomía</span>
+                <span class="tpl-badge"><i class="fa-solid fa-fire"></i> Popular</span>
+                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rest1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2C1810"/><stop offset="100%" stop-color="#1A0F0A"/></linearGradient></defs><rect width="400" height="300" fill="url(#rest1)"/><rect width="400" height="38" fill="#1A0F0A"/><text x="18" y="24" fill="#F4C27A" font-family="Georgia" font-size="14" font-weight="700" font-style="italic">Trattoria Milano</text><rect x="315" y="10" width="70" height="18" rx="9" fill="#B8461C"/><text x="350" y="22" fill="#fff" font-family="sans-serif" font-size="9" font-weight="600" text-anchor="middle">Reservar</text><g transform="translate(18,52)"><text x="0" y="8" fill="#D97B3A" font-family="sans-serif" font-size="7" letter-spacing="2">RISTORANTE ITALIANO · SANTIAGO</text><text x="0" y="32" fill="#fff" font-family="Georgia" font-size="20" font-weight="700" font-style="italic">Auténtica</text><text x="0" y="55" fill="#F4C27A" font-family="Georgia" font-size="20" font-weight="700" font-style="italic">cocina italiana.</text><rect x="0" y="70" width="80" height="22" rx="11" fill="#B8461C"/><text x="40" y="84" fill="#fff" font-family="sans-serif" font-size="8" font-weight="600" text-anchor="middle">Ver menú</text></g><g transform="translate(255,50)"><circle cx="70" cy="70" r="65" fill="#3D2418"/><circle cx="70" cy="70" r="45" fill="#5A3A28"/><text x="70" y="85" fill="#F4C27A" font-family="serif" font-size="55" text-anchor="middle">🍝</text></g><g transform="translate(18,170)"><rect width="115" height="115" rx="10" fill="#2C1810" stroke="#5A3A28"/><text x="57" y="55" fill="#F4C27A" font-family="serif" font-size="34" text-anchor="middle">🍕</text><text x="10" y="85" fill="#fff" font-family="Georgia" font-size="10" font-weight="700" font-style="italic">Pizza Margherita</text><text x="10" y="105" fill="#F4C27A" font-family="sans-serif" font-size="10" font-weight="700">$12.990</text></g><g transform="translate(140,170)"><rect width="115" height="115" rx="10" fill="#2C1810" stroke="#5A3A28"/><text x="57" y="55" fill="#F4C27A" font-family="serif" font-size="34" text-anchor="middle">🍷</text><text x="10" y="85" fill="#fff" font-family="Georgia" font-size="10" font-weight="700" font-style="italic">Risotto ai Funghi</text><text x="10" y="105" fill="#F4C27A" font-family="sans-serif" font-size="10" font-weight="700">$15.500</text></g><g transform="translate(262,170)"><rect width="120" height="115" rx="10" fill="#2C1810" stroke="#5A3A28"/><text x="60" y="55" fill="#F4C27A" font-family="serif" font-size="34" text-anchor="middle">🍰</text><text x="10" y="85" fill="#fff" font-family="Georgia" font-size="10" font-weight="700" font-style="italic">Tiramisú</text><text x="10" y="105" fill="#F4C27A" font-family="sans-serif" font-size="10" font-weight="700">$6.990</text></g></svg>
+              </div>
+              <div class="tpl-body"><h3><span class="tpl-ico"><i class="fa-solid fa-utensils"></i></span>Restaurante / Gastronomía</h3><p>Landing elegante para restaurante, cafetería o negocio gastronómico con menú visual y reservas.</p><ul class="tpl-features"><li>Hero</li><li>Menú</li><li>Galería</li><li>Reserva</li></ul><button class="tpl-action" data-open="0"><i class="fa-solid fa-eye"></i> Ver ejemplo</button></div>
+            </article>
+            <article class="tpl-card" data-template="1">
+              <div class="tpl-preview"><span class="tpl-tag">Servicios</span>
+                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="serv1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0F1B2E"/><stop offset="100%" stop-color="#070E1A"/></linearGradient></defs><rect width="400" height="300" fill="url(#serv1)"/><rect width="400" height="38" fill="#070E1A"/><text x="18" y="24" fill="#fff" font-family="Georgia" font-size="13" font-weight="700">MORENO &amp; ASOCIADOS</text><rect x="315" y="10" width="70" height="18" rx="9" fill="#C9A961"/><text x="350" y="22" fill="#070E1A" font-family="sans-serif" font-size="9" font-weight="700" text-anchor="middle">Consulta</text><g transform="translate(18,52)"><text x="0" y="8" fill="#C9A961" font-family="sans-serif" font-size="7" letter-spacing="2">ESTUDIO JURÍDICO · DESDE 1998</text><text x="0" y="32" fill="#fff" font-family="Georgia" font-size="18" font-weight="700">Asesoría legal</text><text x="0" y="52" fill="#C9A961" font-family="Georgia" font-size="18" font-weight="700" font-style="italic">de excelencia.</text><rect x="0" y="64" width="88" height="22" rx="11" fill="#C9A961"/><text x="44" y="78" fill="#070E1A" font-family="sans-serif" font-size="8" font-weight="700" text-anchor="middle">Agendar</text></g><g transform="translate(255,50)"><rect width="130" height="110" rx="8" fill="#1A2844"/><rect x="10" y="10" width="110" height="70" rx="4" fill="#2A3B5C"/><rect x="20" y="40" width="30" height="40" fill="#3D4E70"/><rect x="60" y="40" width="30" height="40" fill="#3D4E70"/></g><g transform="translate(18,170)"><rect width="115" height="115" rx="10" fill="#0F1B2E" stroke="#1F2F4E"/><text x="30" y="40" fill="#C9A961" font-family="serif" font-size="20" font-weight="700">§</text><text x="15" y="65" fill="#fff" font-family="Georgia" font-size="10" font-weight="700">Derecho Civil</text><text x="15" y="105" fill="#C9A961" font-family="sans-serif" font-size="7" font-weight="600">Ver más →</text></g><g transform="translate(140,170)"><rect width="115" height="115" rx="10" fill="#0F1B2E" stroke="#1F2F4E"/><text x="30" y="40" fill="#C9A961" font-family="serif" font-size="20" font-weight="700">§</text><text x="15" y="65" fill="#fff" font-family="Georgia" font-size="10" font-weight="700">Empresas</text><text x="15" y="105" fill="#C9A961" font-family="sans-serif" font-size="7" font-weight="600">Ver más →</text></g><g transform="translate(262,170)"><rect width="120" height="115" rx="10" fill="#0F1B2E" stroke="#1F2F4E"/><text x="30" y="40" fill="#C9A961" font-family="serif" font-size="20" font-weight="700">§</text><text x="15" y="65" fill="#fff" font-family="Georgia" font-size="10" font-weight="700">Laboral</text><text x="15" y="105" fill="#C9A961" font-family="sans-serif" font-size="7" font-weight="600">Ver más →</text></g></svg>
+              </div>
+              <div class="tpl-body"><h3><span class="tpl-ico"><i class="fa-solid fa-briefcase"></i></span>Servicios profesionales</h3><p>Para abogados, consultores, contadores, asesores y profesionales independientes.</p><ul class="tpl-features"><li>Presentación</li><li>Servicios</li><li>Testimonios</li></ul><button class="tpl-action" data-open="1"><i class="fa-solid fa-eye"></i> Ver ejemplo</button></div>
+            </article>
+            <article class="tpl-card" data-template="2">
+              <div class="tpl-preview"><span class="tpl-tag">Salud</span>
+                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="salud1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EFF7F4"/><stop offset="100%" stop-color="#D9EDE4"/></linearGradient></defs><rect width="400" height="300" fill="url(#salud1)"/><rect width="400" height="38" fill="#fff"/><text x="18" y="24" fill="#2A7F6F" font-family="sans-serif" font-size="13" font-weight="700">Clínica Bienestar</text><rect x="315" y="10" width="70" height="18" rx="9" fill="#2A7F6F"/><text x="350" y="22" fill="#fff" font-family="sans-serif" font-size="9" font-weight="600" text-anchor="middle">Agendar</text><g transform="translate(18,52)"><text x="0" y="8" fill="#2A7F6F" font-family="sans-serif" font-size="7" letter-spacing="2">CENTRO DE BIENESTAR INTEGRAL</text><text x="0" y="32" fill="#1A3B32" font-family="Georgia" font-size="19" font-weight="700">Tu salud,</text><text x="0" y="53" fill="#2A7F6F" font-family="Georgia" font-size="19" font-weight="700" font-style="italic">nuestra prioridad.</text><rect x="0" y="64" width="88" height="22" rx="11" fill="#2A7F6F"/><text x="44" y="78" fill="#fff" font-family="sans-serif" font-size="8" font-weight="600" text-anchor="middle">Agendar hora</text></g><g transform="translate(255,50)"><rect width="130" height="115" rx="10" fill="#fff"/><circle cx="65" cy="45" r="28" fill="#E5EDE8"/><text x="65" y="53" fill="#2A7F6F" font-family="sans-serif" font-size="20" font-weight="700" text-anchor="middle">AM</text><text x="65" y="95" fill="#1A3B32" font-family="sans-serif" font-size="10" font-weight="700" text-anchor="middle">Dra. Ana Morales</text><text x="65" y="107" fill="#2A7F6F" font-family="sans-serif" font-size="8" text-anchor="middle">Medicina General</text></g><g transform="translate(18,170)"><rect width="175" height="115" rx="10" fill="#fff"/><text x="15" y="22" fill="#1A3B32" font-family="sans-serif" font-size="10" font-weight="700">Especialistas</text><circle cx="30" cy="50" r="14" fill="#E5EDE8"/><circle cx="60" cy="50" r="14" fill="#E5EDE8"/><circle cx="90" cy="50" r="14" fill="#E5EDE8"/><text x="15" y="95" fill="#2A7F6F" font-family="sans-serif" font-size="8" font-weight="600">Ver equipo →</text></g><g transform="translate(205,170)"><rect width="180" height="115" rx="10" fill="#fff"/><text x="15" y="22" fill="#1A3B32" font-family="sans-serif" font-size="10" font-weight="700">Servicios</text><text x="15" y="42" fill="#2A7F6F" font-family="sans-serif" font-size="8">✓ Medicina general</text><text x="15" y="55" fill="#2A7F6F" font-family="sans-serif" font-size="8">✓ Nutrición</text><text x="15" y="68" fill="#2A7F6F" font-family="sans-serif" font-size="8">✓ Psicología</text><text x="15" y="100" fill="#2A7F6F" font-family="sans-serif" font-size="8" font-weight="600">Ver todos →</text></g></svg>
+              </div>
+              <div class="tpl-body"><h3><span class="tpl-ico"><i class="fa-solid fa-heart-pulse"></i></span>Salud / Bienestar</h3><p>Para clínicas, centros de salud, psicología, estética, gimnasios y profesionales del bienestar.</p><ul class="tpl-features"><li>Servicios</li><li>Profesionales</li><li>Agenda</li></ul><button class="tpl-action" data-open="2"><i class="fa-solid fa-eye"></i> Ver ejemplo</button></div>
+            </article>
+            <article class="tpl-card" data-template="3">
+              <div class="tpl-preview"><span class="tpl-tag">Inmobiliaria</span>
+                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="inmob1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F5EFE2"/><stop offset="100%" stop-color="#E8DDC4"/></linearGradient></defs><rect width="400" height="300" fill="url(#inmob1)"/><rect width="400" height="38" fill="#1F1A10"/><text x="18" y="24" fill="#D4B574" font-family="Georgia" font-size="13" font-weight="700" font-style="italic">Altamira Propiedades</text><rect x="320" y="10" width="65" height="18" rx="9" fill="#D4B574"/><text x="352" y="22" fill="#1F1A10" font-family="sans-serif" font-size="9" font-weight="700" text-anchor="middle">Publicar</text><g transform="translate(18,52)"><text x="0" y="8" fill="#8A6D3B" font-family="sans-serif" font-size="7" letter-spacing="2">PROPIEDADES PREMIUM · CHILE</text><text x="0" y="32" fill="#1F1A10" font-family="Georgia" font-size="19" font-weight="700" font-style="italic">Encuentra</text><text x="0" y="53" fill="#8A6D3B" font-family="Georgia" font-size="19" font-weight="700" font-style="italic">tu hogar ideal.</text></g><g transform="translate(18,135)"><rect width="365" height="38" rx="10" fill="#fff" stroke="#D4B574"/><text x="18" y="25" fill="#8A6D3B" font-family="sans-serif" font-size="8">Tipo</text><text x="42" y="25" fill="#1F1A10" font-family="sans-serif" font-size="9" font-weight="600">Casa</text><rect x="325" y="6" width="32" height="26" rx="8" fill="#D4B574"/><text x="341" y="24" fill="#1F1A10" font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle">🔍</text></g><g transform="translate(18,185)"><rect width="175" height="100" rx="10" fill="#fff"/><rect x="8" y="8" width="159" height="50" rx="6" fill="#E8DDC4"/><path d="M 40 45 L 87 18 L 135 45 L 135 58 L 40 58 Z" fill="#8A6D3B" opacity="0.5"/><rect x="77" y="45" width="20" height="13" fill="#D4B574"/><text x="12" y="75" fill="#1F1A10" font-family="sans-serif" font-size="9" font-weight="700">Casa Las Condes</text><text x="12" y="97" fill="#8A6D3B" font-family="sans-serif" font-size="9" font-weight="700">UF 12.500</text></g><g transform="translate(205,185)"><rect width="178" height="100" rx="10" fill="#fff"/><rect x="8" y="8" width="162" height="50" rx="6" fill="#E8DDC4"/><rect x="40" y="25" width="95" height="33" fill="#8A6D3B" opacity="0.4"/><text x="12" y="75" fill="#1F1A10" font-family="sans-serif" font-size="9" font-weight="700">Depto Providencia</text><text x="12" y="97" fill="#8A6D3B" font-family="sans-serif" font-size="9" font-weight="700">UF 6.200</text></g></svg>
+              </div>
+              <div class="tpl-body"><h3><span class="tpl-ico"><i class="fa-solid fa-house"></i></span>Inmobiliaria</h3><p>Para propiedades, corredores y servicios inmobiliarios con galería visual y detalle.</p><ul class="tpl-features"><li>Propiedades</li><li>Galería</li><li>Ubicación</li></ul><button class="tpl-action" data-open="3"><i class="fa-solid fa-eye"></i> Ver ejemplo</button></div>
+            </article>
+            <article class="tpl-card" data-template="4">
+              <div class="tpl-preview"><span class="tpl-tag">Portafolio</span>
+                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="port1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1A0E1F"/><stop offset="100%" stop-color="#2A1530"/></linearGradient></defs><rect width="400" height="300" fill="url(#port1)"/><rect width="400" height="38" fill="#1A0E1F"/><text x="18" y="24" fill="#FF7AB6" font-family="sans-serif" font-size="13" font-weight="700">cristina.dev</text><rect x="315" y="10" width="70" height="18" rx="9" fill="#FF7AB6"/><text x="350" y="22" fill="#fff" font-family="sans-serif" font-size="9" font-weight="600" text-anchor="middle">Contacto</text><g transform="translate(18,52)"><circle cx="35" cy="35" r="32" fill="#FF7AB6"/><text x="35" y="45" fill="#fff" font-family="sans-serif" font-size="22" font-weight="700" text-anchor="middle">CK</text><g transform="translate(80,5)"><text x="0" y="8" fill="#FF7AB6" font-family="sans-serif" font-size="7" letter-spacing="1.5">DISEÑADORA UX/UI · CHILE</text><text x="0" y="32" fill="#fff" font-family="Georgia" font-size="17" font-weight="700">Hola, soy Cristina.</text><text x="0" y="52" fill="#E8D5EA" font-family="sans-serif" font-size="8">Creo experiencias memorables.</text></g></g><g transform="translate(18,135)"><rect width="115" height="150" rx="10" fill="#2A1530"/><rect x="8" y="8" width="99" height="75" rx="6" fill="#3D1E45"/><rect x="18" y="18" width="60" height="10" rx="2" fill="#FF7AB6" opacity="0.8"/><rect x="18" y="57" width="45" height="15" rx="4" fill="#FF7AB6"/><text x="12" y="105" fill="#FF7AB6" font-family="sans-serif" font-size="7" font-weight="700">UX/UI</text><text x="12" y="125" fill="#fff" font-family="sans-serif" font-size="10" font-weight="700">Fintech App Nova</text></g><g transform="translate(140,135)"><rect width="115" height="150" rx="10" fill="#2A1530"/><rect x="8" y="8" width="99" height="75" rx="6" fill="#3D1E45"/><circle cx="57" cy="45" r="22" fill="#FF7AB6" opacity="0.3"/><text x="57" y="55" fill="#fff" font-family="serif" font-size="28" font-weight="700" text-anchor="middle">✦</text><text x="12" y="105" fill="#FF7AB6" font-family="sans-serif" font-size="7" font-weight="700">BRANDING</text><text x="12" y="125" fill="#fff" font-family="sans-serif" font-size="10" font-weight="700">Café Aroma</text></g><g transform="translate(262,135)"><rect width="120" height="150" rx="10" fill="#2A1530"/><rect x="8" y="8" width="104" height="75" rx="6" fill="#3D1E45"/><rect x="20" y="20" width="80" height="45" rx="4" fill="#FF7AB6" opacity="0.25"/><text x="12" y="105" fill="#FF7AB6" font-family="sans-serif" font-size="7" font-weight="700">WEB DESIGN</text><text x="12" y="125" fill="#fff" font-family="sans-serif" font-size="10" font-weight="700">Studio Luna</text></g></svg>
+              </div>
+              <div class="tpl-body"><h3><span class="tpl-ico"><i class="fa-solid fa-palette"></i></span>Portafolio / Marca personal</h3><p>Para profesionales, freelancers, artistas y emprendedores que quieren destacar.</p><ul class="tpl-features"><li>Trabajos</li><li>Experiencia</li><li>Contacto</li></ul><button class="tpl-action" data-open="4"><i class="fa-solid fa-eye"></i> Ver ejemplo</button></div>
+            </article>
+          </div>
+          <div class="tpl-controls">
+            <div class="tpl-meta">
+              <span class="tpl-count" id="tplCount"><b>01</b> / 05</span>
+              <div class="tpl-progress"><span id="tplBar"></span></div>
+            </div>
+            <div class="tpl-arrows">
+              <button class="tpl-arrow" id="tplPrev" aria-label="Plantilla anterior"><i class="fa-solid fa-chevron-left"></i></button>
+              <button class="tpl-arrow" id="tplNext" aria-label="Plantilla siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contact" id="contacto" aria-labelledby="contacto-titulo">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-accent" aria-hidden="true"></span>
+          <h2 class="section-title" id="contacto-titulo">¿Tienes una idea para tu <em class="grad-text">próxima página web</em>?</h2>
+          <p class="section-subtitle">Cuéntanos qué necesitas y conversemos sobre cómo llevar tu proyecto a Internet.</p>
+        </div>
+        <div class="contact-grid">
+          <article class="contact-card reveal">
+            <div class="contact-card-icon"><i class="fa-brands fa-whatsapp"></i></div>
+            <h3>WhatsApp</h3><p>La forma más rápida de conversar sobre tu proyecto.</p>
+            <span class="contact-card-value">+56 9 3346 5843</span>
+            <a href="https://wa.me/56933465843" class="btn btn-primary grad-anim" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp</a>
+            <span class="contact-time"><i class="fa-solid fa-bolt"></i> Respondemos en minutos</span>
+          </article>
+          <article class="contact-card reveal delay-1">
+            <div class="contact-card-icon"><i class="fa-regular fa-envelope"></i></div>
+            <h3>Correo</h3><p>Ideal para propuestas más detalladas o presupuestos formales.</p>
+            <span class="contact-card-value">crisdev.chile@gmail.com</span>
+            <a href="mailto:crisdev.chile@gmail.com" class="btn btn-glass"><i class="fa-regular fa-paper-plane"></i> Enviar correo</a>
+            <span class="contact-time"><i class="fa-regular fa-clock"></i> Respondemos en menos de 24 h</span>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer-cta">
+      <div class="container reveal">
+        <h2 class="footer-title">Tu próxima web <em class="grad-text">te está esperando</em>.</h2>
+        <p class="footer-sub">Conversemos hoy y hagámosla realidad.</p>
+        <div class="footer-actions">
+          <a href="https://wa.me/56933465843" class="btn btn-primary grad-anim" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp</a>
+          <a href="#contacto" class="btn btn-glass">Ver formas de contacto <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Landing Pages <i class="fa-solid fa-star"></i> Páginas informativas <i class="fa-solid fa-star"></i> Captación de clientes <i class="fa-solid fa-star"></i> SEO <i class="fa-solid fa-star"></i> Desarrollo a medida <i class="fa-solid fa-star"></i></span>
+        <span>Landing Pages <i class="fa-solid fa-star"></i> Páginas informativas <i class="fa-solid fa-star"></i> Captación de clientes <i class="fa-solid fa-star"></i> SEO <i class="fa-solid fa-star"></i> Desarrollo a medida <i class="fa-solid fa-star"></i></span>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div class="footer-brand-mini"><img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="CodeKat" loading="lazy" /><span>Code<span style="color:var(--purple-light)">Kat</span></span></div>
+      <nav class="footer-links" aria-label="Enlaces del pie"><a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#plantillas">Plantillas</a><a href="#contacto">Contacto</a></nav>
+      <span class="footer-copy">© 2026 CodeKat — Desarrollo Web</span>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title"><span id="modalTitle">Plantilla</span><small id="modalCategory">Categoría</small></div>
+        <button class="modal-close" id="modalClose" aria-label="Cerrar modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-preview-carousel" id="modalPreviewCarousel">
+          <div class="modal-preview-track" id="modalPreviewTrack"></div>
+          <div class="modal-preview-controls">
+            <button class="modal-preview-btn" id="modalPrev" aria-label="Vista anterior"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="modal-preview-btn" id="modalNext" aria-label="Vista siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="modal-preview-dots" id="modalPreviewDots"></div>
+        </div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-section"><div class="modal-section-title"><i class="fa-solid fa-users"></i> Orientado a</div><div class="modal-audience" id="modalAudience"></div></div>
+        <div class="modal-section"><div class="modal-section-title"><i class="fa-solid fa-star"></i> Ventajas</div><div class="modal-advantages" id="modalAdvantages"></div></div>
+        <div class="modal-cta">
+          <div><div class="modal-cta-text">¿Te interesa esta plantilla?</div><div class="modal-cta-sub">Solicítala por WhatsApp y la adaptamos a tu negocio.</div></div>
+          <a href="https://wa.me/56933465843" class="btn btn-primary grad-anim" target="_blank" rel="noopener" id="modalWhatsapp"><i class="fa-brands fa-whatsapp"></i> Solicitar por WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    'use strict';
+
+    /* ===== THEME ===== */
+    var root=document.documentElement;
+    var themeIconMini=document.getElementById('themeIconMini');
+    var themeBtns=document.querySelectorAll('.theme-btn');
+    var themeMini=document.getElementById('themeToggleMini');
+    function setTheme(t){
+      if(t==='light'){root.setAttribute('data-theme','light');themeIconMini.className='fa-solid fa-sun';}
+      else{root.removeAttribute('data-theme');themeIconMini.className='fa-solid fa-moon';}
+      themeBtns.forEach(function(b){b.classList.toggle('active',b.getAttribute('data-theme-set')===t);});
+      try{localStorage.setItem('codekat-theme',t);}catch(e){}
+    }
+    var savedTheme='dark'; try{savedTheme=localStorage.getItem('codekat-theme')||'dark';}catch(e){}
+    setTheme(savedTheme);
+    themeBtns.forEach(function(b){b.addEventListener('click',function(){setTheme(b.getAttribute('data-theme-set'));});});
+    if(themeMini){themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});}
+
+    /* ===== REFS ===== */
+    var navbar=document.getElementById('navbar');
+    var scrollProgress=document.getElementById('scrollProgress');
+    var backToTop=document.getElementById('backToTop');
+    var waFloat=document.getElementById('waFloat');
+    var waTooltip=document.getElementById('waTooltip');
+    var burger=document.getElementById('burger');
+    var navMenu=document.getElementById('navMenu');
+    var menuBack=document.getElementById('menuBack');
+    var menuLinks=navMenu.querySelectorAll('.menu-link');
+    var sections=document.querySelectorAll('main section[id]');
+
+    /* Secciones donde SÍ mostramos el WhatsApp flotante */
+    var waSections={servicios:true,plantillas:true};
+
+    /* ===== MENÚ ===== */
+    function isMenuOpen(){return navMenu.classList.contains('open');}
+    function openMenu(){navMenu.classList.add('open');burger.classList.add('active');burger.setAttribute('aria-expanded','true');navMenu.setAttribute('aria-hidden','false');document.body.classList.add('menu-open');}
+    function closeMenu(){navMenu.classList.remove('open');burger.classList.remove('active');burger.setAttribute('aria-expanded','false');navMenu.setAttribute('aria-hidden','true');document.body.classList.remove('menu-open');}
+    burger.addEventListener('click',function(e){e.stopPropagation();isMenuOpen()?closeMenu():openMenu();});
+    if(menuBack){menuBack.addEventListener('click',closeMenu);}
+    menuLinks.forEach(function(l){
+      l.addEventListener('click',function(e){
+        e.preventDefault();
+        var t=document.querySelector(l.getAttribute('href'));
+        closeMenu();
+        if(t){setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'start'});},300);}
+      });
+    });
+    document.addEventListener('click',function(e){
+      if(!isMenuOpen())return;
+      if(!navMenu.contains(e.target)&&!burger.contains(e.target)){closeMenu();}
+    });
+
+    /* ===== SECCIÓN ACTIVA + alternar WhatsApp / flecha ===== */
+    function setActive(id){
+      menuLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+id);});
+    }
+    function getCurrentSection(){
+      var c='inicio';
+      sections.forEach(function(s){var top=s.offsetTop-160;if(window.scrollY>=top){c=s.id;}});
+      return c;
+    }
+    var lastY=0,ticking=false,lastSection='inicio';
+    function onFrame(){
+      var y=window.scrollY;
+      navbar.classList.toggle('scrolled',y>20);
+      var max=document.documentElement.scrollHeight-window.innerHeight;
+      scrollProgress.style.width=(max>0?(y/max)*100:0)+'%';
+      var cur=getCurrentSection();
+      if(cur!==lastSection){lastSection=cur;setActive(cur);}
+      var waVisible=!!waSections[cur];
+      waFloat.classList.toggle('visible',waVisible);
+      backToTop.classList.toggle('visible',(!waVisible && y>500));
+      lastY=y;ticking=false;
+    }
+    window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(onFrame);ticking=true;}},{passive:true});
+    onFrame();
+    backToTop.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+    /* ===== MENSAJES ROTATIVOS del globo WhatsApp (no invasivo) ===== */
+    var waMessages=['Asesórate con nosotros','¿Tienes una idea? Conversemos','Cotiza sin compromiso','Tu web a un mensaje de distancia'];
+    var waMsgIndex=0;
+    function waShowCurrent(){
+      waTooltip.textContent=waMessages[waMsgIndex];
+      waFloat.classList.add('show-tip');
+      setTimeout(function(){
+        waFloat.classList.remove('show-tip');
+        waMsgIndex=(waMsgIndex+1)%waMessages.length;
+      },3500);
+    }
+    setTimeout(function(){waShowCurrent();setInterval(waShowCurrent,9000);},3000);
+
+    /* ===== REVEAL ===== */
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('visible');io.unobserve(en.target);}});
+    },{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+    /* ===== CARRUSEL PROPUESTA (autoplay más lento: 6s) ===== */
+    var valueTrack=document.getElementById('valueTrack');
+    var valueCards=Array.prototype.slice.call(valueTrack.querySelectorAll('.value-card'));
+    var valuePrev=document.getElementById('valuePrev');
+    var valueNext=document.getElementById('valueNext');
+    var valueDotsWrap=document.getElementById('valueDots');
+    var vIndex=0,vTimer=null;
+    var VALUE_AUTOPLAY=6000;
+    valueCards.forEach(function(_,i){
+      var d=document.createElement('button');
+      d.className='v-dot'+(i===0?' active':'');
+      d.setAttribute('aria-label','Ir a la propuesta '+(i+1));
+      d.addEventListener('click',function(){vGo(i);vRestart();});
+      valueDotsWrap.appendChild(d);
+    });
+    var vDots=Array.prototype.slice.call(valueDotsWrap.querySelectorAll('.v-dot'));
+    function vStep(){
+      var c=valueCards[0]; if(!c)return 0;
+      var st=getComputedStyle(valueTrack);
+      var gap=parseFloat(st.columnGap||st.gap)||24;
+      return c.offsetWidth+gap;
+    }
+    function vUpdateDots(){
+      var step=vStep()||1;
+      var idx=Math.round(valueTrack.scrollLeft/step);
+      idx=Math.max(0,Math.min(idx,valueCards.length-1));
+      vIndex=idx;
+      vDots.forEach(function(d,j){d.classList.toggle('active',j===idx);});
+    }
+    function vGo(i){
+      var target=Math.max(0,Math.min(i,valueCards.length-1));
+      valueTrack.scrollTo({left:target*vStep(),behavior:'smooth'});
+    }
+    function vNext(){
+      if(vIndex>=valueCards.length-1){vGo(0);}else{vGo(vIndex+1);}
+    }
+    function vStop(){if(vTimer){clearInterval(vTimer);vTimer=null;}}
+    function vStart(){vStop();vTimer=setInterval(vNext,VALUE_AUTOPLAY);}
+    function vRestart(){vStop();vStart();}
+    valuePrev.addEventListener('click',function(){vGo(vIndex-1);vRestart();});
+    valueNext.addEventListener('click',function(){vGo(vIndex+1);vRestart();});
+    valueTrack.addEventListener('scroll',function(){requestAnimationFrame(vUpdateDots);},{passive:true});
+    valueTrack.addEventListener('mouseenter',vStop);
+    valueTrack.addEventListener('mouseleave',vStart);
+    valueTrack.addEventListener('touchstart',vStop,{passive:true});
+    valueTrack.addEventListener('touchend',function(){setTimeout(vStart,2000);},{passive:true});
+    vStart();
+
+    /* ===== CARRUSEL PLANTILLAS ===== */
+    var tplTrack=document.getElementById('tplTrack');
+    var tplPrev=document.getElementById('tplPrev');
+    var tplNext=document.getElementById('tplNext');
+    var tplCount=document.getElementById('tplCount');
+    var tplBar=document.getElementById('tplBar');
+    var tplCards=Array.prototype.slice.call(tplTrack.querySelectorAll('.tpl-card'));
+    function cardStep(){
+      var c=tplCards[0]; if(!c){return 0;}
+      var style=getComputedStyle(tplTrack);
+      var gap=parseFloat(style.columnGap||style.gap)||24;
+      return c.offsetWidth+gap;
+    }
+    tplPrev.addEventListener('click',function(){tplTrack.scrollBy({left:-cardStep(),behavior:'smooth'});});
+    tplNext.addEventListener('click',function(){tplTrack.scrollBy({left:cardStep(),behavior:'smooth'});});
+    function updateTplMeta(){
+      var step=cardStep()||1;
+      var idx=Math.round(tplTrack.scrollLeft/step);
+      idx=Math.max(0,Math.min(idx,tplCards.length-1));
+      tplCount.innerHTML='<b>'+String(idx+1).padStart(2,'0')+'</b> / '+String(tplCards.length).padStart(2,'0');
+      var max=tplTrack.scrollWidth-tplTrack.clientWidth;
+      tplBar.style.width=(max>0?(tplTrack.scrollLeft/max)*100:0)+'%';
+    }
+    tplTrack.addEventListener('scroll',function(){requestAnimationFrame(updateTplMeta);},{passive:true});
+    window.addEventListener('resize',updateTplMeta);
+    updateTplMeta();
+    var isDown=false,startX=0,slStart=0;
+    tplTrack.addEventListener('mousedown',function(e){isDown=true;tplTrack.classList.add('dragging');startX=e.pageX;slStart=tplTrack.scrollLeft;});
+    window.addEventListener('mouseup',function(){isDown=false;tplTrack.classList.remove('dragging');});
+    tplTrack.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();tplTrack.scrollLeft=slStart-(e.pageX-startX)*1.4;});
+
+    /* ===== DATOS PLANTILLAS ===== */
+    var templates=[
+      {title:'Restaurante / Gastronomía',category:'Gastronomía',desc:'Landing elegante para restaurantes, cafeterías y negocios gastronómicos. Menú visual, galería de platos, horarios y reservas.',audience:['Restaurantes','Cafeterías','Bares','Food trucks','Pastelerías'],advantages:[{icon:'fa-utensils',title:'Menú visual atractivo',desc:'Presenta tus platos con fotos y precios claros.'},{icon:'fa-calendar-check',title:'Reservas online',desc:'Sistema de reservas directo desde la web.'},{icon:'fa-location-dot',title:'Ubicación y horarios',desc:'Mapa integrado y horarios visibles.'},{icon:'fa-mobile-screen',title:'Optimizado para móviles',desc:'Ideal para clientes que buscan desde el celular.'}],
+        slides:[
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#1A0F0A"/><rect width="800" height="65" fill="#1A0F0A"/><text x="40" y="42" fill="#F4C27A" font-family="Georgia" font-size="22" font-weight="700" font-style="italic">Trattoria Milano</text><rect x="680" y="22" width="90" height="30" rx="15" fill="#B8461C"/><text x="725" y="42" fill="#fff" font-family="sans-serif" font-size="12" font-weight="600" text-anchor="middle">Reservar</text><g transform="translate(40,130)"><text x="0" y="0" fill="#D97B3A" font-family="sans-serif" font-size="12" letter-spacing="3">RISTORANTE ITALIANO · SANTIAGO</text><text x="0" y="55" fill="#fff" font-family="Georgia" font-size="54" font-weight="700" font-style="italic">Auténtica</text><text x="0" y="115" fill="#F4C27A" font-family="Georgia" font-size="54" font-weight="700" font-style="italic">cocina italiana.</text><text x="0" y="165" fill="#C9B79A" font-family="sans-serif" font-size="16">Pasta fresca hecha a mano y pizzas al horno de leña.</text><rect x="0" y="200" width="155" height="48" rx="24" fill="#B8461C"/><text x="77" y="230" fill="#fff" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle">Ver menú</text></g><g transform="translate(520,130)"><circle cx="120" cy="130" r="115" fill="#3D2418"/><circle cx="120" cy="130" r="85" fill="#4A2F1F"/><text x="120" y="165" fill="#F4C27A" font-family="serif" font-size="110" text-anchor="middle">🍝</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#1A0F0A"/><g transform="translate(40,50)"><text x="0" y="0" fill="#D97B3A" font-family="sans-serif" font-size="11" letter-spacing="2.5">NUESTRA CARTA</text><text x="0" y="45" fill="#fff" font-family="Georgia" font-size="42" font-weight="700" font-style="italic">Platos destacados</text></g><g transform="translate(40,150)"><rect width="230" height="300" rx="16" fill="#2C1810" stroke="#5A3A28"/><text x="115" y="100" fill="#F4C27A" font-family="serif" font-size="75" text-anchor="middle">🍕</text><text x="20" y="180" fill="#fff" font-family="Georgia" font-size="19" font-weight="700" font-style="italic">Pizza Margherita</text><text x="20" y="265" fill="#F4C27A" font-family="Georgia" font-size="24" font-weight="700">$12.990</text></g><g transform="translate(285,150)"><rect width="230" height="300" rx="16" fill="#2C1810" stroke="#5A3A28"/><text x="115" y="100" fill="#F4C27A" font-family="serif" font-size="75" text-anchor="middle">🍝</text><text x="20" y="180" fill="#fff" font-family="Georgia" font-size="19" font-weight="700" font-style="italic">Pasta Carbonara</text><text x="20" y="265" fill="#F4C27A" font-family="Georgia" font-size="24" font-weight="700">$14.500</text></g><g transform="translate(530,150)"><rect width="230" height="300" rx="16" fill="#2C1810" stroke="#5A3A28"/><text x="115" y="100" fill="#F4C27A" font-family="serif" font-size="75" text-anchor="middle">🍰</text><text x="20" y="180" fill="#fff" font-family="Georgia" font-size="19" font-weight="700" font-style="italic">Tiramisú clásico</text><text x="20" y="265" fill="#F4C27A" font-family="Georgia" font-size="24" font-weight="700">$6.990</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#1A0F0A"/><g transform="translate(40,50)"><text x="0" y="0" fill="#D97B3A" font-family="sans-serif" font-size="11" letter-spacing="2.5">RESERVAS</text><text x="0" y="45" fill="#fff" font-family="Georgia" font-size="42" font-weight="700" font-style="italic">Reserva tu mesa</text></g><g transform="translate(40,160)"><rect width="720" height="310" rx="20" fill="#2C1810" stroke="#5A3A28"/><text x="35" y="45" fill="#fff" font-family="Georgia" font-size="20" font-weight="700" font-style="italic">Completa tus datos</text><rect x="35" y="80" width="315" height="42" rx="10" fill="#3D2418"/><rect x="370" y="80" width="310" height="42" rx="10" fill="#3D2418"/><rect x="35" y="150" width="315" height="42" rx="10" fill="#3D2418"/><rect x="370" y="150" width="310" height="42" rx="10" fill="#3D2418"/><rect x="35" y="280" width="220" height="48" rx="24" fill="#B8461C"/><text x="145" y="310" fill="#fff" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle">Confirmar reserva</text></g></svg>'
+        ]},
+      {title:'Servicios profesionales',category:'Profesionales',desc:'Ideal para abogados, consultores, contadores y asesores. Diseño sobrio que transmite confianza.',audience:['Abogados','Consultores','Contadores','Asesores','Coach'],advantages:[{icon:'fa-handshake',title:'Transmite confianza',desc:'Diseño profesional que genera credibilidad.'},{icon:'fa-briefcase',title:'Servicios claros',desc:'Cada servicio con beneficios concretos.'},{icon:'fa-quote-left',title:'Testimonios reales',desc:'Refuerza tu reputación con casos de éxito.'},{icon:'fa-calendar',title:'Agenda de citas',desc:'Los clientes reservan una consulta online.'}],
+        slides:[
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#070E1A"/><rect width="800" height="65" fill="#070E1A"/><text x="40" y="42" fill="#fff" font-family="Georgia" font-size="20" font-weight="700">MORENO &amp; ASOCIADOS</text><rect x="650" y="20" width="120" height="30" rx="15" fill="#C9A961"/><text x="710" y="40" fill="#070E1A" font-family="sans-serif" font-size="12" font-weight="700" text-anchor="middle">Agendar</text><g transform="translate(40,130)"><text x="0" y="0" fill="#C9A961" font-family="sans-serif" font-size="12" letter-spacing="2.5">ESTUDIO JURÍDICO · DESDE 1998</text><text x="0" y="60" fill="#fff" font-family="Georgia" font-size="52" font-weight="700">Asesoría legal</text><text x="0" y="120" fill="#C9A961" font-family="Georgia" font-size="52" font-weight="700" font-style="italic">de excelencia.</text><rect x="0" y="180" width="175" height="48" rx="24" fill="#C9A961"/><text x="87" y="210" fill="#070E1A" font-family="sans-serif" font-size="14" font-weight="700" text-anchor="middle">Agendar consulta</text></g><g transform="translate(500,110)"><rect width="260" height="280" rx="14" fill="#15283F"/><rect x="20" y="20" width="220" height="150" rx="8" fill="#1F3552"/><rect x="30" y="90" width="40" height="80" fill="#2A4568"/><rect x="75" y="70" width="40" height="100" fill="#2A4568"/><rect x="120" y="60" width="40" height="110" fill="#2A4568"/></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#070E1A"/><g transform="translate(40,50)"><text x="0" y="0" fill="#C9A961" font-family="sans-serif" font-size="11" letter-spacing="2.5">NUESTROS SERVICIOS</text><text x="0" y="45" fill="#fff" font-family="Georgia" font-size="40" font-weight="700">Áreas de práctica</text></g><g transform="translate(40,130)"><rect width="345" height="180" rx="16" fill="#15283F"/><text x="50" y="58" fill="#C9A961" font-family="Georgia" font-size="28" font-weight="700" text-anchor="middle">§</text><text x="25" y="105" fill="#fff" font-family="Georgia" font-size="20" font-weight="700">Derecho Civil</text><text x="25" y="175" fill="#C9A961" font-family="sans-serif" font-size="12" font-weight="600">Más información →</text></g><g transform="translate(415,130)"><rect width="345" height="180" rx="16" fill="#15283F"/><text x="50" y="58" fill="#C9A961" font-family="Georgia" font-size="28" font-weight="700" text-anchor="middle">§</text><text x="25" y="105" fill="#fff" font-family="Georgia" font-size="20" font-weight="700">Derecho Empresas</text><text x="25" y="175" fill="#C9A961" font-family="sans-serif" font-size="12" font-weight="600">Más información →</text></g><g transform="translate(40,330)"><rect width="345" height="150" rx="16" fill="#15283F"/><text x="50" y="58" fill="#C9A961" font-family="Georgia" font-size="28" font-weight="700" text-anchor="middle">§</text><text x="25" y="105" fill="#fff" font-family="Georgia" font-size="20" font-weight="700">Derecho Laboral</text></g><g transform="translate(415,330)"><rect width="345" height="150" rx="16" fill="#15283F"/><text x="50" y="58" fill="#C9A961" font-family="Georgia" font-size="28" font-weight="700" text-anchor="middle">§</text><text x="25" y="105" fill="#fff" font-family="Georgia" font-size="20" font-weight="700">Derecho Familia</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#070E1A"/><g transform="translate(40,50)"><text x="0" y="0" fill="#C9A961" font-family="sans-serif" font-size="11" letter-spacing="2.5">TESTIMONIOS</text><text x="0" y="45" fill="#fff" font-family="Georgia" font-size="40" font-weight="700">Lo que dicen nuestros clientes</text></g><g transform="translate(40,130)"><rect width="345" height="230" rx="16" fill="#15283F"/><text x="30" y="50" fill="#C9A961" font-family="Georgia" font-size="56" font-weight="700">"</text><text x="30" y="95" fill="#fff" font-family="sans-serif" font-size="16" font-weight="500">Excelente asesoría legal.</text><text x="30" y="120" fill="#B5C4D6" font-family="sans-serif" font-size="13">Resolvieron nuestro caso rápido.</text><text x="30" y="200" fill="#fff" font-family="sans-serif" font-size="14" font-weight="600">María Rodríguez</text></g><g transform="translate(415,130)"><rect width="345" height="230" rx="16" fill="#15283F"/><text x="30" y="50" fill="#C9A961" font-family="Georgia" font-size="56" font-weight="700">"</text><text x="30" y="95" fill="#fff" font-family="sans-serif" font-size="16" font-weight="500">Profesionales de primer nivel.</text><text x="30" y="120" fill="#B5C4D6" font-family="sans-serif" font-size="13">Nos acompañaron en todo el proceso.</text><text x="30" y="200" fill="#fff" font-family="sans-serif" font-size="14" font-weight="600">Juan Pérez</text></g></svg>'
+        ]},
+      {title:'Salud / Bienestar',category:'Bienestar',desc:'Pensado para clínicas, psicólogos, centros de estética y gimnasios. Transmite calma y profesionalismo.',audience:['Clínicas','Psicólogos','Nutricionistas','Estética','Gimnasios'],advantages:[{icon:'fa-user-doctor',title:'Equipo visible',desc:'Muestra a los profesionales y sus especialidades.'},{icon:'fa-calendar-check',title:'Agenda online',desc:'Los pacientes reservan hora desde la web.'},{icon:'fa-heart-pulse',title:'Transmite confianza',desc:'Diseño cálido que inspira tranquilidad.'},{icon:'fa-clipboard-list',title:'Servicios claros',desc:'Cada especialidad con su descripción.'}],
+        slides:[
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#EFF7F4"/><rect width="800" height="65" fill="#fff"/><text x="40" y="42" fill="#2A7F6F" font-family="sans-serif" font-size="20" font-weight="700">Clínica Bienestar</text><rect x="650" y="20" width="120" height="30" rx="15" fill="#2A7F6F"/><text x="710" y="40" fill="#fff" font-family="sans-serif" font-size="12" font-weight="600" text-anchor="middle">Agendar hora</text><g transform="translate(40,120)"><text x="0" y="0" fill="#2A7F6F" font-family="sans-serif" font-size="12" letter-spacing="2.5">CENTRO DE BIENESTAR INTEGRAL</text><text x="0" y="55" fill="#1A3B32" font-family="Georgia" font-size="52" font-weight="700">Tu salud,</text><text x="0" y="115" fill="#2A7F6F" font-family="Georgia" font-size="52" font-weight="700" font-style="italic">nuestra prioridad.</text><rect x="0" y="170" width="170" height="48" rx="24" fill="#2A7F6F"/><text x="85" y="200" fill="#fff" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle">Agendar hora</text></g><g transform="translate(520,110)"><rect width="240" height="280" rx="18" fill="#fff"/><circle cx="120" cy="90" r="55" fill="#E5EDE8"/><text x="120" y="112" fill="#2A7F6F" font-family="sans-serif" font-size="42" font-weight="700" text-anchor="middle">AM</text><text x="120" y="180" fill="#1A3B32" font-family="sans-serif" font-size="17" font-weight="700" text-anchor="middle">Dra. Ana Morales</text><text x="120" y="205" fill="#2A7F6F" font-family="sans-serif" font-size="13" text-anchor="middle">Medicina General</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#EFF7F4"/><g transform="translate(40,50)"><text x="0" y="0" fill="#2A7F6F" font-family="sans-serif" font-size="11" letter-spacing="2.5">NUESTRO EQUIPO</text><text x="0" y="45" fill="#1A3B32" font-family="Georgia" font-size="40" font-weight="700">Profesionales a tu servicio</text></g><g transform="translate(40,130)"><rect width="230" height="280" rx="16" fill="#fff"/><circle cx="115" cy="90" r="45" fill="#2A7F6F" opacity="0.15"/><text x="115" y="108" fill="#2A7F6F" font-family="sans-serif" font-size="38" font-weight="700" text-anchor="middle">AM</text><text x="20" y="195" fill="#1A3B32" font-family="sans-serif" font-size="17" font-weight="700">Ana Martínez</text><text x="20" y="220" fill="#2A7F6F" font-family="sans-serif" font-size="13">Psicóloga clínica</text></g><g transform="translate(285,130)"><rect width="230" height="280" rx="16" fill="#fff"/><circle cx="115" cy="90" r="45" fill="#2A7F6F" opacity="0.15"/><text x="115" y="108" fill="#2A7F6F" font-family="sans-serif" font-size="38" font-weight="700" text-anchor="middle">CR</text><text x="20" y="195" fill="#1A3B32" font-family="sans-serif" font-size="17" font-weight="700">Carlos Rojas</text><text x="20" y="220" fill="#2A7F6F" font-family="sans-serif" font-size="13">Nutricionista</text></g><g transform="translate(530,130)"><rect width="230" height="280" rx="16" fill="#fff"/><circle cx="115" cy="90" r="45" fill="#2A7F6F" opacity="0.15"/><text x="115" y="108" fill="#2A7F6F" font-family="sans-serif" font-size="38" font-weight="700" text-anchor="middle">LF</text><text x="20" y="195" fill="#1A3B32" font-family="sans-serif" font-size="17" font-weight="700">Laura Fernández</text><text x="20" y="220" fill="#2A7F6F" font-family="sans-serif" font-size="13">Fisioterapeuta</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#EFF7F4"/><g transform="translate(40,50)"><text x="0" y="0" fill="#2A7F6F" font-family="sans-serif" font-size="11" letter-spacing="2.5">RESERVA TU HORA</text><text x="0" y="45" fill="#1A3B32" font-family="Georgia" font-size="40" font-weight="700">Agenda en 3 simples pasos</text></g><g transform="translate(40,130)"><rect width="230" height="290" rx="16" fill="#fff"/><circle cx="115" cy="70" r="35" fill="#2A7F6F"/><text x="115" y="80" fill="#fff" font-family="sans-serif" font-size="24" font-weight="700" text-anchor="middle">1</text><text x="115" y="140" fill="#1A3B32" font-family="sans-serif" font-size="19" font-weight="700" text-anchor="middle">Elige servicio</text></g><g transform="translate(285,130)"><rect width="230" height="290" rx="16" fill="#fff"/><circle cx="115" cy="70" r="35" fill="#2A7F6F"/><text x="115" y="80" fill="#fff" font-family="sans-serif" font-size="24" font-weight="700" text-anchor="middle">2</text><text x="115" y="140" fill="#1A3B32" font-family="sans-serif" font-size="19" font-weight="700" text-anchor="middle">Selecciona hora</text></g><g transform="translate(530,130)"><rect width="230" height="290" rx="16" fill="#fff"/><circle cx="115" cy="70" r="35" fill="#2A7F6F"/><text x="115" y="80" fill="#fff" font-family="sans-serif" font-size="24" font-weight="700" text-anchor="middle">3</text><text x="115" y="140" fill="#1A3B32" font-family="sans-serif" font-size="19" font-weight="700" text-anchor="middle">Confirma</text></g><g transform="translate(40,440)"><rect width="720" height="48" rx="24" fill="#2A7F6F"/><text x="360" y="30" fill="#fff" font-family="sans-serif" font-size="15" font-weight="600" text-anchor="middle">Agendar mi hora ahora →</text></g></svg>'
+        ]},
+      {title:'Inmobiliaria',category:'Inmobiliaria',desc:'Perfecta para corredores y empresas inmobiliarias. Galería visual de propiedades, filtros y detalle.',audience:['Corredores','Inmobiliarias','Constructoras','Arrendadores'],advantages:[{icon:'fa-images',title:'Galería visual',desc:'Presenta cada propiedad con fotos de calidad.'},{icon:'fa-filter',title:'Filtros avanzados',desc:'Busca por comuna, precio y dormitorios.'},{icon:'fa-map-location-dot',title:'Mapa interactivo',desc:'Los clientes ven la ubicación exacta.'},{icon:'fa-phone',title:'Contacto rápido',desc:'Botón de WhatsApp en cada propiedad.'}],
+        slides:[
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#F5EFE2"/><rect width="800" height="65" fill="#1F1A10"/><text x="40" y="42" fill="#D4B574" font-family="Georgia" font-size="20" font-weight="700" font-style="italic">Altamira Propiedades</text><rect x="650" y="20" width="120" height="30" rx="15" fill="#D4B574"/><text x="710" y="40" fill="#1F1A10" font-family="sans-serif" font-size="12" font-weight="700" text-anchor="middle">Publicar</text><g transform="translate(40,110)"><text x="0" y="0" fill="#8A6D3B" font-family="sans-serif" font-size="12" letter-spacing="2.5">PROPIEDADES PREMIUM · CHILE</text><text x="0" y="55" fill="#1F1A10" font-family="Georgia" font-size="52" font-weight="700" font-style="italic">Encuentra</text><text x="0" y="115" fill="#8A6D3B" font-family="Georgia" font-size="52" font-weight="700" font-style="italic">tu hogar ideal.</text></g><g transform="translate(40,315)"><rect width="720" height="70" rx="14" fill="#fff" stroke="#D4B574"/><text x="25" y="30" fill="#8A6D3B" font-family="sans-serif" font-size="11">Tipo</text><text x="25" y="52" fill="#1F1A10" font-family="sans-serif" font-size="14" font-weight="600">Casa</text><rect x="580" y="15" width="120" height="40" rx="12" fill="#D4B574"/><text x="640" y="40" fill="#1F1A10" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">🔍 Buscar</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#F5EFE2"/><g transform="translate(40,40)"><text x="0" y="0" fill="#8A6D3B" font-family="sans-serif" font-size="11" letter-spacing="2.5">PROPIEDADES DESTACADAS</text><text x="0" y="40" fill="#1F1A10" font-family="Georgia" font-size="36" font-weight="700" font-style="italic">Las mejores opciones para ti</text></g><g transform="translate(40,100)"><rect width="345" height="380" rx="16" fill="#fff"/><rect x="15" y="15" width="315" height="195" rx="10" fill="#E8DDC4"/><path d="M 75 150 L 172 70 L 270 150 L 270 210 L 75 210 Z" fill="#8A6D3B" opacity="0.5"/><rect x="155" y="150" width="35" height="60" fill="#D4B574"/><text x="20" y="240" fill="#1F1A10" font-family="sans-serif" font-size="19" font-weight="700">Casa en Las Condes</text><text x="20" y="375" fill="#8A6D3B" font-family="Georgia" font-size="24" font-weight="700">UF 12.500</text></g><g transform="translate(415,100)"><rect width="345" height="380" rx="16" fill="#fff"/><rect x="15" y="15" width="315" height="195" rx="10" fill="#E8DDC4"/><rect x="70" y="70" width="205" height="140" fill="#8A6D3B" opacity="0.3"/><text x="20" y="240" fill="#1F1A10" font-family="sans-serif" font-size="19" font-weight="700">Depto Providencia</text><text x="20" y="375" fill="#8A6D3B" font-family="Georgia" font-size="22" font-weight="700">$850.000/mes</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#F5EFE2"/><rect width="800" height="65" fill="#1F1A10"/><text x="40" y="42" fill="#D4B574" font-family="sans-serif" font-size="14" font-weight="700">← Volver</text><text x="400" y="42" fill="#fff" font-family="Georgia" font-size="18" font-weight="700" text-anchor="middle">Casa en Las Condes</text><g transform="translate(40,85)"><rect width="460" height="385" rx="16" fill="#fff"/><rect x="15" y="15" width="430" height="240" rx="10" fill="#E8DDC4"/><path d="M 100 180 L 230 90 L 360 180 L 360 255 L 100 255 Z" fill="#8A6D3B" opacity="0.5"/><rect x="210" y="180" width="40" height="75" fill="#D4B574"/><text x="20" y="345" fill="#1F1A10" font-family="sans-serif" font-size="16" font-weight="700">Casa en Las Condes</text><text x="20" y="365" fill="#8A6D3B" font-family="sans-serif" font-size="12">📍 Av. Las Condes 1234</text></g><g transform="translate(520,85)"><rect width="240" height="385" rx="16" fill="#fff"/><text x="25" y="40" fill="#8A6D3B" font-family="sans-serif" font-size="12">Precio</text><text x="25" y="75" fill="#8A6D3B" font-family="Georgia" font-size="28" font-weight="700">UF 12.500</text><rect x="25" y="260" width="190" height="45" rx="12" fill="#D4B574"/><text x="120" y="288" fill="#1F1A10" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">Contactar corredor</text><rect x="25" y="315" width="190" height="45" rx="12" fill="none" stroke="#D4B574"/><text x="120" y="343" fill="#8A6D3B" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">Agendar visita</text></g></svg>'
+        ]},
+      {title:'Portafolio / Marca personal',category:'Profesionales independientes',desc:'Diseñado para freelancers, artistas, diseñadores y emprendedores que quieren destacar su trabajo.',audience:['Diseñadores','Fotógrafos','Ilustradores','Freelancers','Artistas'],advantages:[{icon:'fa-briefcase',title:'Portafolio visual',desc:'Muestra tus proyectos de forma atractiva.'},{icon:'fa-user',title:'Marca personal',desc:'Destaca tu historia, experiencia y estilo.'},{icon:'fa-star',title:'Testimonios',desc:'Refuerza tu reputación con feedback real.'},{icon:'fa-envelope',title:'Contacto directo',desc:'Los clientes te contactan fácilmente.'}],
+        slides:[
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#1A0E1F"/><rect width="800" height="65" fill="#1A0E1F"/><text x="40" y="42" fill="#FF7AB6" font-family="sans-serif" font-size="20" font-weight="700">cristina.dev</text><rect x="650" y="20" width="120" height="30" rx="15" fill="#FF7AB6"/><text x="710" y="40" fill="#fff" font-family="sans-serif" font-size="12" font-weight="600" text-anchor="middle">Contacto</text><g transform="translate(40,120)"><circle cx="80" cy="80" r="70" fill="#FF7AB6"/><text x="80" y="100" fill="#fff" font-family="sans-serif" font-size="42" font-weight="700" text-anchor="middle">CK</text><g transform="translate(190,20)"><text x="0" y="15" fill="#FF7AB6" font-family="sans-serif" font-size="12" letter-spacing="2">DISEÑADORA UX/UI · SANTIAGO</text><text x="0" y="65" fill="#fff" font-family="Georgia" font-size="48" font-weight="700">Hola, soy Cristina.</text><text x="0" y="115" fill="#E8D5EA" font-family="sans-serif" font-size="16">Creo experiencias digitales memorables.</text></g><rect x="190" y="200" width="165" height="48" rx="24" fill="#FF7AB6"/><text x="272" y="230" fill="#fff" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle">Ver proyectos</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#1A0E1F"/><g transform="translate(40,50)"><text x="0" y="0" fill="#FF7AB6" font-family="sans-serif" font-size="11" letter-spacing="2.5">PROYECTOS DESTACADOS</text><text x="0" y="45" fill="#fff" font-family="Georgia" font-size="40" font-weight="700">Trabajos recientes</text></g><g transform="translate(40,130)"><rect width="345" height="290" rx="16" fill="#2A1530"/><rect x="15" y="15" width="315" height="180" rx="10" fill="#3D1E45"/><rect x="60" y="60" width="100" height="14" rx="2" fill="#FF7AB6" opacity="0.7"/><rect x="60" y="125" width="90" height="30" rx="8" fill="#FF7AB6"/><text x="20" y="230" fill="#FF7AB6" font-family="sans-serif" font-size="11" font-weight="700">UX/UI · BRANDING</text><text x="20" y="260" fill="#fff" font-family="sans-serif" font-size="19" font-weight="700">Fintech App Nova</text></g><g transform="translate(415,130)"><rect width="345" height="290" rx="16" fill="#2A1530"/><rect x="15" y="15" width="315" height="180" rx="10" fill="#3D1E45"/><circle cx="172" cy="105" r="55" fill="#FF7AB6" opacity="0.25"/><text x="172" y="128" fill="#FF7AB6" font-family="serif" font-size="65" font-weight="700" text-anchor="middle">✦</text><text x="20" y="230" fill="#FF7AB6" font-family="sans-serif" font-size="11" font-weight="700">BRANDING</text><text x="20" y="260" fill="#fff" font-family="sans-serif" font-size="19" font-weight="700">Marca Café Aroma</text></g></svg>',
+          '<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"><rect width="800" height="500" fill="#1A0E1F"/><g transform="translate(40,50)"><text x="0" y="0" fill="#FF7AB6" font-family="sans-serif" font-size="11" letter-spacing="2.5">SOBRE MÍ</text><text x="0" y="45" fill="#fff" font-family="Georgia" font-size="40" font-weight="700">Mi historia en pocas palabras</text></g><g transform="translate(40,130)"><rect width="720" height="260" rx="16" fill="#2A1530"/><circle cx="100" cy="100" r="60" fill="#FF7AB6"/><text x="100" y="120" fill="#fff" font-family="sans-serif" font-size="36" font-weight="700" text-anchor="middle">CK</text><g transform="translate(195,50)"><text x="0" y="0" fill="#fff" font-family="sans-serif" font-size="24" font-weight="700">Cristina K.</text><text x="0" y="30" fill="#FF7AB6" font-family="sans-serif" font-size="14">Diseñadora UX/UI · Santiago, Chile</text><text x="0" y="70" fill="#E8D5EA" font-family="sans-serif" font-size="15">Llevo más de 6 años ayudando a marcas</text><text x="0" y="92" fill="#E8D5EA" font-family="sans-serif" font-size="15">a destacar en el mundo digital.</text></g></g><g transform="translate(40,410)"><rect width="720" height="75" rx="16" fill="#FF7AB6"/><text x="35" y="38" fill="#fff" font-family="sans-serif" font-size="20" font-weight="700">¿Quieres trabajar conmigo?</text><rect x="585" y="18" width="115" height="40" rx="12" fill="#fff"/><text x="642" y="43" fill="#FF7AB6" font-family="sans-serif" font-size="14" font-weight="700" text-anchor="middle">Contactar</text></g></svg>'
+        ]}
+    ];
+
+    /* ===== MODAL ===== */
+    var modalBackdrop=document.getElementById('modalBackdrop');
+    var modalTitle=document.getElementById('modalTitle');
+    var modalCategory=document.getElementById('modalCategory');
+    var modalDesc=document.getElementById('modalDesc');
+    var modalAudience=document.getElementById('modalAudience');
+    var modalAdvantages=document.getElementById('modalAdvantages');
+    var modalClose=document.getElementById('modalClose');
+    var modalPreviewTrack=document.getElementById('modalPreviewTrack');
+    var modalPreviewDots=document.getElementById('modalPreviewDots');
+    var modalPrev=document.getElementById('modalPrev');
+    var modalNext=document.getElementById('modalNext');
+    var modalWhatsapp=document.getElementById('modalWhatsapp');
+    var curSlide=0,slideCount=0,lastFocused=null;
+
+    function renderSlides(slides){
+      modalPreviewTrack.innerHTML=slides.map(function(s){return '<div class="modal-preview-slide">'+s+'</div>';}).join('');
+      modalPreviewDots.innerHTML='';
+      slides.forEach(function(_,i){
+        var d=document.createElement('button');
+        d.className='modal-preview-dot'+(i===0?' active':'');
+        d.setAttribute('aria-label','Vista '+(i+1));
+        d.addEventListener('click',function(){goSlide(i);});
+        modalPreviewDots.appendChild(d);
+      });
+      slideCount=slides.length; goSlide(0);
+    }
+    function goSlide(i){
+      if(slideCount===0)return;
+      curSlide=(i+slideCount)%slideCount;
+      modalPreviewTrack.style.transform='translateX(-'+(curSlide*100)+'%)';
+      var dots=modalPreviewDots.querySelectorAll('.modal-preview-dot');
+      dots.forEach(function(d,idx){d.classList.toggle('active',idx===curSlide);});
+    }
+    modalPrev.addEventListener('click',function(){goSlide(curSlide-1);});
+    modalNext.addEventListener('click',function(){goSlide(curSlide+1);});
+    var mTouch=0;
+    var mCarousel=document.getElementById('modalPreviewCarousel');
+    mCarousel.addEventListener('touchstart',function(e){mTouch=e.changedTouches[0].screenX;},{passive:true});
+    mCarousel.addEventListener('touchend',function(e){var d=mTouch-e.changedTouches[0].screenX;if(Math.abs(d)>50){goSlide(d>0?curSlide+1:curSlide-1);}},{passive:true});
+
+    function openModal(idx){
+      var t=templates[idx]; if(!t)return;
+      lastFocused=document.activeElement;
+      modalTitle.textContent=t.title;
+      modalCategory.textContent=t.category;
+      modalDesc.textContent=t.desc;
+      modalAudience.innerHTML=t.audience.map(function(a){return '<span class="modal-audience-tag"><i class="fa-solid fa-check"></i> '+a+'</span>';}).join('');
+      modalAdvantages.innerHTML=t.advantages.map(function(a){return '<div class="modal-advantage"><i class="fa-solid '+a.icon+'"></i><div><strong>'+a.title+'</strong><span>'+a.desc+'</span></div></div>';}).join('');
+      renderSlides(t.slides);
+      modalWhatsapp.href='https://wa.me/56933465843?text='+encodeURIComponent('Hola! Me interesa la plantilla "'+t.title+'" de CodeKat. ¿Podemos conversar?');
+      void modalBackdrop.offsetWidth;
+      modalBackdrop.classList.add('open');
+      modalBackdrop.setAttribute('aria-hidden','false');
+      document.body.classList.add('menu-open');
+      setTimeout(function(){modalClose.focus();},100);
+    }
+    function closeModal(){
+      modalBackdrop.classList.remove('open');
+      modalBackdrop.setAttribute('aria-hidden','true');
+      document.body.classList.remove('menu-open');
+      if(lastFocused){lastFocused.focus();}
+    }
+    document.querySelectorAll('[data-open]').forEach(function(b){
+      b.addEventListener('click',function(){openModal(parseInt(b.getAttribute('data-open'),10));});
+    });
+    modalClose.addEventListener('click',closeModal);
+    modalBackdrop.addEventListener('click',function(e){if(e.target===modalBackdrop){closeModal();}});
+
+    /* ===== TECLADO ===== */
+    document.addEventListener('keydown',function(e){
+      if(modalBackdrop.classList.contains('open')){
+        if(e.key==='Escape'){closeModal();}
+        if(e.key==='ArrowRight'){goSlide(curSlide+1);}
+        if(e.key==='ArrowLeft'){goSlide(curSlide-1);}
+      } else if(e.key==='Escape' && isMenuOpen()){
+        closeMenu();
+      }
+    });
+
+  })();
+  </script>
+</body>
+</html>
