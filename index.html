@@ -114,10 +114,11 @@
     .nav-menu.open .menu-links>li:nth-child(2){animation-delay:.16s;}
     .nav-menu.open .menu-links>li:nth-child(3){animation-delay:.24s;}
     .nav-menu.open .menu-links>li:nth-child(4){animation-delay:.32s;}
+    .nav-menu.open .menu-links>li:nth-child(5){animation-delay:.4s;}
     .nav-menu .menu-contact-card{opacity:0;transform:translateX(24px);}
     .nav-menu.open .menu-contact-card{animation:menuItemIn .5s var(--ease) forwards;}
-    .nav-menu.open .menu-contact-card:nth-child(1){animation-delay:.42s;}
-    .nav-menu.open .menu-contact-card:nth-child(2){animation-delay:.5s;}
+    .nav-menu.open .menu-contact-card:nth-child(1){animation-delay:.5s;}
+    .nav-menu.open .menu-contact-card:nth-child(2){animation-delay:.58s;}
     @keyframes menuItemIn{to{opacity:1;transform:translateX(0);}}
     .menu-links{display:flex;flex-direction:column;gap:.4rem;margin-bottom:2rem;position:relative;}
     .menu-link{display:flex;align-items:center;justify-content:space-between;padding:1rem 1rem;border:1px solid transparent;border-radius:var(--radius-md);font-family:var(--font-display);font-size:1.25rem;font-weight:500;color:var(--white);transition:all var(--t-fast) var(--ease);}
@@ -144,12 +145,10 @@
     .mcc-arrow{color:var(--text-dim);font-size:.9rem;transition:all var(--t-fast) var(--ease);flex-shrink:0;}
     .menu-contact-card:hover .mcc-arrow{color:var(--purple-light);transform:translate(2px,-2px);}
 
-    /* FLECHA SUBIR — misma posición que WhatsApp (se alternan) */
     .back-to-top{position:fixed;bottom:1.4rem;right:1.4rem;width:52px;height:52px;border-radius:50%;background:var(--glass-bg-strong);border:1px solid var(--glass-border);color:var(--white);font-size:1.05rem;display:grid;place-items:center;backdrop-filter:blur(16px);z-index:120;opacity:0;transform:translateY(16px);pointer-events:none;transition:all .4s var(--ease);box-shadow:0 8px 20px var(--shadow-color);}
     .back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
     .back-to-top:hover{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;border-color:var(--purple);transform:translateY(-3px);}
 
-    /* BOTÓN FLOTANTE WHATSAPP */
     .wa-float{position:fixed;bottom:1.4rem;right:1.4rem;z-index:120;display:flex;align-items:center;gap:.65rem;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease);}
     .wa-float.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
     .wa-tooltip{background:var(--surface);border:1px solid var(--border-strong);padding:.55rem .95rem;border-radius:999px;font-size:.85rem;font-weight:600;color:var(--white);box-shadow:0 8px 24px var(--shadow-color);opacity:0;transform:translateX(10px);transition:opacity .6s var(--ease),transform .6s var(--ease);pointer-events:none;white-space:nowrap;}
@@ -399,7 +398,7 @@
       <li><a class="menu-link" href="#servicios"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-star"></i></span><span class="link-text"><span class="num">02 — Servicios</span><span class="link-title">Qué ofrecemos</span><span class="link-desc">Soluciones que hacen crecer tu negocio</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
       <li><a class="menu-link" href="#plantillas"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-palette"></i></span><span class="link-text"><span class="num">03 — Plantillas</span><span class="link-title">Modelos de web</span><span class="link-desc">Estructuras listas para adaptar</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
       <li><a class="menu-link" href="#contacto"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-paper-plane"></i></span><span class="link-text"><span class="num">04 — Contacto</span><span class="link-title">Conversemos</span><span class="link-desc">Cuéntanos sobre tu proyecto</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
-      <li><a href="cotizador.html" class="menu-link"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-paper-plane"></i></span><span class="link-text"><span class="num">05 — Cotizador APP</span><span class="link-title">Cotizador online</span><span class="link-desc">Crea una cotización de tu negocio</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+      <li><a href="cotizador.html" class="menu-link"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-calculator"></i></span><span class="link-text"><span class="num">05 — Cotizador APP</span><span class="link-title">Cotizador online</span><span class="link-desc">Crea una cotización para tu negocio</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
     </ul>
     <div class="menu-footer">
       <a href="https://wa.me/56933465843" target="_blank" rel="noopener" class="menu-contact-card wa">
@@ -415,10 +414,8 @@
     </div>
   </nav>
 
-  <!-- FLECHA SUBIR (se alterna con WhatsApp) -->
   <button class="back-to-top" id="backToTop" aria-label="Volver arriba"><i class="fa-solid fa-arrow-up"></i></button>
 
-  <!-- BOTÓN FLOTANTE WHATSAPP -->
   <a href="https://wa.me/56933465843" class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="Asesórate con nosotros por WhatsApp">
     <span class="wa-tooltip" id="waTooltip">Asesórate con nosotros</span>
     <span class="wa-icon"><i class="fa-brands fa-whatsapp"></i></span>
@@ -516,7 +513,6 @@
       <div class="hero-scroll-hint" aria-hidden="true"><span>Desliza</span><i class="fa-solid fa-chevron-down"></i></div>
     </section>
 
-    <!-- LO QUE OFRECEMOS -->
     <section class="value-section" id="servicios" aria-labelledby="servicios-titulo">
       <div class="container">
         <div class="section-head reveal">
@@ -596,7 +592,6 @@
       </div>
     </section>
 
-    <!-- PLANTILLAS -->
     <section class="tpl-section" id="plantillas" aria-labelledby="plantillas-titulo">
       <div class="container">
         <div class="section-head reveal">
@@ -653,7 +648,6 @@
       </div>
     </section>
 
-    <!-- CONTACTO -->
     <section class="contact" id="contacto" aria-labelledby="contacto-titulo">
       <div class="container">
         <div class="section-head reveal">
@@ -700,7 +694,7 @@
     </div>
     <div class="container footer-bottom">
       <div class="footer-brand-mini"><img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="CodeKat" loading="lazy" /><span>Code<span style="color:var(--purple-light)">Kat</span></span></div>
-      <nav class="footer-links" aria-label="Enlaces del pie"><a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#plantillas">Plantillas</a><a href="#contacto">Contacto</a></nav>
+      <nav class="footer-links" aria-label="Enlaces del pie"><a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#plantillas">Plantillas</a><a href="#contacto">Contacto</a><a href="cotizador.html">Cotizador</a></nav>
       <span class="footer-copy">© 2026 CodeKat — Desarrollo Web</span>
     </div>
   </footer>
@@ -735,7 +729,6 @@
   (function(){
     'use strict';
 
-    /* ===== THEME ===== */
     var root=document.documentElement;
     var themeIconMini=document.getElementById('themeIconMini');
     var themeBtns=document.querySelectorAll('.theme-btn');
@@ -751,7 +744,6 @@
     themeBtns.forEach(function(b){b.addEventListener('click',function(){setTheme(b.getAttribute('data-theme-set'));});});
     if(themeMini){themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});}
 
-    /* ===== REFS ===== */
     var navbar=document.getElementById('navbar');
     var scrollProgress=document.getElementById('scrollProgress');
     var backToTop=document.getElementById('backToTop');
@@ -763,7 +755,6 @@
     var menuLinks=navMenu.querySelectorAll('.menu-link');
     var sections=document.querySelectorAll('main section[id]');
 
-    /* Secciones donde SÍ mostramos el WhatsApp flotante */
     var waSections={servicios:true,plantillas:true};
 
     /* ===== MENÚ ===== */
@@ -772,10 +763,16 @@
     function closeMenu(){navMenu.classList.remove('open');burger.classList.remove('active');burger.setAttribute('aria-expanded','false');navMenu.setAttribute('aria-hidden','true');document.body.classList.remove('menu-open');}
     burger.addEventListener('click',function(e){e.stopPropagation();isMenuOpen()?closeMenu():openMenu();});
     if(menuBack){menuBack.addEventListener('click',closeMenu);}
+    /* CORRECCIÓN: solo interceptar anclas (#...); dejar navegar a cotizador.html normalmente */
     menuLinks.forEach(function(l){
       l.addEventListener('click',function(e){
+        var href=l.getAttribute('href');
+        if(!href || href.charAt(0)!=='#'){
+          closeMenu();
+          return;
+        }
         e.preventDefault();
-        var t=document.querySelector(l.getAttribute('href'));
+        var t=document.querySelector(href);
         closeMenu();
         if(t){setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'start'});},300);}
       });
@@ -785,7 +782,6 @@
       if(!navMenu.contains(e.target)&&!burger.contains(e.target)){closeMenu();}
     });
 
-    /* ===== SECCIÓN ACTIVA + alternar WhatsApp / flecha ===== */
     function setActive(id){
       menuLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+id);});
     }
@@ -811,7 +807,6 @@
     onFrame();
     backToTop.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
 
-    /* ===== MENSAJES ROTATIVOS del globo WhatsApp (no invasivo) ===== */
     var waMessages=['Asesórate con nosotros','¿Tienes una idea? Conversemos','Cotiza sin compromiso','Tu web a un mensaje de distancia'];
     var waMsgIndex=0;
     function waShowCurrent(){
@@ -824,13 +819,11 @@
     }
     setTimeout(function(){waShowCurrent();setInterval(waShowCurrent,9000);},3000);
 
-    /* ===== REVEAL ===== */
     var io=new IntersectionObserver(function(entries){
       entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('visible');io.unobserve(en.target);}});
     },{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
     document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
 
-    /* ===== CARRUSEL PROPUESTA (autoplay más lento: 6s) ===== */
     var valueTrack=document.getElementById('valueTrack');
     var valueCards=Array.prototype.slice.call(valueTrack.querySelectorAll('.value-card'));
     var valuePrev=document.getElementById('valuePrev');
@@ -878,7 +871,6 @@
     valueTrack.addEventListener('touchend',function(){setTimeout(vStart,2000);},{passive:true});
     vStart();
 
-    /* ===== CARRUSEL PLANTILLAS ===== */
     var tplTrack=document.getElementById('tplTrack');
     var tplPrev=document.getElementById('tplPrev');
     var tplNext=document.getElementById('tplNext');
@@ -909,7 +901,6 @@
     window.addEventListener('mouseup',function(){isDown=false;tplTrack.classList.remove('dragging');});
     tplTrack.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();tplTrack.scrollLeft=slStart-(e.pageX-startX)*1.4;});
 
-    /* ===== DATOS PLANTILLAS ===== */
     var templates=[
       {title:'Restaurante / Gastronomía',category:'Gastronomía',desc:'Landing elegante para restaurantes, cafeterías y negocios gastronómicos. Menú visual, galería de platos, horarios y reservas.',audience:['Restaurantes','Cafeterías','Bares','Food trucks','Pastelerías'],advantages:[{icon:'fa-utensils',title:'Menú visual atractivo',desc:'Presenta tus platos con fotos y precios claros.'},{icon:'fa-calendar-check',title:'Reservas online',desc:'Sistema de reservas directo desde la web.'},{icon:'fa-location-dot',title:'Ubicación y horarios',desc:'Mapa integrado y horarios visibles.'},{icon:'fa-mobile-screen',title:'Optimizado para móviles',desc:'Ideal para clientes que buscan desde el celular.'}],
         slides:[
@@ -943,7 +934,6 @@
         ]}
     ];
 
-    /* ===== MODAL ===== */
     var modalBackdrop=document.getElementById('modalBackdrop');
     var modalTitle=document.getElementById('modalTitle');
     var modalCategory=document.getElementById('modalCategory');
@@ -1012,7 +1002,6 @@
     modalClose.addEventListener('click',closeModal);
     modalBackdrop.addEventListener('click',function(e){if(e.target===modalBackdrop){closeModal();}});
 
-    /* ===== TECLADO ===== */
     document.addEventListener('keydown',function(e){
       if(modalBackdrop.classList.contains('open')){
         if(e.key==='Escape'){closeModal();}
