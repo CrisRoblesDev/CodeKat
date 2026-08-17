@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Remuneraciones | CodeKat</title>
+  <meta name="description" content="Calculadora de remuneraciones para Chile y Latinoamérica. Sueldo bruto a líquido, horas extras, turnos, descuentos y liquidación completa según las leyes de cada país." />
+  <meta name="theme-color" content="#8B5CF6" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238B5CF6'/%3E%3Cpath d='M20 28 L12 36 L20 44 M44 28 L52 36 L44 44' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='32' cy='36' r='4' fill='%23fff'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root{
+      --bg:#0A0A0F; --bg-elevated:#111119; --surface:#17171F; --surface-2:#1F1F2B; --surface-3:#27273A;
+      --border:rgba(167,139,250,.14); --border-strong:rgba(167,139,250,.32);
+      --purple:#A78BFA; --purple-light:#C4B5FD; --purple-soft:#8B5CF6; --purple-dark:#7C3AED;
+      --purple-glow:rgba(167,139,250,.35); --purple-bg:rgba(167,139,250,.08);
+      --white:#FFFFFF; --text:#FFFFFF; --text-muted:#A8A5B8; --text-dim:#6E6A85;
+      --green:#10B981; --green-soft:#34D399; --red:#EF4444; --amber:#F59E0B;
+      --glass-bg:rgba(23,23,31,.55); --glass-bg-strong:rgba(23,23,31,.85); --glass-border:rgba(167,139,250,.25);
+      --pattern-color:rgba(167,139,250,.08); --shadow-color:rgba(0,0,0,.5);
+      --font-body:'Inter',system-ui,sans-serif; --font-display:'Space Grotesk','Inter',sans-serif;
+      --radius-md:14px; --radius-lg:20px; --shadow-lg:0 24px 60px var(--shadow-color);
+      --ease:cubic-bezier(.2,.7,.2,1); --t-fast:200ms; --t-slow:460ms;
+    }
+    [data-theme="light"]{
+      --bg:#F7F5FB; --bg-elevated:#FFFFFF; --surface:#FFFFFF; --surface-2:#F0ECF7; --surface-3:#E8E2F0;
+      --border:rgba(139,92,246,.15); --border-strong:rgba(139,92,246,.35);
+      --purple:#8B5CF6; --purple-light:#A78BFA; --purple-soft:#7C3AED; --purple-dark:#6D28D9;
+      --purple-glow:rgba(139,92,246,.25); --purple-bg:rgba(139,92,246,.08);
+      --white:#1A1A2E; --text:#1A1A2E; --text-muted:#5C5875; --text-dim:#8E88A0;
+      --glass-bg:rgba(255,255,255,.65); --glass-bg-strong:rgba(255,255,255,.92); --glass-border:rgba(139,92,246,.25);
+      --pattern-color:rgba(139,92,246,.1); --shadow-color:rgba(139,92,246,.12);
+    }
+    *,*::before,*::after{box-sizing:border-box;}
+    html{overflow-x:hidden;}
+    body{margin:0;font-family:var(--font-body);color:var(--text);line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh;transition:background var(--t-slow) var(--ease),color var(--t-slow) var(--ease);background-color:var(--bg);background-image:radial-gradient(circle at 1px 1px,var(--pattern-color) 1px,transparent 0);background-size:28px 28px;}
+    main{flex:1;}
+    img,svg,canvas{max-width:100%;display:block;}
+    a{color:inherit;text-decoration:none;}
+    button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+    input,select,textarea{font:inherit;color:inherit;}
+    h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;line-height:1.2;letter-spacing:-0.01em;}
+    p{margin:0;} ul{list-style:none;padding:0;margin:0;}
+    ::selection{background:var(--purple);color:#fff;}
+    :focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:4px;}
+    ::-webkit-scrollbar{width:9px;height:9px;} ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:5px;} ::-webkit-scrollbar-thumb:hover{background:var(--purple-soft);}
+
+    .bg-aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+    .bg-aurora::before{content:'';position:absolute;inset:-60%;background:conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(139,92,246,.06) 80deg, transparent 160deg, rgba(167,139,250,.05) 240deg, transparent 320deg);animation:bgRotate 50s linear infinite;}
+    @keyframes bgRotate{to{transform:rotate(360deg);}}
+    .aurora{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;}
+    .a1{width:520px;height:520px;background:radial-gradient(circle,rgba(139,92,246,.5),transparent 70%);top:-14%;left:-12%;animation:aur1 16s ease-in-out infinite alternate;}
+    .a2{width:460px;height:460px;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 70%);top:30%;right:-12%;animation:aur2 20s ease-in-out infinite alternate;}
+    .a3{width:500px;height:500px;background:radial-gradient(circle,rgba(167,139,250,.4),transparent 70%);bottom:-16%;left:20%;animation:aur3 24s ease-in-out infinite alternate;}
+    @keyframes aur1{to{transform:translate(120px,80px) scale(1.15);}}
+    @keyframes aur2{to{transform:translate(-100px,60px) scale(1.1);}}
+    @keyframes aur3{to{transform:translate(80px,-70px) scale(1.2);}}
+
+    .container{width:100%;max-width:920px;margin:0 auto;padding:0 1rem;}
+    .grad-text{background:linear-gradient(135deg,var(--purple-light),var(--purple),var(--purple-light));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:textShift 5s linear infinite;}
+    @keyframes textShift{to{background-position:200% center;}}
+
+    .navbar{position:sticky;top:0;z-index:100;padding:.6rem 0;background:var(--glass-bg);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+    .brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.05rem;}
+    .brand-logo{width:36px;height:36px;border-radius:10px;object-fit:contain;background:var(--surface);padding:3px;border:1px solid var(--border);}
+    .brand-name{font-family:var(--font-display);} .brand-name span{color:var(--purple-light);}
+    .nav-right{display:flex;align-items:center;gap:.5rem;}
+    .theme-toggle-mini{width:40px;height:40px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;color:var(--white);font-size:.95rem;transition:all var(--t-fast) var(--ease);}
+    .theme-toggle-mini:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+    .burger{width:44px;height:44px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;transition:all var(--t-fast) var(--ease);position:relative;}
+    .burger:hover{background:var(--purple-bg);border-color:var(--purple);}
+    .burger-lines{position:relative;width:20px;height:14px;}
+    .burger-lines span{position:absolute;left:0;height:2px;width:100%;background:var(--white);border-radius:2px;transition:all var(--t-fast) var(--ease);}
+    .burger-lines span:nth-child(1){top:0;} .burger-lines span:nth-child(2){top:6px;width:14px;} .burger-lines span:nth-child(3){top:12px;width:16px;}
+    .burger.active .burger-lines span:nth-child(1){top:6px;transform:rotate(45deg);}
+    .burger.active .burger-lines span:nth-child(2){opacity:0;transform:translateX(10px);}
+    .burger.active .burger-lines span:nth-child(3){top:6px;transform:rotate(-45deg);width:20px;}
+
+    .nav-menu{position:fixed;top:0;right:0;width:100%;height:100vh;height:100dvh;z-index:105;background:var(--bg);overflow-y:auto;padding:5.5rem 1.5rem 2rem;transform:translateX(100%);transition:transform .5s var(--ease),visibility 0s .5s;visibility:hidden;}
+    .nav-menu.open{transform:translateX(0);visibility:visible;transition:transform .5s var(--ease),visibility 0s 0s;}
+    .menu-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:1.25rem;margin-bottom:1.25rem;border-bottom:1px solid var(--border);gap:.75rem;}
+    .menu-back{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;border-radius:999px;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--white);font-size:.85rem;font-weight:600;}
+    .menu-back:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+    .menu-theme{display:flex;align-items:center;gap:.35rem;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:999px;padding:.25rem;}
+    .theme-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--text-dim);font-size:.9rem;transition:all var(--t-fast) var(--ease);}
+    .theme-btn.active{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;}
+    .menu-home-card{display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);transition:all var(--t-fast) var(--ease);}
+    .menu-home-card:hover{border-color:var(--purple);transform:translateX(4px);}
+    .mcc-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:1.2rem;flex-shrink:0;}
+    .mcc-body{display:flex;flex-direction:column;flex:1;min-width:0;}
+    .mcc-title{font-size:.95rem;font-weight:600;color:var(--white);}
+    .mcc-sub{font-size:.78rem;color:var(--text-muted);}
+    .menu-note{margin-top:1.25rem;font-size:.78rem;color:var(--text-dim);display:flex;align-items:center;gap:.5rem;}
+    .menu-note i{color:var(--purple);}
+
+    .app-intro{padding:1.5rem 0 1rem;text-align:center;}
+    .app-intro h1{font-size:clamp(1.6rem,4.5vw,2.4rem);}
+    .app-intro p{color:var(--text-muted);margin-top:.4rem;font-size:.9rem;}
+
+    .wizard-nav-wrap{position:sticky;top:60px;z-index:60;padding:.5rem 0 .4rem;}
+    .wizard-nav{position:relative;display:flex;gap:.3rem;overflow-x:auto;padding:.4rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:999px;scrollbar-width:none;}
+    .wizard-nav::-webkit-scrollbar{display:none;}
+    .nav-indicator{position:absolute;top:4px;bottom:4px;border-radius:999px;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));box-shadow:0 4px 14px var(--purple-glow);transition:left .35s var(--ease),width .35s var(--ease);z-index:0;}
+    .wtab{position:relative;z-index:1;flex-shrink:0;display:flex;align-items:center;gap:.45rem;padding:.5rem .85rem;border-radius:999px;color:var(--text-muted);font-size:.8rem;font-weight:600;white-space:nowrap;transition:color .3s;}
+    .wtab i{font-size:.9rem;}
+    .wtab.active{color:#fff;}
+    .wtab:hover:not(.active){color:var(--white);}
+
+    .wpanel{display:none;}
+    .wpanel.active{display:block;}
+    .wpanel.active.from-right{animation:panelRight .4s var(--ease);}
+    .wpanel.active.from-left{animation:panelLeft .4s var(--ease);}
+    @keyframes panelRight{from{opacity:0;transform:translateX(36px);}to{opacity:1;transform:translateX(0);}}
+    @keyframes panelLeft{from{opacity:0;transform:translateX(-36px);}to{opacity:1;transform:translateX(0);}}
+
+    .wizard-footer-wrap{position:fixed;bottom:12px;left:0;right:0;z-index:60;pointer-events:none;padding:0 1rem;transition:bottom .15s linear;}
+    .wizard-footer{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);pointer-events:auto;}
+    .wf-center{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;}
+    .wf-counter{font-size:.78rem;color:var(--text-muted);font-weight:600;}
+    .wf-counter b{color:var(--white);}
+    .wf-progress{width:100%;max-width:200px;height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden;}
+    .wf-progress span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));transition:width .4s var(--ease);}
+
+    .rem-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.15rem;margin-bottom:.85rem;}
+    .rem-card-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .rem-card-ico{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));display:grid;place-items:center;color:#fff;font-size:1rem;flex-shrink:0;}
+    .rem-card-head h2{font-size:1.02rem;color:var(--white);}
+    .rem-card-head p{font-size:.76rem;color:var(--text-muted);}
+
+    .field-grid{display:grid;gap:.7rem;}
+    @media(min-width:640px){.field-grid{grid-template-columns:1fr 1fr;}}
+    .field{display:flex;flex-direction:column;gap:.3rem;}
+    .field.full{grid-column:1/-1;}
+    .field label{font-size:.74rem;color:var(--text-muted);font-weight:600;display:flex;align-items:center;gap:.4rem;}
+    .field label .flag{font-size:1.1rem;}
+    .field input,.field select,.field textarea{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.55rem .7rem;color:var(--white);font-size:.87rem;transition:border-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);width:100%;}
+    .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-bg);}
+    .field textarea{resize:vertical;min-height:56px;}
+
+    /* SELECTOR DE PAÍS CON BANDERAS */
+    .country-grid{display:grid;gap:.6rem;grid-template-columns:repeat(2,1fr);}
+    @media(min-width:520px){.country-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(min-width:768px){.country-grid{grid-template-columns:repeat(4,1fr);}}
+    .country-opt{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.85rem .5rem;background:var(--surface-2);border:2px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all var(--t-fast) var(--ease);text-align:center;}
+    .country-opt:hover{border-color:var(--border-strong);transform:translateY(-2px);}
+    .country-opt.selected{border-color:var(--purple);background:var(--purple-bg);box-shadow:0 0 0 1px var(--purple),0 6px 16px var(--purple-glow);}
+    .country-flag{font-size:2.2rem;line-height:1;}
+    .country-name{font-size:.82rem;font-weight:600;color:var(--white);}
+    .country-code{font-size:.68rem;color:var(--text-dim);font-weight:500;}
+
+    /* TIPO DE CÁLCULO */
+    .calc-mode{display:grid;gap:.6rem;grid-template-columns:1fr 1fr;}
+    .calc-opt{padding:1rem;background:var(--surface-2);border:2px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all var(--t-fast) var(--ease);text-align:center;}
+    .calc-opt:hover{border-color:var(--border-strong);}
+    .calc-opt.selected{border-color:var(--purple);background:var(--purple-bg);box-shadow:0 0 0 1px var(--purple);}
+    .calc-opt i{font-size:1.6rem;color:var(--purple);margin-bottom:.5rem;display:block;}
+    .calc-opt b{display:block;color:var(--white);font-size:.92rem;margin-bottom:.25rem;}
+    .calc-opt span{font-size:.74rem;color:var(--text-muted);}
+
+    /* TURNOS */
+    .shift-grid{display:grid;gap:.6rem;grid-template-columns:1fr 1fr 1fr;}
+    .shift-opt{padding:.85rem .6rem;background:var(--surface-2);border:2px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all var(--t-fast) var(--ease);text-align:center;}
+    .shift-opt:hover{border-color:var(--border-strong);}
+    .shift-opt.selected{border-color:var(--purple);background:var(--purple-bg);box-shadow:0 0 0 1px var(--purple);}
+    .shift-opt i{font-size:1.2rem;color:var(--purple);margin-bottom:.4rem;display:block;}
+    .shift-opt b{display:block;color:var(--white);font-size:.85rem;margin-bottom:.15rem;}
+    .shift-opt span{font-size:.7rem;color:var(--text-muted);}
+
+    /* HORAS EXTRAS */
+    .extra-grid{display:grid;gap:.7rem;grid-template-columns:1fr;}
+    @media(min-width:520px){.extra-grid{grid-template-columns:1fr 1fr;}}
+    .extra-row{display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;}
+    .extra-row i{font-size:1rem;color:var(--purple);width:22px;text-align:center;}
+    .extra-row .extra-info{flex:1;}
+    .extra-row .extra-info b{display:block;color:var(--white);font-size:.85rem;}
+    .extra-row .extra-info span{font-size:.7rem;color:var(--text-muted);}
+    .extra-row input{width:80px;text-align:right;}
+
+    /* DESCUENTOS ADICIONALES */
+    .discounts-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.7rem;}
+    .discount-item{display:flex;align-items:center;gap:.6rem;padding:.6rem;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;}
+    .discount-item input:first-of-type{flex:1;min-width:0;}
+    .discount-item input:last-of-type{width:120px;text-align:right;}
+    .discount-item button{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--text-dim);border:1px solid var(--border);transition:all var(--t-fast) var(--ease);flex-shrink:0;}
+    .discount-item button:hover{color:#ef4444;border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.12);}
+
+    /* LIQUIDACIÓN */
+    .payslip{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);}
+    .payslip-head{padding:1.25rem;background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;}
+    .payslip-top{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+    .payslip-country{display:flex;align-items:center;gap:.6rem;}
+    .payslip-flag{font-size:2.2rem;line-height:1;}
+    .payslip-title{font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;}
+    .payslip-sub{font-size:.72rem;opacity:.85;margin-top:.15rem;}
+    .payslip-date{font-size:.78rem;opacity:.9;text-align:right;}
+
+    .payslip-body{padding:1.25rem;}
+    .payslip-section{margin-bottom:1.1rem;}
+    .payslip-section-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem;}
+    .payslip-section-title i{color:var(--purple);}
+    .payslip-row{display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;font-size:.88rem;border-bottom:1px dashed var(--border);}
+    .payslip-row:last-child{border-bottom:none;}
+    .payslip-row .label{color:var(--text-muted);display:flex;align-items:center;gap:.4rem;}
+    .payslip-row .value{color:var(--white);font-weight:600;font-variant-numeric:tabular-nums;}
+    .payslip-row .value.negative{color:var(--red);}
+    .payslip-row .value.positive{color:var(--green);}
+    .payslip-row.sub{padding-left:1rem;font-size:.82rem;}
+    .payslip-row.sub .label{color:var(--text-dim);}
+    .payslip-total{background:linear-gradient(135deg,rgba(139,92,246,.14),rgba(167,139,250,.06));border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:1rem;margin-top:.85rem;display:flex;justify-content:space-between;align-items:center;}
+    .payslip-total .label{font-size:.92rem;font-weight:600;color:var(--white);display:flex;align-items:center;gap:.5rem;}
+    .payslip-total .label i{color:var(--purple);}
+    .payslip-total .value{font-size:1.4rem;font-weight:700;color:var(--purple-light);font-variant-numeric:tabular-nums;}
+
+    /* GRÁFICO DE DISTRIBUCIÓN */
+    .chart-wrap{margin:.85rem 0;padding:1rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);}
+    .chart-bars{display:flex;flex-direction:column;gap:.55rem;margin-top:.6rem;}
+    .chart-bar{display:flex;align-items:center;gap:.6rem;}
+    .chart-label{width:100px;font-size:.74rem;color:var(--text-muted);flex-shrink:0;}
+    .chart-track{flex:1;height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden;position:relative;}
+    .chart-fill{height:100%;border-radius:4px;transition:width .5s var(--ease);}
+    .chart-percent{font-size:.72rem;color:var(--white);font-weight:600;width:40px;text-align:right;}
+
+    /* DESCARGA */
+    .totals-card{background:linear-gradient(135deg,rgba(139,92,246,.14),rgba(167,139,250,.06));border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.05rem;margin-bottom:.85rem;}
+    .totals-row{display:flex;justify-content:space-between;font-size:.9rem;color:var(--text-muted);padding:.26rem 0;}
+    .totals-row.total{border-top:1px solid var(--border-strong);margin-top:.5rem;padding-top:.6rem;font-size:1.15rem;color:var(--white);font-weight:700;}
+    .totals-row.total span:last-child{color:var(--purple-light);}
+    .actions-grid{display:grid;gap:.6rem;grid-template-columns:1fr 1fr;}
+    .actions-grid .btn{width:100%;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem .95rem;border-radius:11px;font-weight:600;font-size:.85rem;transition:all var(--t-fast) var(--ease);white-space:nowrap;cursor:pointer;border:1px solid transparent;}
+    .btn:disabled{opacity:.4;cursor:not-allowed;}
+    .btn-primary{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;box-shadow:0 6px 18px var(--purple-glow);}
+    .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 26px var(--purple-glow);}
+    .btn-ghost{background:var(--glass-bg);color:var(--white);border-color:var(--glass-border);}
+    .btn-ghost:hover:not(:disabled){border-color:var(--purple);background:var(--purple-bg);}
+    .btn-sm{padding:.45rem .8rem;font-size:.78rem;}
+
+    .toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1px solid var(--border-strong);color:var(--white);padding:.7rem 1.2rem;border-radius:999px;font-size:.84rem;z-index:300;opacity:0;transition:all .4s var(--ease);box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.5rem;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .toast i{color:var(--purple-light);}
+
+    .info-box{display:flex;align-items:flex-start;gap:.55rem;padding:.75rem .85rem;background:var(--purple-bg);border:1px solid var(--border-strong);border-radius:10px;font-size:.78rem;color:var(--text-muted);margin-top:.7rem;}
+    .info-box i{color:var(--purple);margin-top:.15rem;flex-shrink:0;}
+
+    .footer{border-top:1px solid var(--border);background:var(--bg-elevated);padding:30px 0;margin-top:auto;}
+    .footer-slim{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 1rem;flex-wrap:wrap;}
+    .footer-brand-mini{display:flex;align-items:center;gap:.55rem;font-weight:700;font-size:.95rem;color:var(--white);}
+    .footer-brand-mini img{width:28px;height:28px;border-radius:8px;background:var(--surface);padding:2px;border:1px solid var(--border);}
+    .footer-copy{font-size:.76rem;color:var(--text-dim);}
+    .footer-home{display:inline-flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--text-muted);padding:.4rem .8rem;border:1px solid var(--border);border-radius:999px;transition:all var(--t-fast) var(--ease);}
+    .footer-home:hover{color:var(--purple-light);border-color:var(--purple);}
+
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
+    @media print{
+      body *{visibility:hidden;}
+      #payslipDoc,#payslipDoc *{visibility:visible;}
+      #payslipDoc{position:absolute;left:0;top:0;width:100%;box-shadow:none;border-radius:0;}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-aurora" aria-hidden="true"><span class="aurora a1"></span><span class="aurora a2"></span><span class="aurora a3"></span></div>
+
+  <header class="navbar">
+    <div class="container nav-inner" style="max-width:1200px;">
+      <a href="index.html" class="brand" aria-label="CodeKat — Inicio">
+        <img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="CodeKat" class="brand-logo" />
+        <span class="brand-name">Code<span>Kat</span></span>
+      </a>
+      <div class="nav-right">
+        <button class="theme-toggle-mini" id="themeToggleMini" aria-label="Cambiar tema"><i class="fa-solid fa-moon" id="themeIconMini"></i></button>
+        <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
+          <span class="burger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-menu" id="navMenu" aria-label="Menú" aria-hidden="true">
+    <div class="menu-header">
+      <button class="menu-back" id="menuBack" aria-label="Cerrar menú"><i class="fa-solid fa-arrow-left"></i><span>Volver</span></button>
+      <div class="menu-theme" role="group" aria-label="Cambiar tema">
+        <button class="theme-btn" data-theme-set="dark" aria-label="Tema oscuro"><i class="fa-solid fa-moon"></i></button>
+        <button class="theme-btn active" data-theme-set="light" aria-label="Tema claro"><i class="fa-solid fa-sun"></i></button>
+      </div>
+    </div>
+    <a href="index.html" class="menu-home-card">
+      <span class="mcc-icon" style="background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));"><i class="fa-solid fa-house"></i></span>
+      <span class="mcc-body">
+        <span class="mcc-title">Volver al inicio</span>
+        <span class="mcc-sub">Ir a la página principal de CodeKat</span>
+      </span>
+    </a>
+    <p class="menu-note"><i class="fa-solid fa-circle-info"></i> Calculadora de Remuneraciones · una herramienta de CodeKat</p>
+  </nav>
+
+  <div class="app-intro">
+    <h1>Calculadora de <em class="grad-text">remuneraciones</em></h1>
+    <p>Chile y Latinoamérica · sueldo bruto, líquido, horas extras y turnos</p>
+  </div>
+
+  <div class="wizard-nav-wrap">
+    <div class="container"><div class="wizard-nav" id="wizardNav" role="tablist" aria-label="Pasos del calculador"></div></div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <!-- PANEL 1: PAÍS -->
+      <section class="wpanel active" data-panel="0">
+        <div class="rem-card">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-flag"></i></span>
+            <div><h2>Selecciona tu país</h2><p>Aplicaremos las reglas de liquidación vigentes</p></div>
+          </div>
+          <div class="country-grid" id="countryGrid"></div>
+          <div class="info-box" id="countryInfo"><i class="fa-solid fa-circle-info"></i><span>Las tasas se basan en la legislación laboral general. Pueden existir variaciones según región, convenio o empresa.</span></div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: TIPO DE CÁLCULO -->
+      <section class="wpanel" data-panel="1">
+        <div class="rem-card">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-calculator"></i></span>
+            <div><h2>Tipo de cálculo</h2><p>¿Cómo quieres calcular tu sueldo?</p></div>
+          </div>
+          <div class="calc-mode" id="calcMode">
+            <button type="button" class="calc-opt selected" data-mode="bruto">
+              <i class="fa-solid fa-arrow-down"></i>
+              <b>Bruto → Líquido</b>
+              <span>Ingreso bruto, calcular cuánto llega al bolsillo</span>
+            </button>
+            <button type="button" class="calc-opt" data-mode="liquido">
+              <i class="fa-solid fa-arrow-up"></i>
+              <b>Líquido → Bruto</b>
+              <span>Quiero recibir X, calcular cuánto debo pedir</span>
+            </button>
+          </div>
+          <div class="field-grid" style="margin-top:1rem;">
+            <div class="field">
+              <label><span class="flag" id="salaryFlag">🇨🇱</span> <span id="salaryLabel">Sueldo bruto mensual</span></label>
+              <input type="number" id="salaryInput" value="1000000" min="0" step="1000" />
+            </div>
+            <div class="field">
+              <label>Período de pago</label>
+              <select id="payPeriod">
+                <option value="mes">Mensual</option>
+                <option value="quincena">Quincenal</option>
+                <option value="semana">Semanal</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label>Nombre del trabajador (opcional)</label>
+              <input type="text" id="workerName" placeholder="Ej: Juan Pérez" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: CONFIGURACIÓN LABORAL -->
+      <section class="wpanel" data-panel="2">
+        <div class="rem-card">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-briefcase"></i></span>
+            <div><h2>Configuración laboral</h2><p>Turno, horas semanales y tipo de contrato</p></div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label>Horas semanales</label>
+              <input type="number" id="weeklyHours" value="45" min="1" max="80" />
+            </div>
+            <div class="field">
+              <label>Días trabajados por semana</label>
+              <input type="number" id="workDays" value="5" min="1" max="7" />
+            </div>
+            <div class="field full">
+              <label>Turno</label>
+              <div class="shift-grid" id="shiftGrid">
+                <button type="button" class="shift-opt selected" data-shift="diurno"><i class="fa-solid fa-sun"></i><b>Diurno</b><span>6:00 - 20:00</span></button>
+                <button type="button" class="shift-opt" data-shift="nocturno"><i class="fa-solid fa-moon"></i><b>Nocturno</b><span>20:00 - 6:00</span></button>
+                <button type="button" class="shift-opt" data-shift="mixto"><i class="fa-solid fa-cloud-sun"></i><b>Mixto</b><span>Parte de noche</span></button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Tipo de contrato</label>
+              <select id="contractType">
+                <option value="indefinido">Indefinido</option>
+                <option value="plazo_fijo">Plazo fijo</option>
+                <option value="honorarios">Honorarios</option>
+                <option value="part_time">Part-time</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Cargas familiares</label>
+              <input type="number" id="dependents" value="0" min="0" max="20" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 4: HORAS EXTRAS -->
+      <section class="wpanel" data-panel="3">
+        <div class="rem-card">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-clock"></i></span>
+            <div><h2>Horas extras del mes</h2><p>Ingresa la cantidad según el tipo</p></div>
+          </div>
+          <div class="extra-grid">
+            <div class="extra-row">
+              <i class="fa-solid fa-sun"></i>
+              <div class="extra-info"><b>Días ordinarios</b><span id="extraOrdRate">50% de recargo</span></div>
+              <input type="number" id="extraOrd" value="0" min="0" step="0.5" />
+            </div>
+            <div class="extra-row">
+              <i class="fa-solid fa-moon"></i>
+              <div class="extra-info"><b>Nocturnas</b><span id="extraNightRate">75% de recargo</span></div>
+              <input type="number" id="extraNight" value="0" min="0" step="0.5" />
+            </div>
+            <div class="extra-row">
+              <i class="fa-solid fa-calendar-day"></i>
+              <div class="extra-info"><b>Domingos / Festivos</b><span id="extraHolRate">100% de recargo</span></div>
+              <input type="number" id="extraHol" value="0" min="0" step="0.5" />
+            </div>
+            <div class="extra-row">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <div class="extra-info"><b>Festivos nocturnos</b><span id="extraHolNightRate">150% de recargo</span></div>
+              <input type="number" id="extraHolNight" value="0" min="0" step="0.5" />
+            </div>
+          </div>
+          <div class="info-box"><i class="fa-solid fa-circle-info"></i><span>Las horas extras se calculan con el valor hora del sueldo base y el recargo según el tipo de jornada de tu país.</span></div>
+        </div>
+      </section>
+
+      <!-- PANEL 5: DESCUENTOS ADICIONALES -->
+      <section class="wpanel" data-panel="4">
+        <div class="rem-card">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-scissors"></i></span>
+            <div><h2>Descuentos adicionales</h2><p>Préstamos, anticipos, pensión de alimentos, etc.</p></div>
+          </div>
+          <div class="discounts-list" id="discountsList"></div>
+          <button class="btn btn-ghost btn-sm" id="addDiscount" type="button"><i class="fa-solid fa-plus"></i> Agregar descuento</button>
+        </div>
+      </section>
+
+      <!-- PANEL 6: LIQUIDACIÓN -->
+      <section class="wpanel" data-panel="5">
+        <div class="rem-card">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-receipt"></i></span>
+            <div><h2>Desglose de liquidación</h2><p>Así queda tu sueldo con las reglas de tu país</p></div>
+          </div>
+          <div class="payslip" id="payslipDoc"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 7: DESCARGA -->
+      <section class="wpanel" data-panel="6">
+        <div class="rem-card">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-download"></i></span>
+            <div><h2>Exportar liquidación</h2><p>Descarga en PDF, Excel o TXT</p></div>
+          </div>
+          <div class="totals-card" id="summaryCard"></div>
+          <div class="field full" style="margin-bottom:.85rem;">
+            <label>Nombre del archivo</label>
+            <input type="text" id="fileName" placeholder="Ej: Liquidación Enero" value="Liquidación" />
+          </div>
+          <div class="actions-grid">
+            <button class="btn btn-primary" id="btnPDF"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</button>
+            <button class="btn btn-ghost" id="btnExcel"><i class="fa-solid fa-file-excel"></i> Excel (CSV)</button>
+            <button class="btn btn-ghost" id="btnTXT"><i class="fa-solid fa-file-lines"></i> TXT</button>
+            <button class="btn btn-ghost" id="btnPrint"><i class="fa-solid fa-print"></i> Imprimir</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="wizard-footer-wrap" id="wizardFooterWrap">
+    <div class="wizard-footer">
+      <button class="btn btn-ghost" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
+      <div class="wf-center">
+        <span class="wf-counter">Paso <b id="stepNow">1</b> de <span id="stepTotal">7</span></span>
+        <div class="wf-progress"><span id="progressBar"></span></div>
+      </div>
+      <button class="btn btn-primary" id="nextBtn">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <footer class="footer" id="siteFooter">
+    <div class="container footer-slim">
+      <div class="footer-brand-mini"><img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="CodeKat" /><span>Code<span style="color:var(--purple-light)">Kat</span></span></div>
+      <span class="footer-copy">Calculadora de Remuneraciones · una herramienta de CodeKat</span>
+      <a href="index.html" class="footer-home"><i class="fa-solid fa-house"></i> Ir al inicio</a>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+  (function(){
+    'use strict';
+    function el(id){return document.getElementById(id);}
+
+    /* =========================================================
+       DATOS DE PAÍSES DE LATINOAMÉRICA
+       Cada país define sus tasas legales básicas.
+       Las tasas son aproximadas a 2025.
+       ========================================================= */
+    var COUNTRIES = {
+      CL: {
+        name:'Chile', flag:'🇨🇱', code:'CL', currency:'CLP', symbol:'$', locale:'es-CL',
+        weeklyHoursDefault:45,
+        afp:0.10, comisionAfp:0.015, salud:0.07, seguroCesantia:0.006,
+        gratificacion:0.25, gratificacionTopeMul:4.5, ingresoMinimo:500000,
+        horaExtraOrd:1.5, horaExtraNoct:1.5, horaExtraFest:2.0, horaExtraFestNoct:2.0,
+        recargoNocturno:1.25, recargoFestivo:1.5,
+        nombreAfp:'AFP', nombreSalud:'Fonasa/Isapre',
+        nombreSegCes:'Seguro de Cesantía', nombreGratif:'Gratificación legal',
+        impuestoTramos:[
+          {desde:0, hasta:900360, tasa:0.00},
+          {desde:900360, hasta:1997376, tasa:0.04},
+          {desde:1997376, hasta:3328956, tasa:0.08},
+          {desde:3328956, hasta:4660548, tasa:0.135},
+          {desde:4660548, hasta:5992128, tasa:0.23},
+          {desde:5992128, hasta:11318520, tasa:0.304},
+          {desde:11318520, hasta:18864180, tasa:0.35},
+          {desde:18864180, hasta:Infinity, tasa:0.40}
+        ]
+      },
+      AR: {
+        name:'Argentina', flag:'🇦🇷', code:'AR', currency:'ARS', symbol:'$', locale:'es-AR',
+        weeklyHoursDefault:48,
+        jubilacion:0.11, obraSocial:0.03, ley13:0.03, aporteSolidario:0.0,
+        horaExtraOrd:1.5, horaExtraNoct:1.5, horaExtraFest:2.0, horaExtraFestNoct:2.0,
+        recargoNocturno:1.0, recargoFestivo:1.0,
+        nombreAfp:'Jubilación (SIPA)', nombreSalud:'Obra social',
+        nombreSegCes:'Ley 23.660', nombreGratif:'SAC proporcional',
+        gratificacion:0.0833, gratificacionTopeMul:0, ingresoMinimo:278000,
+        impuestoTramos:[{desde:0, hasta:Infinity, tasa:0.0}]
+      },
+      PE: {
+        name:'Perú', flag:'🇵🇪', code:'PE', currency:'PEN', symbol:'S/', locale:'es-PE',
+        weeklyHoursDefault:48,
+        afp:0.1318, salud:0.09, seguro:0.00,
+        horaExtraOrd:1.5, horaExtraNoct:1.5, horaExtraFest:2.0, horaExtraFestNoct:2.0,
+        recargoNocturno:1.0, recargoFestivo:1.0,
+        nombreAfp:'ONP/AFP', nombreSalud:'ESSALUD',
+        nombreSegCes:'', nombreGratif:'Gratificación (jul/dic)',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:1025,
+        impuestoTramos:[
+          {desde:0, hasta:12075*12, tasa:0.08},
+          {desde:12075*12, hasta:52325*12, tasa:0.14},
+          {desde:52325*12, hasta:92550*12, tasa:0.17},
+          {desde:92550*12, hasta:132775*12, tasa:0.20},
+          {desde:132775*12, hasta:Infinity, tasa:0.30}
+        ]
+      },
+      MX: {
+        name:'México', flag:'🇲🇽', code:'MX', currency:'MXN', symbol:'$', locale:'es-MX',
+        weeklyHoursDefault:48,
+        imssTrabajador:0.02875, sar:0.02, infonavit:0.05,
+        horaExtraOrd:2.0, horaExtraNoct:2.0, horaExtraFest:3.0, horaExtraFestNoct:3.0,
+        recargoNocturno:1.25, recargoFestivo:1.0,
+        nombreAfp:'IMSS (cuota obrera)', nombreSalud:'IMSS',
+        nombreSegCes:'SAR (Afore)', nombreGratif:'Aguinaldo (15 días)',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:274,
+        impuestoTramos:[
+          {desde:0, hasta:10000, tasa:0.0192},
+          {desde:10000, hasta:85000, tasa:0.064},
+          {desde:85000, hasta:150000, tasa:0.1088},
+          {desde:150000, hasta:180000, tasa:0.16},
+          {desde:180000, hasta:500000, tasa:0.2136},
+          {desde:500000, hasta:800000, tasa:0.2352},
+          {desde:800000, hasta:1200000, tasa:0.30},
+          {desde:1200000, hasta:4000000, tasa:0.32},
+          {desde:4000000, hasta:Infinity, tasa:0.35}
+        ]
+      },
+      CO: {
+        name:'Colombia', flag:'🇨🇴', code:'CO', currency:'COP', symbol:'$', locale:'es-CO',
+        weeklyHoursDefault:47,
+        pension:0.04, salud:0.04, solidaridad:0.0, cesantias:0.0,
+        horaExtraOrd:1.25, horaExtraNoct:1.75, horaExtraFest:2.0, horaExtraFestNoct:2.5,
+        recargoNocturno:1.35, recargoFestivo:1.75,
+        nombreAfp:'Pensión', nombreSalud:'Salud',
+        nombreSegCes:'Fondo solidaridad', nombreGratif:'Prima de servicios',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:1423500,
+        impuestoTramos:[
+          {desde:0, hasta:4210000*12, tasa:0.00},
+          {desde:4210000*12, hasta:6000000*12, tasa:0.19},
+          {desde:6000000*12, hasta:13000000*12, tasa:0.28},
+          {desde:13000000*12, hasta:30000000*12, tasa:0.33},
+          {desde:30000000*12, hasta:55000000*12, tasa:0.35},
+          {desde:55000000*12, hasta:90000000*12, tasa:0.37},
+          {desde:90000000*12, hasta:Infinity, tasa:0.39}
+        ]
+      },
+      UY: {
+        name:'Uruguay', flag:'🇺🇾', code:'UY', currency:'UYU', symbol:'$', locale:'es-UY',
+        weeklyHoursDefault:44,
+        bps:0.15, fonasa:0.045, fonasaHijos:0.015,
+        horaExtraOrd:1.5, horaExtraNoct:1.5, horaExtraFest:2.0, horaExtraFestNoct:2.0,
+        recargoNocturno:1.20, recargoFestivo:1.5,
+        nombreAfp:'BPS (jubilación)', nombreSalud:'FONASA',
+        nombreSegCes:'Fondo reconversión', nombreGratif:'Sueldo anual complementario',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:23485,
+        impuestoTramos:[
+          {desde:0, hasta:58000*12, tasa:0.00},
+          {desde:58000*12, hasta:84000*12, tasa:0.10},
+          {desde:84000*12, hasta:130000*12, tasa:0.15},
+          {desde:130000*12, hasta:200000*12, tasa:0.24},
+          {desde:200000*12, hasta:350000*12, tasa:0.25},
+          {desde:350000*12, hasta:600000*12, tasa:0.27},
+          {desde:600000*12, hasta:1000000*12, tasa:0.31},
+          {desde:1000000*12, hasta:Infinity, tasa:0.36}
+        ]
+      },
+      EC: {
+        name:'Ecuador', flag:'🇪🇨', code:'EC', currency:'USD', symbol:'$', locale:'es-EC',
+        weeklyHoursDefault:40,
+        iess:0.0945, seguroSocial:0.0,
+        horaExtraOrd:1.5, horaExtraNoct:1.75, horaExtraFest:2.0, horaExtraFestNoct:2.5,
+        recargoNocturno:1.25, recargoFestivo:1.5,
+        nombreAfp:'IESS (aporte personal)', nombreSalud:'IESS',
+        nombreSegCes:'Desempleo', nombreGratif:'Décimo 3ro y 4to',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:470,
+        impuestoTramos:[
+          {desde:0, hasta:11706, tasa:0.00},
+          {desde:11706, hasta:14933, tasa:0.05},
+          {desde:14933, hasta:19440, tasa:0.10},
+          {desde:19440, hasta:27530, tasa:0.12},
+          {desde:27530, hasta:38970, tasa:0.15},
+          {desde:38970, hasta:41760, tasa:0.20},
+          {desde:41760, hasta:52000, tasa:0.25},
+          {desde:52000, hasta:100000, tasa:0.30},
+          {desde:100000, hasta:Infinity, tasa:0.35}
+        ]
+      },
+      BO: {
+        name:'Bolivia', flag:'🇧🇴', code:'BO', currency:'BOB', symbol:'Bs', locale:'es-BO',
+        weeklyHoursDefault:48,
+        afp:0.1289, aporteSolidario:0.01, cajaSalud:0.0,
+        horaExtraOrd:2.0, horaExtraNoct:2.0, horaExtraFest:2.0, horaExtraFestNoct:3.0,
+        recargoNocturno:1.30, recargoFestivo:1.5,
+        nombreAfp:'AFP/Gestora', nombreSalud:'Caja de Salud',
+        nombreSegCes:'Aporte solidario', nombreGratif:'Aguinaldo (1 salario)',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:2500,
+        impuestoTramos:[
+          {desde:0, hasta:13000*12, tasa:0.00},
+          {desde:13000*12, hasta:20000*12, tasa:0.13},
+          {desde:20000*12, hasta:50000*12, tasa:0.16},
+          {desde:50000*12, hasta:Infinity, tasa:0.25}
+        ]
+      },
+      PY: {
+        name:'Paraguay', flag:'🇵🇾', code:'PY', currency:'PYG', symbol:'₲', locale:'es-PY',
+        weeklyHoursDefault:48,
+        ips:0.095, irp:0.10,
+        horaExtraOrd:1.5, horaExtraNoct:1.75, horaExtraFest:2.0, horaExtraFestNoct:2.5,
+        recargoNocturno:1.30, recargoFestivo:1.5,
+        nombreAfp:'IPS (jubilación)', nombreSalud:'IPS',
+        nombreSegCes:'', nombreGratif:'Aguinaldo (1 salario)',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:2920000,
+        impuestoTramos:[
+          {desde:0, hasta:36000000, tasa:0.00},
+          {desde:36000000, hasta:180000000, tasa:0.08},
+          {desde:180000000, hasta:540000000, tasa:0.09},
+          {desde:540000000, hasta:Infinity, tasa:0.10}
+        ]
+      },
+      VE: {
+        name:'Venezuela', flag:'🇻🇪', code:'VE', currency:'VES', symbol:'Bs.D', locale:'es-VE',
+        weeklyHoursDefault:40,
+        sso:0.04, faov:0.01, incas:0.005, regimenPrestacional:0.005,
+        horaExtraOrd:1.5, horaExtraNoct:1.6, horaExtraFest:2.0, horaExtraFestNoct:2.5,
+        recargoNocturno:1.30, recargoFestivo:1.5,
+        nombreAfp:'SSO', nombreSalud:'SSO',
+        nombreSegCes:'FAOV (vivienda)', nombreGratif:'Utilidades (30-120 días)',
+        gratificacion:0.0, gratificacionTopeMul:0, ingresoMinimo:540,
+        impuestoTramos:[
+          {desde:0, hasta:1000*12, tasa:0.00},
+          {desde:1000*12, hasta:2500*12, tasa:0.06},
+          {desde:2500*12, hasta:4500*12, tasa:0.09},
+          {desde:4500*12, hasta:6000*12, tasa:0.12},
+          {desde:6000*12, hasta:12000*12, tasa:0.16},
+          {desde:12000*12, hasta:20000*12, tasa:0.20},
+          {desde:20000*12, hasta:40000*12, tasa:0.24},
+          {desde:40000*12, hasta:Infinity, tasa:0.34}
+        ]
+      }
+    };
+
+    var STEPS=[
+      {key:'pais', label:'País', icon:'fa-flag'},
+      {key:'calculo', label:'Sueldo', icon:'fa-calculator'},
+      {key:'laboral', label:'Laboral', icon:'fa-briefcase'},
+      {key:'extras', label:'Horas extras', icon:'fa-clock'},
+      {key:'descuentos', label:'Descuentos', icon:'fa-scissors'},
+      {key:'liquidacion', label:'Liquidación', icon:'fa-receipt'},
+      {key:'descarga', label:'Descarga', icon:'fa-download'}
+    ];
+
+    var state={
+      country:'CL',
+      mode:'bruto',
+      salary:1000000,
+      period:'mes',
+      workerName:'',
+      weeklyHours:45,
+      workDays:5,
+      shift:'diurno',
+      contract:'indefinido',
+      dependents:0,
+      extraOrd:0, extraNight:0, extraHol:0, extraHolNight:0,
+      discounts:[]
+    };
+
+    function fmt(n){
+      var c=COUNTRIES[state.country];
+      if(!isFinite(n))n=0;
+      try{return c.symbol+' '+Math.round(n).toLocaleString(c.locale);}
+      catch(e){return c.symbol+' '+Math.round(n).toLocaleString('es-CL');}
+    }
+    function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function setTxt(id,v){var e=el(id);if(e)e.textContent=v;}
+    function showToast(msg){var t=el('toast');el('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(showToast._t);showToast._t=setTimeout(function(){t.classList.remove('show');},2200);}
+    function getFileName(ext){
+      var name=(el('fileName')?el('fileName').value.trim():'')||'Liquidacion';
+      name=name.replace(/[\\/:*?"<>|]/g,'').trim()||'Liquidacion';
+      return name+'.'+ext;
+    }
+
+    /* WIZARD NAV */
+    var currentStep=0,navBtns=[];
+    function buildNav(){
+      var nav=el('wizardNav');nav.innerHTML='';
+      var ind=document.createElement('span');ind.className='nav-indicator';ind.id='navIndicator';nav.appendChild(ind);
+      STEPS.forEach(function(s,i){
+        var b=document.createElement('button');
+        b.className='wtab'+(i===0?' active':'');b.setAttribute('role','tab');
+        b.innerHTML='<i class="fa-solid '+s.icon+'"></i><span>'+s.label+'</span>';
+        b.addEventListener('click',function(){goToStep(i);});
+        nav.appendChild(b);navBtns.push(b);
+      });
+    }
+    function moveIndicator(){
+      var b=navBtns[currentStep];if(!b)return;
+      var ind=el('navIndicator');
+      ind.style.left=b.offsetLeft+'px';ind.style.width=b.offsetWidth+'px';
+    }
+    function goToStep(n){
+      if(n<0||n>=STEPS.length)return;
+      var dir=n>currentStep?'fwd':'back';currentStep=n;
+      var panels=document.querySelectorAll('.wpanel');
+      panels.forEach(function(p){p.classList.remove('active','from-left','from-right');});
+      panels[n].classList.add('active',dir==='fwd'?'from-right':'from-left');
+      navBtns.forEach(function(b,i){b.classList.toggle('active',i===n);});
+      moveIndicator();
+      try{navBtns[n].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}catch(e){}
+      updateFooter();
+      if(STEPS[n].key==='liquidacion'){renderPayslip();}
+      if(STEPS[n].key==='descarga'){renderSummary();}
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function updateFooter(){
+      setTxt('stepNow',currentStep+1);setTxt('stepTotal',STEPS.length);
+      el('progressBar').style.width=((currentStep+1)/STEPS.length*100)+'%';
+      el('prevBtn').disabled=currentStep===0;el('nextBtn').disabled=currentStep===STEPS.length-1;
+    }
+    el('prevBtn').addEventListener('click',function(e){e.preventDefault();this.focus();goToStep(currentStep-1);});
+    el('nextBtn').addEventListener('click',function(e){e.preventDefault();this.focus();goToStep(currentStep+1);});
+
+    var wfWrap=el('wizardFooterWrap'),siteFooter=el('siteFooter');
+    function positionWizardFooter(){
+      if(!siteFooter||!wfWrap)return;
+      if(window.innerWidth >= 768){wfWrap.style.bottom='';return;}
+      var r=siteFooter.getBoundingClientRect();
+      var overlap=window.innerHeight - r.top;
+      wfWrap.style.bottom=(overlap>0?(overlap+12):12)+'px';
+    }
+    window.addEventListener('scroll',positionWizardFooter,{passive:true});
+    window.addEventListener('resize',function(){moveIndicator();positionWizardFooter();});
+
+    /* SELECTOR DE PAÍS */
+    function renderCountries(){
+      var g=el('countryGrid');g.innerHTML='';
+      Object.keys(COUNTRIES).forEach(function(code){
+        var c=COUNTRIES[code];
+        var b=document.createElement('button');
+        b.type='button';
+        b.className='country-opt'+(code===state.country?' selected':'');
+        b.innerHTML='<span class="country-flag">'+c.flag+'</span><span class="country-name">'+c.name+'</span><span class="country-code">'+c.currency+'</span>';
+        b.addEventListener('click',function(){
+          state.country=code;
+          var p=COUNTRIES[code];
+          state.weeklyHours=p.weeklyHoursDefault;
+          el('weeklyHours').value=p.weeklyHoursDefault;
+          updateSalaryLabel();
+          updateExtraRates();
+          renderCountries();
+          renderPayslip();
+        });
+        g.appendChild(b);
+      });
+    }
+
+    function updateSalaryLabel(){
+      var c=COUNTRIES[state.country];
+      el('salaryFlag').textContent=c.flag;
+      el('salaryLabel').textContent=state.mode==='bruto'?'Sueldo bruto mensual':'Sueldo líquido mensual';
+    }
+
+    function updateExtraRates(){
+      var c=COUNTRIES[state.country];
+      el('extraOrdRate').textContent='Recargo '+Math.round((c.horaExtraOrd-1)*100)+'%';
+      el('extraNightRate').textContent='Recargo '+Math.round((c.horaExtraNoct-1)*100)+'% (nocturnas)';
+      el('extraHolRate').textContent='Recargo '+Math.round((c.horaExtraFest-1)*100)+'% (festivos)';
+      el('extraHolNightRate').textContent='Recargo '+Math.round((c.horaExtraFestNoct-1)*100)+'% (festivos noc.)';
+    }
+
+    /* TIPO DE CÁLCULO */
+    document.querySelectorAll('.calc-opt').forEach(function(opt){
+      opt.addEventListener('click',function(){
+        document.querySelectorAll('.calc-opt').forEach(function(o){o.classList.remove('selected');});
+        opt.classList.add('selected');
+        state.mode=opt.getAttribute('data-mode');
+        updateSalaryLabel();
+      });
+    });
+
+    el('salaryInput').addEventListener('input',function(e){state.salary=parseFloat(e.target.value)||0;});
+    el('payPeriod').addEventListener('change',function(e){state.period=e.target.value;});
+    el('workerName').addEventListener('input',function(e){state.workerName=e.target.value;});
+    el('weeklyHours').addEventListener('input',function(e){state.weeklyHours=parseFloat(e.target.value)||0;});
+    el('workDays').addEventListener('input',function(e){state.workDays=parseFloat(e.target.value)||0;});
+    el('contractType').addEventListener('change',function(e){state.contract=e.target.value;});
+    el('dependents').addEventListener('input',function(e){state.dependents=parseInt(e.target.value)||0;});
+
+    /* TURNO */
+    document.querySelectorAll('.shift-opt').forEach(function(opt){
+      opt.addEventListener('click',function(){
+        document.querySelectorAll('.shift-opt').forEach(function(o){o.classList.remove('selected');});
+        opt.classList.add('selected');
+        state.shift=opt.getAttribute('data-shift');
+      });
+    });
+
+    /* HORAS EXTRAS */
+    ['extraOrd','extraNight','extraHol','extraHolNight'].forEach(function(id){
+      el(id).addEventListener('input',function(e){state[id]=parseFloat(e.target.value)||0;});
+    });
+
+    /* DESCUENTOS ADICIONALES */
+    function renderDiscounts(){
+      var list=el('discountsList');list.innerHTML='';
+      if(!state.discounts.length){
+        list.innerHTML='<div style="text-align:center;color:var(--text-dim);padding:1rem;border:1px dashed var(--border);border-radius:10px;font-size:.84rem;">Sin descuentos adicionales. Agrega préstamos, anticipos u otros.</div>';
+        return;
+      }
+      state.discounts.forEach(function(d,i){
+        var item=document.createElement('div');
+        item.className='discount-item';
+        item.innerHTML='<input type="text" placeholder="Concepto" value="'+esc(d.name)+'" data-i="'+i+'" data-k="name"/>'+
+          '<input type="number" placeholder="Monto" value="'+d.amount+'" data-i="'+i+'" data-k="amount" min="0" step="1"/>'+
+          '<button type="button" data-i="'+i+'" aria-label="Quitar"><i class="fa-solid fa-trash"></i></button>';
+        list.appendChild(item);
+      });
+      list.querySelectorAll('input').forEach(function(inp){
+        inp.addEventListener('input',function(){
+          var i=parseInt(inp.getAttribute('data-i'));
+          var k=inp.getAttribute('data-k');
+          state.discounts[i][k]=k==='amount'?(parseFloat(inp.value)||0):inp.value;
+        });
+      });
+      list.querySelectorAll('button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          var i=parseInt(btn.getAttribute('data-i'));
+          state.discounts.splice(i,1);
+          renderDiscounts();
+        });
+      });
+    }
+    el('addDiscount').addEventListener('click',function(){
+      state.discounts.push({name:'Préstamo/anticipo',amount:0});
+      renderDiscounts();
+    });
+
+    /* =========================================================
+       MOTOR DE CÁLCULO DE REMUNERACIONES
+       ========================================================= */
+    function calculate(){
+      var c=COUNTRIES[state.country];
+      var gross=state.salary, net=state.salary;
+
+      // Convertir a mensual si es otro período
+      var periodMul = state.period==='mes'?1:(state.period==='quincena'?2:4.33);
+      var grossMonth = state.mode==='bruto'?gross*periodMul:0;
+      var targetNet = state.mode==='liquido'?gross*periodMul:0;
+
+      // Iteración para calcular bruto desde líquido deseado
+      if(state.mode==='liquido'){
+        var low=0, high=targetNet*2.5, mid=0;
+        for(var it=0;it<40;it++){
+          mid=(low+high)/2;
+          var trial=computeBreakdown(mid, c);
+          if(trial.neto < targetNet) low=mid; else high=mid;
+        }
+        grossMonth=mid;
+      }
+
+      return computeBreakdown(grossMonth, c);
+    }
+
+    function computeBreakdown(grossMonth, c){
+      var breakdown={
+        sueldoBase:grossMonth,
+        gratificacion:0,
+        totalImponible:grossMonth,
+        aportes:{},
+        descuentosLegales:0,
+        horasExtras:0,
+        horasExtrasDet:[],
+        impuestos:0,
+        descuentosExtra:0,
+        descuentosExtraDet:[],
+        neto:0
+      };
+
+      // Gratificación (solo Chile y algunos países)
+      if(c.gratificacion>0 && c.gratificacionTopeMul>0){
+        var tope=c.ingresoMinimo*c.gratificacionTopeMul;
+        breakdown.gratificacion=Math.min(grossMonth*c.gratificacion, tope*c.gratificacion);
+      } else if(c.gratificacion>0){
+        breakdown.gratificacion=grossMonth*c.gratificacion;
+      }
+
+      breakdown.totalImponible=grossMonth+breakdown.gratificacion;
+
+      // Aportes legales por país
+      var code=state.country;
+      if(code==='CL'){
+        breakdown.aportes.afp=breakdown.totalImponible*(c.afp+c.comisionAfp);
+        breakdown.aportes.salud=breakdown.totalImponible*c.salud;
+        breakdown.aportes.seguroCesantia=breakdown.totalImponible*c.seguroCesantia;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round((c.afp+c.comisionAfp)*1000)/10+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud+' ('+Math.round(c.salud*100)+'%)';
+        breakdown.aportes.nombreSegCes=c.nombreSegCes+' ('+Math.round(c.seguroCesantia*1000)/10+'%)';
+      }
+      else if(code==='AR'){
+        breakdown.aportes.jubilacion=breakdown.totalImponible*c.jubilacion;
+        breakdown.aportes.obraSocial=breakdown.totalImponible*c.obraSocial;
+        breakdown.aportes.ley13=breakdown.totalImponible*c.ley13;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.jubilacion*100)+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud+' ('+Math.round(c.obraSocial*100)+'%)';
+        breakdown.aportes.nombreSegCes='Ley 23.660 ('+Math.round(c.ley13*100)+'%)';
+      }
+      else if(code==='PE'){
+        breakdown.aportes.afp=breakdown.totalImponible*c.afp;
+        breakdown.aportes.salud=breakdown.totalImponible*c.salud;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.afp*10000)/100+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud+' ('+Math.round(c.salud*100)+'%)';
+        breakdown.aportes.nombreSegCes='';
+      }
+      else if(code==='MX'){
+        breakdown.aportes.imss=breakdown.totalImponible*c.imssTrabajador;
+        breakdown.aportes.sar=breakdown.totalImponible*c.sar;
+        breakdown.aportes.infonavit=breakdown.totalImponible*c.infonavit;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.imssTrabajador*10000)/100+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud;
+        breakdown.aportes.nombreSegCes='SAR ('+Math.round(c.sar*100)+'%)';
+      }
+      else if(code==='CO'){
+        breakdown.aportes.pension=breakdown.totalImponible*c.pension;
+        breakdown.aportes.salud=breakdown.totalImponible*c.salud;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.pension*100)+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud+' ('+Math.round(c.salud*100)+'%)';
+        breakdown.aportes.nombreSegCes='Fondo solidaridad';
+      }
+      else if(code==='UY'){
+        breakdown.aportes.bps=breakdown.totalImponible*c.bps;
+        breakdown.aportes.fonasa=breakdown.totalImponible*(c.fonasa+c.fonasaHijos*Math.min(state.dependents,3));
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.bps*100)+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud+' ('+Math.round((c.fonasa+c.fonasaHijos*Math.min(state.dependents,3))*1000)/10+'%)';
+        breakdown.aportes.nombreSegCes='';
+      }
+      else if(code==='EC'){
+        breakdown.aportes.iess=breakdown.totalImponible*c.iess;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.iess*10000)/100+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud;
+        breakdown.aportes.nombreSegCes='';
+      }
+      else if(code==='BO'){
+        breakdown.aportes.afp=breakdown.totalImponible*c.afp;
+        breakdown.aportes.solidaridad=breakdown.totalImponible*c.aporteSolidario;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.afp*10000)/100+'%)';
+        breakdown.aportes.nombreSalud='Caja de Salud';
+        breakdown.aportes.nombreSegCes='Aporte solidario ('+Math.round(c.aporteSolidario*100)+'%)';
+      }
+      else if(code==='PY'){
+        breakdown.aportes.ips=breakdown.totalImponible*c.ips;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.ips*1000)/10+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud;
+        breakdown.aportes.nombreSegCes='';
+      }
+      else if(code==='VE'){
+        breakdown.aportes.sso=breakdown.totalImponible*c.sso;
+        breakdown.aportes.faov=breakdown.totalImponible*c.faov;
+        breakdown.aportes.incas=breakdown.totalImponible*c.incas;
+        breakdown.aportes.nombreAfp=c.nombreAfp+' ('+Math.round(c.sso*100)+'%)';
+        breakdown.aportes.nombreSalud=c.nombreSalud;
+        breakdown.aportes.nombreSegCes='FAOV ('+Math.round(c.faov*100)+'%)';
+      }
+
+      breakdown.descuentosLegales=0;
+      Object.keys(breakdown.aportes).forEach(function(k){
+        if(typeof breakdown.aportes[k]==='number') breakdown.descuentosLegales+=breakdown.aportes[k];
+      });
+
+      // Horas extras
+      var horasMes=state.weeklyHours*4.33;
+      var valorHora=grossMonth/horasMes;
+      var recargoNoct = c.recargoNocturno;
+      var recargoFest = c.recargoFestivo;
+
+      // Ajuste según turno
+      var turnoNocturnoBonus = 0;
+      if(state.shift==='nocturno'){
+        turnoNocturnoBonus = grossMonth * (recargoNoct - 1);
+      } else if(state.shift==='mixto'){
+        turnoNocturnoBonus = grossMonth * (recargoNoct - 1) * 0.5;
+      }
+
+      var heOrd = state.extraOrd * valorHora * c.horaExtraOrd;
+      var heNight = state.extraNight * valorHora * c.horaExtraNoct;
+      var heHol = state.extraHol * valorHora * c.horaExtraFest;
+      var heHolNight = state.extraHolNight * valorHora * c.horaExtraFestNoct;
+
+      breakdown.horasExtrasDet=[
+        {label:'Ordinarias ('+state.extraOrd+' h)', amount:heOrd},
+        {label:'Nocturnas ('+state.extraNight+' h)', amount:heNight},
+        {label:'Festivas ('+state.extraHol+' h)', amount:heHol},
+        {label:'Festivas nocturnas ('+state.extraHolNight+' h)', amount:heHolNight},
+        {label:'Bono turno '+state.shift, amount:turnoNocturnoBonus}
+      ].filter(function(x){return x.amount>0;});
+      breakdown.horasExtras = heOrd+heNight+heHol+heHolNight+turnoNocturnoBonus;
+
+      // Impuesto
+      var baseImp = breakdown.totalImponible - breakdown.descuentosLegales;
+      var tramo=c.impuestoTramos.find(function(t){return baseImp>=t.desde && baseImp<t.hasta;});
+      breakdown.impuestos = tramo?baseImp*tramo.tasa:0;
+      breakdown.impuestosTasa = tramo?tramo.tasa:0;
+
+      // Descuentos extra
+      breakdown.descuentosExtra=0;
+      breakdown.descuentosExtraDet=state.discounts.filter(function(d){return d.amount>0;});
+      breakdown.descuentosExtraDet.forEach(function(d){breakdown.descuentosExtra+=d.amount;});
+
+      // Neto
+      breakdown.neto = breakdown.totalImponible + breakdown.horasExtras - breakdown.descuentosLegales - breakdown.impuestos - breakdown.descuentosExtra;
+      breakdown.valorHora = valorHora;
+
+      // Ajustar por período seleccionado (dividir si no es mensual)
+      var periodMul = state.period==='mes'?1:(state.period==='quincena'?2:4.33);
+      breakdown.netoPeriod = breakdown.neto/periodMul;
+
+      return breakdown;
+    }
+
+    /* RENDER DE LIQUIDACIÓN */
+    function renderPayslip(){
+      var c=COUNTRIES[state.country];
+      var b=calculate();
+      var worker = state.workerName||'Trabajador';
+      var fecha = new Date().toLocaleDateString(c.locale,{year:'numeric',month:'long'});
+
+      var aportesHtml='';
+      Object.keys(b.aportes).forEach(function(k){
+        if(typeof b.aportes[k]==='number' && b.aportes[k]>0){
+          aportesHtml+='<div class="payslip-row sub"><span class="label">- '+b.aportes['nombre'+k.charAt(0).toUpperCase()+k.slice(1)]+'</span><span class="value negative">'+fmt(b.aportes[k])+'</span></div>';
+        }
+      });
+
+      var extrasHtml='';
+      b.horasExtrasDet.forEach(function(x){
+        extrasHtml+='<div class="payslip-row sub"><span class="label">+ '+x.label+'</span><span class="value positive">'+fmt(x.amount)+'</span></div>';
+      });
+
+      var descExtraHtml='';
+      b.descuentosExtraDet.forEach(function(d){
+        descExtraHtml+='<div class="payslip-row sub"><span class="label">- '+esc(d.name)+'</span><span class="value negative">'+fmt(d.amount)+'</span></div>';
+      });
+
+      // Cálculo del gráfico de distribución
+      var totalDed = b.descuentosLegales + b.impuestos + b.descuentosExtra;
+      var totalBruto = b.totalImponible + b.horasExtras;
+      var pctLiq = totalBruto>0?Math.round((b.neto/totalBruto)*100):0;
+      var pctAportes = totalBruto>0?Math.round((b.descuentosLegales/totalBruto)*100):0;
+      var pctImp = totalBruto>0?Math.round((b.impuestos/totalBruto)*100):0;
+      var pctDesc = totalBruto>0?Math.round((b.descuentosExtra/totalBruto)*100):0;
+      var pctHe = totalBruto>0?Math.round((b.horasExtras/totalBruto)*100):0;
+
+      var html =
+        '<div class="payslip-head">'+
+          '<div class="payslip-top">'+
+            '<div class="payslip-country">'+
+              '<span class="payslip-flag">'+c.flag+'</span>'+
+              '<div>'+
+                '<div class="payslip-title">Liquidación de remuneración</div>'+
+                '<div class="payslip-sub">'+c.name+' · '+esc(worker)+'</div>'+
+              '</div>'+
+            '</div>'+
+            '<div class="payslip-date">'+esc(fecha)+'<br><span style="opacity:.75;font-size:.7rem;">Período: '+state.period.charAt(0).toUpperCase()+state.period.slice(1)+'</span></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="payslip-body">'+
+          '<div class="payslip-section">'+
+            '<div class="payslip-section-title"><i class="fa-solid fa-coins"></i> Haberes</div>'+
+            '<div class="payslip-row"><span class="label">Sueldo base</span><span class="value">'+fmt(b.sueldoBase)+'</span></div>'+
+            (b.gratificacion>0?'<div class="payslip-row sub"><span class="label">+ '+(c.nombreGratif||'Gratificación')+'</span><span class="value positive">'+fmt(b.gratificacion)+'</span></div>':'')+
+            '<div class="payslip-row"><span class="label">Total imponible</span><span class="value">'+fmt(b.totalImponible)+'</span></div>'+
+            '<div class="payslip-row"><span class="label">Valor hora</span><span class="value">'+fmt(b.valorHora)+'</span></div>'+
+          '</div>'+
+          (extrasHtml?'<div class="payslip-section"><div class="payslip-section-title"><i class="fa-solid fa-clock"></i> Horas extras y bonos</div>'+extrasHtml+'</div>':'')+
+          '<div class="payslip-section">'+
+            '<div class="payslip-section-title"><i class="fa-solid fa-building-columns"></i> Descuentos legales</div>'+
+            aportesHtml+
+          '</div>'+
+          (b.impuestos>0?'<div class="payslip-section"><div class="payslip-section-title"><i class="fa-solid fa-landmark"></i> Impuesto a la renta ('+Math.round(b.impuestosTasa*100)+'%)</div><div class="payslip-row sub"><span class="label">- Impuesto</span><span class="value negative">'+fmt(b.impuestos)+'</span></div></div>':'')+
+          (descExtraHtml?'<div class="payslip-section"><div class="payslip-section-title"><i class="fa-solid fa-scissors"></i> Descuentos adicionales</div>'+descExtraHtml+'</div>':'')+
+          '<div class="payslip-total"><span class="label"><i class="fa-solid fa-wallet"></i> Líquido a pagar</span><span class="value">'+fmt(b.neto)+'</span></div>'+
+          '<div class="chart-wrap">'+
+            '<div style="font-size:.85rem;font-weight:600;color:var(--white);margin-bottom:.5rem;">Distribución del sueldo bruto</div>'+
+            '<div class="chart-bars">'+
+              '<div class="chart-bar"><span class="chart-label">Líquido</span><div class="chart-track"><div class="chart-fill" style="width:'+pctLiq+'%;background:linear-gradient(90deg,var(--green),var(--green-soft));"></div></div><span class="chart-percent">'+pctLiq+'%</span></div>'+
+              '<div class="chart-bar"><span class="chart-label">Aportes</span><div class="chart-track"><div class="chart-fill" style="width:'+pctAportes+'%;background:var(--purple);"></div></div><span class="chart-percent">'+pctAportes+'%</span></div>'+
+              (pctImp>0?'<div class="chart-bar"><span class="chart-label">Impuestos</span><div class="chart-track"><div class="chart-fill" style="width:'+pctImp+'%;background:var(--amber);"></div></div><span class="chart-percent">'+pctImp+'%</span></div>':'')+
+              (pctDesc>0?'<div class="chart-bar"><span class="chart-label">Desc. extra</span><div class="chart-track"><div class="chart-fill" style="width:'+pctDesc+'%;background:var(--red);"></div></div><span class="chart-percent">'+pctDesc+'%</span></div>':'')+
+              (pctHe>0?'<div class="chart-bar"><span class="chart-label">H. extras</span><div class="chart-track"><div class="chart-fill" style="width:'+pctHe+'%;background:var(--green-soft);"></div></div><span class="chart-percent">'+pctHe+'%</span></div>':'')+
+            '</div>'+
+          '</div>'+
+        '</div>';
+
+      el('payslipDoc').innerHTML=html;
+    }
+
+    function renderSummary(){
+      var b=calculate();
+      el('summaryCard').innerHTML=
+        '<div class="totals-row"><span>Sueldo bruto</span><span>'+fmt(b.totalImponible)+'</span></div>'+
+        '<div class="totals-row"><span>Horas extras</span><span>'+fmt(b.horasExtras)+'</span></div>'+
+        '<div class="totals-row"><span>Descuentos legales</span><span>-'+fmt(b.descuentosLegales)+'</span></div>'+
+        '<div class="totals-row"><span>Impuestos</span><span>-'+fmt(b.impuestos)+'</span></div>'+
+        (b.descuentosExtra>0?'<div class="totals-row"><span>Descuentos extra</span><span>-'+fmt(b.descuentosExtra)+'</span></div>':'')+
+        '<div class="totals-row total"><span>Líquido a pagar</span><span>'+fmt(b.neto)+'</span></div>';
+    }
+
+    /* EXPORT */
+    function download(filename,content,type){
+      var blob=new Blob([content],{type:type});var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;a.download=filename;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      URL.revokeObjectURL(url);return true;
+    }
+    function buildText(){
+      var c=COUNTRIES[state.country];var b=calculate();
+      var L=[];
+      L.push('======================================');
+      L.push('   LIQUIDACIÓN DE REMUNERACIÓN');
+      L.push('   '+c.flag+' '+c.name);
+      L.push('======================================');
+      L.push('Trabajador: '+(state.workerName||'—'));
+      L.push('Período: '+state.period+' · '+new Date().toLocaleDateString(c.locale));
+      L.push('');
+      L.push('HABERES');
+      L.push('Sueldo base: '+fmt(b.sueldoBase));
+      if(b.gratificacion>0)L.push('Gratificación: '+fmt(b.gratificacion));
+      L.push('Total imponible: '+fmt(b.totalImponible));
+      L.push('Valor hora: '+fmt(b.valorHora));
+      if(b.horasExtrasDet.length){L.push('');L.push('HORAS EXTRAS');b.horasExtrasDet.forEach(function(x){L.push('+ '+x.label+': '+fmt(x.amount));});}
+      L.push('');L.push('DESCUENTOS LEGALES');
+      Object.keys(b.aportes).forEach(function(k){
+        if(typeof b.aportes[k]==='number' && b.aportes[k]>0){L.push('- '+b.aportes['nombre'+k.charAt(0).toUpperCase()+k.slice(1)]+': '+fmt(b.aportes[k]));}
+      });
+      if(b.impuestos>0){L.push('');L.push('IMPUESTOS');L.push('- Impuesto ('+Math.round(b.impuestosTasa*100)+'%): '+fmt(b.impuestos));}
+      if(b.descuentosExtraDet.length){L.push('');L.push('DESCUENTOS ADICIONALES');b.descuentosExtraDet.forEach(function(d){L.push('- '+d.name+': '+fmt(d.amount));});}
+      L.push('');L.push('LÍQUIDO A PAGAR: '+fmt(b.neto));
+      return L.join('\n');
+    }
+    function buildCSV(){
+      var c=COUNTRIES[state.country];var b=calculate();var rows=[];
+      rows.push(['Liquidación de remuneración']);
+      rows.push(['País',c.name]);
+      rows.push(['Trabajador',state.workerName||'']);
+      rows.push(['Período',state.period]);
+      rows.push([]);
+      rows.push(['Sueldo base','','',b.sueldoBase]);
+      if(b.gratificacion>0)rows.push(['Gratificación','','',b.gratificacion]);
+      rows.push(['Total imponible','','',b.totalImponible]);
+      rows.push(['Valor hora','','',b.valorHora]);
+      rows.push([]);
+      b.horasExtrasDet.forEach(function(x){rows.push([x.label,'','',x.amount]);});
+      rows.push([]);
+      Object.keys(b.aportes).forEach(function(k){
+        if(typeof b.aportes[k]==='number' && b.aportes[k]>0){rows.push([b.aportes['nombre'+k.charAt(0).toUpperCase()+k.slice(1)],'','',-b.aportes[k]]);}
+      });
+      if(b.impuestos>0)rows.push(['Impuesto','','',-b.impuestos]);
+      b.descuentosExtraDet.forEach(function(d){rows.push([d.name,'','',-d.amount]);});
+      rows.push([]);
+      rows.push(['LÍQUIDO A PAGAR','','',b.neto]);
+      return '\uFEFF'+rows.map(function(r){return r.map(function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
+    }
+    el('btnTXT').addEventListener('click',function(){if(download(getFileName('txt'),buildText(),'text/plain;charset=utf-8'))showToast('TXT descargado');});
+    el('btnExcel').addEventListener('click',function(){if(download(getFileName('csv'),buildCSV(),'text/csv;charset=utf-8'))showToast('Excel (CSV) descargado');});
+    el('btnPrint').addEventListener('click',function(){renderPayslip();window.print();});
+    el('btnPDF').addEventListener('click',function(){
+      if(!window.jspdf){showToast('Cargando librería PDF…');return;}
+      var jsPDF=window.jspdf.jsPDF;
+      var doc=new jsPDF({unit:'pt',format:'a4'});
+      var c=COUNTRIES[state.country];var b=calculate();
+      doc.setFillColor(139,92,246);doc.rect(0,0,595,90,'F');
+      doc.setTextColor(255,255,255);doc.setFontSize(18);doc.setFont(undefined,'bold');
+      doc.text('Liquidación de remuneración',40,40);
+      doc.setFontSize(10);doc.setFont(undefined,'normal');
+      doc.text(c.name+' · '+(state.workerName||'Trabajador'),40,60);
+      doc.setFontSize(9);doc.text('Período: '+state.period+' · '+new Date().toLocaleDateString(c.locale),40,75);
+      doc.setTextColor(60,60,60);doc.setFontSize(11);doc.setFont(undefined,'bold');
+      doc.text('Haberes',40,120);
+      doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);doc.setFontSize(10);
+      var y=140;
+      doc.text('Sueldo base:',40,y);doc.text(fmt(b.sueldoBase),555,y,{align:'right'});y+=16;
+      if(b.gratificacion>0){doc.text('Gratificación:',40,y);doc.text(fmt(b.gratificacion),555,y,{align:'right'});y+=16;}
+      doc.text('Total imponible:',40,y);doc.text(fmt(b.totalImponible),555,y,{align:'right'});y+=16;
+      doc.text('Valor hora:',40,y);doc.text(fmt(b.valorHora),555,y,{align:'right'});y+=22;
+      if(b.horasExtrasDet.length){
+        doc.setTextColor(60,60,60);doc.setFont(undefined,'bold');doc.text('Horas extras',40,y);y+=16;
+        doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);
+        b.horasExtrasDet.forEach(function(x){doc.text(x.label+':',50,y);doc.text(fmt(x.amount),555,y,{align:'right'});y+=14;});
+        y+=8;
+      }
+      doc.setTextColor(60,60,60);doc.setFont(undefined,'bold');doc.text('Descuentos legales',40,y);y+=16;
+      doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);
+      Object.keys(b.aportes).forEach(function(k){
+        if(typeof b.aportes[k]==='number' && b.aportes[k]>0){doc.text('- '+b.aportes['nombre'+k.charAt(0).toUpperCase()+k.slice(1)]+':',50,y);doc.text('-'+fmt(b.aportes[k]),555,y,{align:'right'});y+=14;}
+      });
+      if(b.impuestos>0){y+=6;doc.setTextColor(60,60,60);doc.setFont(undefined,'bold');doc.text('Impuesto a la renta',40,y);y+=16;doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);doc.text('Impuesto ('+Math.round(b.impuestosTasa*100)+'%):',50,y);doc.text('-'+fmt(b.impuestos),555,y,{align:'right'});y+=14;}
+      if(b.descuentosExtraDet.length){y+=6;doc.setTextColor(60,60,60);doc.setFont(undefined,'bold');doc.text('Descuentos adicionales',40,y);y+=16;doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);b.descuentosExtraDet.forEach(function(d){doc.text('- '+d.name+':',50,y);doc.text('-'+fmt(d.amount),555,y,{align:'right'});y+=14;});}
+      y+=15;
+      doc.setFillColor(240,235,247);doc.rect(40,y,515,40,'F');
+      doc.setTextColor(124,58,237);doc.setFontSize(13);doc.setFont(undefined,'bold');
+      doc.text('LÍQUIDO A PAGAR:',55,y+25);doc.text(fmt(b.neto),545,y+25,{align:'right'});
+      doc.setFontSize(7);doc.setTextColor(160,160,160);doc.setFont(undefined,'normal');
+      doc.text('Generado con CodeKat · Calculadora de Remuneraciones · codekat.store',40,820);
+      doc.save(getFileName('pdf'));showToast('PDF descargado');
+    });
+
+    /* MENÚ / TEMA */
+    var burger=el('burger'),navMenu=el('navMenu'),menuBack=el('menuBack');
+    function isMenuOpen(){return navMenu.classList.contains('open');}
+    function openMenu(){navMenu.classList.add('open');burger.classList.add('active');burger.setAttribute('aria-expanded','true');navMenu.setAttribute('aria-hidden','false');document.body.classList.add('menu-open');}
+    function closeMenu(){navMenu.classList.remove('open');burger.classList.remove('active');burger.setAttribute('aria-expanded','false');navMenu.setAttribute('aria-hidden','true');document.body.classList.remove('menu-open');}
+    burger.addEventListener('click',function(e){e.stopPropagation();isMenuOpen()?closeMenu():openMenu();});
+    if(menuBack)menuBack.addEventListener('click',closeMenu);
+    document.addEventListener('click',function(e){if(isMenuOpen()&&!navMenu.contains(e.target)&&!burger.contains(e.target))closeMenu();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&isMenuOpen())closeMenu();});
+
+    var root=document.documentElement,themeIconMini=el('themeIconMini'),themeBtns=document.querySelectorAll('.theme-btn'),themeMini=el('themeToggleMini');
+    function setTheme(t){
+      if(t==='light'){root.setAttribute('data-theme','light');themeIconMini.className='fa-solid fa-sun';}
+      else{root.removeAttribute('data-theme');themeIconMini.className='fa-solid fa-moon';}
+      themeBtns.forEach(function(b){b.classList.toggle('active',b.getAttribute('data-theme-set')===t);});
+      try{localStorage.setItem('codekat-theme',t);}catch(e){}
+    }
+    var savedTheme='dark';try{savedTheme=localStorage.getItem('codekat-theme')||'dark';}catch(e){}
+    setTheme(savedTheme);
+    themeBtns.forEach(function(b){b.addEventListener('click',function(){setTheme(b.getAttribute('data-theme-set'));});});
+    if(themeMini)themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});
+
+    /* INIT */
+    buildNav();renderCountries();renderDiscounts();updateSalaryLabel();updateExtraRates();
+    renderPayslip();updateFooter();positionWizardFooter();
+    setTimeout(moveIndicator,50);
+    window.addEventListener('load',function(){moveIndicator();positionWizardFooter();});
+  })();
+  </script>
+</body>
+</html>
