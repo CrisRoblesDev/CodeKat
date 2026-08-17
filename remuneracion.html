@@ -38,15 +38,7 @@
     }
     *,*::before,*::after{box-sizing:border-box;}
     html{overflow-x:hidden;}
-    body{
-      margin:0;font-family:var(--font-body);color:var(--text);line-height:1.55;
-      overflow-x:clip;-webkit-font-smoothing:antialiased;
-      display:flex;flex-direction:column;min-height:100vh;
-      transition:background var(--t-slow) var(--ease),color var(--t-slow) var(--ease);
-      background-color:var(--bg);
-      background-image:radial-gradient(circle at 1px 1px,var(--pattern-color) 1px,transparent 0);
-      background-size:28px 28px;
-    }
+    body{margin:0;font-family:var(--font-body);color:var(--text);line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh;transition:background var(--t-slow) var(--ease),color var(--t-slow) var(--ease);background-color:var(--bg);background-image:radial-gradient(circle at 1px 1px,var(--pattern-color) 1px,transparent 0);background-size:28px 28px;}
     main{flex:1;}
     img,svg,canvas{max-width:100%;display:block;}
     a{color:inherit;text-decoration:none;}
@@ -80,8 +72,9 @@
     .brand-logo{width:36px;height:36px;border-radius:10px;object-fit:contain;background:var(--surface);padding:3px;border:1px solid var(--border);}
     .brand-name{font-family:var(--font-display);} .brand-name span{color:var(--purple-light);}
     .nav-right{display:flex;align-items:center;gap:.5rem;}
-    .theme-toggle-mini{width:40px;height:40px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;color:var(--white);font-size:.95rem;transition:all var(--t-fast) var(--ease);}
-    .theme-toggle-mini:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+    .nav-icon-btn{width:40px;height:40px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;color:var(--white);font-size:.95rem;transition:all var(--t-fast) var(--ease);}
+    .nav-icon-btn:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+    .nav-icon-btn.limpiar:hover{border-color:var(--red);color:var(--red);}
     .burger{width:44px;height:44px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;transition:all var(--t-fast) var(--ease);position:relative;}
     .burger:hover{background:var(--purple-bg);border-color:var(--purple);}
     .burger-lines{position:relative;width:20px;height:14px;}
@@ -128,7 +121,6 @@
     @keyframes panelRight{from{opacity:0;transform:translateX(36px);}to{opacity:1;transform:translateX(0);}}
     @keyframes panelLeft{from{opacity:0;transform:translateX(-36px);}to{opacity:1;transform:translateX(0);}}
 
-    /* FOOTER WIZARD */
     .wizard-footer-wrap{padding:2rem 1rem 2.5rem;}
     .wizard-footer{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);}
     .wf-center{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;}
@@ -137,18 +129,9 @@
     .wf-progress{width:100%;max-width:200px;height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden;}
     .wf-progress span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));transition:width .4s var(--ease);}
 
-    /* MÓVIL: barra fija hasta el footer */
     @media (max-width: 767px) {
       main { padding-bottom: 110px; }
-      .wizard-footer-wrap {
-        position: fixed;
-        bottom: 12px;
-        left: 0; right: 0;
-        z-index: 60;
-        pointer-events: none;
-        padding: 0 1rem;
-        transition: bottom .15s linear;
-      }
+      .wizard-footer-wrap { position: fixed; bottom: 12px; left: 0; right: 0; z-index: 60; pointer-events: none; padding: 0 1rem; transition: bottom .15s linear; }
       .wizard-footer { pointer-events: auto; }
     }
 
@@ -165,15 +148,10 @@
     .field label{font-size:.82rem;color:var(--white);font-weight:600;display:flex;align-items:center;gap:.45rem;}
     .field label i{color:var(--purple);font-size:.9rem;}
     .field-hint{font-size:.74rem;color:var(--text-dim);margin-top:.15rem;}
-    .field input,.field select,.field textarea{
-      background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
-      padding:.7rem .85rem;color:var(--white);font-size:1rem;font-weight:500;
-      transition:border-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);width:100%;
-    }
+    .field input,.field select{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.7rem .85rem;color:var(--white);font-size:1rem;font-weight:500;transition:border-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);width:100%;}
     .field input:focus,.field select:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-bg);}
     .field input[type="number"]{font-variant-numeric:tabular-nums;}
 
-    /* SELECTOR DE PAÍS GRANDE CON BANDERAS */
     .country-grid{display:grid;gap:.7rem;grid-template-columns:repeat(2,1fr);}
     @media(min-width:520px){.country-grid{grid-template-columns:repeat(3,1fr);}}
     @media(min-width:768px){.country-grid{grid-template-columns:repeat(5,1fr);}}
@@ -184,7 +162,6 @@
     .country-name{font-size:.88rem;font-weight:600;color:var(--white);}
     .country-code{font-size:.7rem;color:var(--text-dim);font-weight:500;}
 
-    /* TURNO SIMPLE */
     .turno-grid{display:grid;gap:.6rem;grid-template-columns:1fr 1fr 1fr;}
     .turno-opt{padding:1rem .6rem;background:var(--surface-2);border:2px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all var(--t-fast) var(--ease);text-align:center;}
     .turno-opt:hover{border-color:var(--border-strong);}
@@ -193,7 +170,6 @@
     .turno-opt b{display:block;color:var(--white);font-size:.9rem;margin-bottom:.2rem;}
     .turno-opt span{font-size:.72rem;color:var(--text-muted);}
 
-    /* HORAS EXTRAS - TARJETAS GRANDES */
     .extra-grid{display:grid;gap:.75rem;grid-template-columns:1fr 1fr;}
     @media(max-width:520px){.extra-grid{grid-template-columns:1fr;}}
     .extra-card{padding:1rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);}
@@ -204,7 +180,6 @@
     .extra-card input{width:100%;}
     .extra-card-valor{font-size:.72rem;color:var(--text-dim);margin-top:.35rem;text-align:right;}
 
-    /* DESCUENTOS */
     .discounts-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.85rem;}
     .discount-item{display:grid;grid-template-columns:1fr 110px 36px;gap:.5rem;align-items:center;}
     .discount-item input{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.6rem .75rem;color:var(--white);font-size:.88rem;}
@@ -213,25 +188,17 @@
     .discount-item button:hover{color:#ef4444;border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.12);}
     .discounts-empty{text-align:center;color:var(--text-dim);padding:1.2rem;border:1px dashed var(--border);border-radius:10px;font-size:.84rem;}
 
-    /* LIQUIDACIÓN - RESULTADO GRANDE */
-    .resultado-hero{
-      background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(167,139,250,.06));
-      border:1px solid var(--border-strong);border-radius:var(--radius-lg);
-      padding:1.75rem 1.25rem;text-align:center;margin-bottom:1.1rem;
-      position:relative;overflow:hidden;
-    }
-    .resultado-hero::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));
-    }
+    .resultado-hero{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(167,139,250,.06));border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.75rem 1.25rem;text-align:center;margin-bottom:1.1rem;position:relative;overflow:hidden;}
+    .resultado-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));}
     .resultado-flag{font-size:2.4rem;margin-bottom:.4rem;display:block;}
     .resultado-label{font-size:.85rem;color:var(--text-muted);font-weight:500;margin-bottom:.3rem;}
-    .resultado-monto{
-      font-family:var(--font-display);font-size:clamp(2rem,8vw,3rem);font-weight:700;
-      color:var(--white);letter-spacing:-0.02em;line-height:1;margin-bottom:.4rem;
-    }
+    .resultado-monto{font-family:var(--font-display);font-size:clamp(2rem,8vw,3rem);font-weight:700;color:var(--white);letter-spacing:-0.02em;line-height:1;margin-bottom:.4rem;}
     .resultado-sub{font-size:.8rem;color:var(--text-dim);}
     .resultado-sub b{color:var(--purple-light);}
+
+    .api-badge{display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;font-size:.7rem;color:var(--text-dim);}
+    .api-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 
     .desglose{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
     .desglose-head{padding:.85rem 1rem;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:.78rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;font-weight:600;display:flex;align-items:center;gap:.5rem;}
@@ -247,7 +214,6 @@
     .desglose-row.total .label{color:var(--white);font-weight:700;}
     .desglose-row.total .value{color:var(--purple-light);font-size:1.2rem;font-weight:700;}
 
-    /* GRÁFICO DE DISTRIBUCIÓN SIMPLE */
     .chart-simple{margin-top:1rem;padding:1rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);}
     .chart-simple-title{font-size:.85rem;font-weight:600;color:var(--white);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;}
     .chart-simple-title i{color:var(--purple);}
@@ -259,25 +225,12 @@
     .chart-simple-item .label{color:var(--text-muted);flex:1;}
     .chart-simple-item .value{color:var(--white);font-weight:600;font-variant-numeric:tabular-nums;}
 
-    /* DESCARGA */
-    .actions-grid{display:grid;gap:.6rem;grid-template-columns:1fr 1fr;}
-    .actions-grid .btn{width:100%;}
-    @media(max-width:420px){.actions-grid{grid-template-columns:1fr;}}
-
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.7rem 1rem;border-radius:11px;font-weight:600;font-size:.88rem;transition:all var(--t-fast) var(--ease);white-space:nowrap;cursor:pointer;border:1px solid transparent;}
-    .btn:disabled{opacity:.4;cursor:not-allowed;}
-    .btn-primary{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;box-shadow:0 6px 18px var(--purple-glow);}
-    .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 26px var(--purple-glow);}
-    .btn-ghost{background:var(--glass-bg);color:var(--white);border-color:var(--glass-border);}
-    .btn-ghost:hover:not(:disabled){border-color:var(--purple);background:var(--purple-bg);}
-    .btn-sm{padding:.5rem .85rem;font-size:.8rem;}
+    .info-box{display:flex;align-items:flex-start;gap:.55rem;padding:.8rem .95rem;background:var(--purple-bg);border:1px solid var(--border-strong);border-radius:10px;font-size:.82rem;color:var(--text-muted);margin-top:.85rem;line-height:1.5;}
+    .info-box i{color:var(--purple);margin-top:.2rem;flex-shrink:0;}
 
     .toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1px solid var(--border-strong);color:var(--white);padding:.7rem 1.2rem;border-radius:999px;font-size:.84rem;z-index:300;opacity:0;transition:all .4s var(--ease);box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.5rem;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .toast i{color:var(--purple-light);}
-
-    .info-box{display:flex;align-items:flex-start;gap:.55rem;padding:.8rem .95rem;background:var(--purple-bg);border:1px solid var(--border-strong);border-radius:10px;font-size:.82rem;color:var(--text-muted);margin-top:.85rem;line-height:1.5;}
-    .info-box i{color:var(--purple);margin-top:.2rem;flex-shrink:0;}
 
     .footer{border-top:1px solid var(--border);background:var(--bg-elevated);padding:30px 0;margin-top:auto;}
     .footer-slim{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 1rem;flex-wrap:wrap;}
@@ -288,11 +241,6 @@
     .footer-home:hover{color:var(--purple-light);border-color:var(--purple);}
 
     @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
-    @media print{
-      body *{visibility:hidden;}
-      #payslipDoc,#payslipDoc *{visibility:visible;}
-      #payslipDoc{position:absolute;left:0;top:0;width:100%;box-shadow:none;border-radius:0;}
-    }
   </style>
 </head>
 <body>
@@ -306,7 +254,8 @@
         <span class="brand-name">Code<span>Kat</span></span>
       </a>
       <div class="nav-right">
-        <button class="theme-toggle-mini" id="themeToggleMini" aria-label="Cambiar tema"><i class="fa-solid fa-moon" id="themeIconMini"></i></button>
+        <button class="nav-icon-btn limpiar" id="btnLimpiar" aria-label="Limpiar formulario" title="Limpiar formulario"><i class="fa-solid fa-eraser"></i></button>
+        <button class="nav-icon-btn" id="themeToggleMini" aria-label="Cambiar tema"><i class="fa-solid fa-moon" id="themeIconMini"></i></button>
         <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
           <span class="burger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
         </button>
@@ -441,7 +390,7 @@
         </div>
       </section>
 
-      <!-- PASO 4: RESULTADO -->
+      <!-- PASO 4: RESULTADO (sin descargas) -->
       <section class="wpanel" data-panel="3">
         <div class="rem-card">
           <div class="rem-card-head">
@@ -453,6 +402,7 @@
             <div class="resultado-label">Líquido a recibir</div>
             <div class="resultado-monto" id="resNeto">—</div>
             <div class="resultado-sub" id="resSub">—</div>
+            <div class="api-badge" id="apiBadge"><span class="dot"></span><span id="apiBadgeText">Tasas legales actualizadas</span></div>
           </div>
 
           <div id="desgloseWrap"></div>
@@ -463,28 +413,11 @@
             <div class="chart-simple-legend" id="chartLegend"></div>
           </div>
         </div>
-
-        <div class="rem-card">
-          <div class="rem-card-head">
-            <span class="rem-card-ico"><i class="fa-solid fa-download"></i></span>
-            <div><h2>Descargar liquidación</h2><p>Guárdala en PDF, Excel o TXT</p></div>
-          </div>
-          <div class="field full" style="margin-bottom:.85rem;">
-            <label>Nombre del archivo</label>
-            <input type="text" id="fileName" placeholder="Ej: Liquidación Enero" value="Liquidación" />
-          </div>
-          <div class="actions-grid">
-            <button class="btn btn-primary" id="btnPDF"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</button>
-            <button class="btn btn-ghost" id="btnExcel"><i class="fa-solid fa-file-excel"></i> Excel (CSV)</button>
-            <button class="btn btn-ghost" id="btnTXT"><i class="fa-solid fa-file-lines"></i> TXT</button>
-            <button class="btn btn-ghost" id="btnPrint"><i class="fa-solid fa-print"></i> Imprimir</button>
-          </div>
-        </div>
       </section>
 
     </div>
 
-    <!-- BARRA DE PASOS: al final del contenido -->
+    <!-- BARRA DE PASOS -->
     <div class="wizard-footer-wrap" id="wizardFooterWrap">
       <div class="wizard-footer">
         <button class="btn btn-ghost" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
@@ -507,58 +440,101 @@
 
   <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-
   <script>
   (function(){
     'use strict';
     function el(id){return document.getElementById(id);}
 
     /* =========================================================
-       PAÍSES DE LATAM - tasas legales simplificadas
+       ⚠️ SISTEMA DE TASAS LEGALES (punto de conexión API)
+       ---------------------------------------------------------
+       Actualmente NO existe una API pública, gratuita y universal
+       que entregue las tasas legales (AFP, salud, impuestos)
+       actualizadas para TODOS los países de LATAM.
+
+       Si en el futuro consigues una API real, solo cambia la
+       constante API_TASAS_URL por la URL de tu API y el sistema
+       la usará automáticamente (con fallback a las tasas locales
+       si la API falla o no responde).
+
+       Ejemplo de respuesta esperada de la API (por país):
+       {
+         "aportes":[ {"label":"AFP","tasa":0.115} ],
+         "horaExtraOrd":1.5, "horaExtraNoct":1.5,
+         "horaExtraFest":2.0, "horaExtraFestNoct":2.0,
+         "recargoNocturno":1.25,
+         "impuestoTramos":[{"hasta":900360,"tasa":0}, ...]
+       }
        ========================================================= */
+    var API_TASAS_URL = null; // <-- Coloca aquí la URL de tu API de tasas (si consigues una)
+    var TASAS_ACTUALIZADAS = '2025'; // Fecha de referencia de las tasas locales
+
+    /* Tasas legales locales (referencia 2025) - fallback si no hay API */
+    var TASAS_LEGALES = {
+      CL:{aportes:[{k:'afp',label:'AFP (jubilación + comisión)',tasa:0.115},{k:'salud',label:'Salud (Fonasa/Isapre)',tasa:0.07},{k:'cesantia',label:'Seguro de cesantía',tasa:0.006}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.25,impuestoTramos:[{hasta:900360,tasa:0},{hasta:1997376,tasa:0.04},{hasta:3328956,tasa:0.08},{hasta:4660548,tasa:0.135},{hasta:5992128,tasa:0.23},{hasta:11318520,tasa:0.304},{hasta:18864180,tasa:0.35},{hasta:Infinity,tasa:0.40}]},
+      AR:{aportes:[{k:'jub',label:'Jubilación',tasa:0.11},{k:'os',label:'Obra social',tasa:0.03},{k:'ley',label:'Ley 23.660',tasa:0.03}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.0,impuestoTramos:[{hasta:Infinity,tasa:0}]},
+      PE:{aportes:[{k:'afp',label:'AFP/ONP',tasa:0.1318},{k:'essalud',label:'Essalud',tasa:0.09}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.0,impuestoTramos:[{hasta:144900,tasa:0.08},{hasta:627900,tasa:0.14},{hasta:1110600,tasa:0.17},{hasta:1593300,tasa:0.20},{hasta:Infinity,tasa:0.30}]},
+      MX:{aportes:[{k:'imss',label:'IMSS (cuota obrera)',tasa:0.02875},{k:'sar',label:'SAR (Afore)',tasa:0.02}],horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:3.0,horaExtraFestNoct:3.0,recargoNocturno:1.25,impuestoTramos:[{hasta:10000,tasa:0.0192},{hasta:85000,tasa:0.064},{hasta:150000,tasa:0.1088},{hasta:180000,tasa:0.16},{hasta:500000,tasa:0.2136},{hasta:Infinity,tasa:0.30}]},
+      CO:{aportes:[{k:'pen',label:'Pensión',tasa:0.04},{k:'salud',label:'Salud',tasa:0.04}],horaExtraOrd:1.25,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.35,impuestoTramos:[{hasta:50520000,tasa:0},{hasta:72000000,tasa:0.19},{hasta:156000000,tasa:0.28},{hasta:360000000,tasa:0.33},{hasta:Infinity,tasa:0.39}]},
+      UY:{aportes:[{k:'bps',label:'BPS (jubilación)',tasa:0.15},{k:'fonasa',label:'FONASA (salud)',tasa:0.06}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.20,impuestoTramos:[{hasta:696000,tasa:0},{hasta:1008000,tasa:0.10},{hasta:1560000,tasa:0.15},{hasta:2400000,tasa:0.24},{hasta:Infinity,tasa:0.36}]},
+      EC:{aportes:[{k:'iess',label:'IESS (aporto personal)',tasa:0.0945}],horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.25,impuestoTramos:[{hasta:11706,tasa:0},{hasta:14933,tasa:0.05},{hasta:19440,tasa:0.10},{hasta:27530,tasa:0.12},{hasta:Infinity,tasa:0.35}]},
+      BO:{aportes:[{k:'afp',label:'Gestora (jubilación)',tasa:0.1289},{k:'sol',label:'Aporte solidario',tasa:0.01}],horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:2.0,horaExtraFestNoct:3.0,recargoNocturno:1.30,impuestoTramos:[{hasta:156000,tasa:0},{hasta:240000,tasa:0.13},{hasta:600000,tasa:0.16},{hasta:Infinity,tasa:0.25}]},
+      PY:{aportes:[{k:'ips',label:'IPS (jubilación + salud)',tasa:0.095}],horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.30,impuestoTramos:[{hasta:36000000,tasa:0},{hasta:180000000,tasa:0.08},{hasta:540000000,tasa:0.09},{hasta:Infinity,tasa:0.10}]},
+      VE:{aportes:[{k:'sso',label:'SSO',tasa:0.04},{k:'faov',label:'FAOV (vivienda)',tasa:0.01},{k:'incas',label:'INCES',tasa:0.005}],horaExtraOrd:1.5,horaExtraNoct:1.6,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.30,impuestoTramos:[{hasta:12000,tasa:0},{hasta:30000,tasa:0.06},{hasta:54000,tasa:0.09},{hasta:Infinity,tasa:0.34}]}
+    };
+
+    /* Caché de tasas obtenidas de la API (por país) */
+    var tasasCache = {};
+
+    /* Obtiene las tasas legales: intenta la API, si falla usa las locales */
+    function obtenerTasasLegales(pais, callback){
+      // Si ya está en caché, usar caché
+      if(tasasCache[pais]){ callback(tasasCache[pais], true); return; }
+
+      // Si hay API configurada, intentar obtener de ahí
+      if(API_TASAS_URL){
+        fetch(API_TASAS_URL + '?pais=' + pais)
+          .then(function(res){ if(!res.ok) throw new Error('API error'); return res.json(); })
+          .then(function(data){
+            tasasCache[pais] = data;
+            callback(data, true);
+            actualizarBadgeAPI(true);
+          })
+          .catch(function(){
+            // Fallback a tasas locales si la API falla
+            tasasCache[pais] = TASAS_LEGALES[pais];
+            callback(TASAS_LEGALES[pais], false);
+            actualizarBadgeAPI(false);
+          });
+      } else {
+        // Sin API: usar tasas locales actualizadas
+        tasasCache[pais] = TASAS_LEGALES[pais];
+        callback(TASAS_LEGALES[pais], false);
+        actualizarBadgeAPI(false);
+      }
+    }
+
+    function actualizarBadgeAPI(desdeAPI){
+      var badgeText = el('apiBadgeText');
+      if(!badgeText)return;
+      if(desdeAPI){
+        badgeText.textContent = 'Tasas en vivo vía API';
+      } else {
+        badgeText.textContent = 'Tasas legales actualizadas (' + TASAS_ACTUALIZADAS + ')';
+      }
+    }
+
     var COUNTRIES = {
-      CL:{name:'Chile',flag:'🇨🇱',symbol:'$',locale:'es-CL',weeklyHours:45,
-        aportes:[{k:'afp',label:'AFP (jubilación + comisión)',tasa:0.115},{k:'salud',label:'Salud (Fonasa/Isapre)',tasa:0.07},{k:'cesantia',label:'Seguro de cesantía',tasa:0.006}],
-        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,
-        recargoNocturno:1.25,impuestoTramos:[{hasta:900360,tasa:0},{hasta:1997376,tasa:0.04},{hasta:3328956,tasa:0.08},{hasta:4660548,tasa:0.135},{hasta:5992128,tasa:0.23},{hasta:11318520,tasa:0.304},{hasta:18864180,tasa:0.35},{hasta:Infinity,tasa:0.40}]},
-      AR:{name:'Argentina',flag:'🇦🇷',symbol:'$',locale:'es-AR',weeklyHours:48,
-        aportes:[{k:'jub',label:'Jubilación',tasa:0.11},{k:'os',label:'Obra social',tasa:0.03},{k:'ley',label:'Ley 23.660',tasa:0.03}],
-        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,
-        recargoNocturno:1.0,impuestoTramos:[{hasta:Infinity,tasa:0}]},
-      PE:{name:'Perú',flag:'🇵🇪',symbol:'S/',locale:'es-PE',weeklyHours:48,
-        aportes:[{k:'afp',label:'AFP/ONP',tasa:0.1318},{k:'essalud',label:'Essalud',tasa:0.09}],
-        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,
-        recargoNocturno:1.0,impuestoTramos:[{hasta:144900,tasa:0.08},{hasta:627900,tasa:0.14},{hasta:1110600,tasa:0.17},{hasta:1593300,tasa:0.20},{hasta:Infinity,tasa:0.30}]},
-      MX:{name:'México',flag:'🇲🇽',symbol:'$',locale:'es-MX',weeklyHours:48,
-        aportes:[{k:'imss',label:'IMSS (cuota obrera)',tasa:0.02875},{k:'sar',label:'SAR (Afore)',tasa:0.02}],
-        horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:3.0,horaExtraFestNoct:3.0,
-        recargoNocturno:1.25,impuestoTramos:[{hasta:10000,tasa:0.0192},{hasta:85000,tasa:0.064},{hasta:150000,tasa:0.1088},{hasta:180000,tasa:0.16},{hasta:500000,tasa:0.2136},{hasta:Infinity,tasa:0.30}]},
-      CO:{name:'Colombia',flag:'🇨🇴',symbol:'$',locale:'es-CO',weeklyHours:47,
-        aportes:[{k:'pen',label:'Pensión',tasa:0.04},{k:'salud',label:'Salud',tasa:0.04}],
-        horaExtraOrd:1.25,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,
-        recargoNocturno:1.35,impuestoTramos:[{hasta:50520000,tasa:0},{hasta:72000000,tasa:0.19},{hasta:156000000,tasa:0.28},{hasta:360000000,tasa:0.33},{hasta:Infinity,tasa:0.39}]},
-      UY:{name:'Uruguay',flag:'🇺🇾',symbol:'$',locale:'es-UY',weeklyHours:44,
-        aportes:[{k:'bps',label:'BPS (jubilación)',tasa:0.15},{k:'fonasa',label:'FONASA (salud)',tasa:0.06}],
-        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,
-        recargoNocturno:1.20,impuestoTramos:[{hasta:696000,tasa:0},{hasta:1008000,tasa:0.10},{hasta:1560000,tasa:0.15},{hasta:2400000,tasa:0.24},{hasta:Infinity,tasa:0.36}]},
-      EC:{name:'Ecuador',flag:'🇪🇨',symbol:'$',locale:'es-EC',weeklyHours:40,
-        aportes:[{k:'iess',label:'IESS (aporto personal)',tasa:0.0945}],
-        horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,
-        recargoNocturno:1.25,impuestoTramos:[{hasta:11706,tasa:0},{hasta:14933,tasa:0.05},{hasta:19440,tasa:0.10},{hasta:27530,tasa:0.12},{hasta:Infinity,tasa:0.35}]},
-      BO:{name:'Bolivia',flag:'🇧🇴',symbol:'Bs',locale:'es-BO',weeklyHours:48,
-        aportes:[{k:'afp',label:'Gestora (jubilación)',tasa:0.1289},{k:'sol',label:'Aporte solidario',tasa:0.01}],
-        horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:2.0,horaExtraFestNoct:3.0,
-        recargoNocturno:1.30,impuestoTramos:[{hasta:156000,tasa:0},{hasta:240000,tasa:0.13},{hasta:600000,tasa:0.16},{hasta:Infinity,tasa:0.25}]},
-      PY:{name:'Paraguay',flag:'🇵🇾',symbol:'₲',locale:'es-PY',weeklyHours:48,
-        aportes:[{k:'ips',label:'IPS (jubilación + salud)',tasa:0.095}],
-        horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,
-        recargoNocturno:1.30,impuestoTramos:[{hasta:36000000,tasa:0},{hasta:180000000,tasa:0.08},{hasta:540000000,tasa:0.09},{hasta:Infinity,tasa:0.10}]},
-      VE:{name:'Venezuela',flag:'🇻🇪',symbol:'Bs.D',locale:'es-VE',weeklyHours:40,
-        aportes:[{k:'sso',label:'SSO',tasa:0.04},{k:'faov',label:'FAOV (vivienda)',tasa:0.01},{k:'incas',label:'INCES',tasa:0.005}],
-        horaExtraOrd:1.5,horaExtraNoct:1.6,horaExtraFest:2.0,horaExtraFestNoct:2.5,
-        recargoNocturno:1.30,impuestoTramos:[{hasta:12000,tasa:0},{hasta:30000,tasa:0.06},{hasta:54000,tasa:0.09},{hasta:Infinity,tasa:0.34}]}
+      CL:{name:'Chile',flag:'🇨🇱',symbol:'$',locale:'es-CL',weeklyHours:45},
+      AR:{name:'Argentina',flag:'🇦🇷',symbol:'$',locale:'es-AR',weeklyHours:48},
+      PE:{name:'Perú',flag:'🇵🇪',symbol:'S/',locale:'es-PE',weeklyHours:48},
+      MX:{name:'México',flag:'🇲🇽',symbol:'$',locale:'es-MX',weeklyHours:48},
+      CO:{name:'Colombia',flag:'🇨🇴',symbol:'$',locale:'es-CO',weeklyHours:47},
+      UY:{name:'Uruguay',flag:'🇺🇾',symbol:'$',locale:'es-UY',weeklyHours:44},
+      EC:{name:'Ecuador',flag:'🇪🇨',symbol:'$',locale:'es-EC',weeklyHours:40},
+      BO:{name:'Bolivia',flag:'🇧🇴',symbol:'Bs',locale:'es-BO',weeklyHours:48},
+      PY:{name:'Paraguay',flag:'🇵🇾',symbol:'₲',locale:'es-PY',weeklyHours:48},
+      VE:{name:'Venezuela',flag:'🇻🇪',symbol:'Bs.D',locale:'es-VE',weeklyHours:40}
     };
 
     var STEPS=[
@@ -584,11 +560,6 @@
     function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
     function setTxt(id,v){var e=el(id);if(e)e.textContent=v;}
     function showToast(msg){var t=el('toast');el('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(showToast._t);showToast._t=setTimeout(function(){t.classList.remove('show');},2200);}
-    function getFileName(ext){
-      var name=(el('fileName')?el('fileName').value.trim():'')||'Liquidacion';
-      name=name.replace(/[\\/:*?"<>|]/g,'').trim()||'Liquidacion';
-      return name+'.'+ext;
-    }
 
     /* WIZARD NAV */
     var currentStep=0,navBtns=[];
@@ -630,14 +601,10 @@
     el('prevBtn').addEventListener('click',function(e){e.preventDefault();this.focus();goToStep(currentStep-1);});
     el('nextBtn').addEventListener('click',function(e){e.preventDefault();this.focus();goToStep(currentStep+1);});
 
-    /* FOOTER WIZARD: en móvil se posa sobre el footer al llegar */
     var wfWrap=el('wizardFooterWrap'),siteFooter=el('siteFooter');
     function positionWizardFooter(){
       if(!siteFooter||!wfWrap)return;
-      if(window.innerWidth >= 768){
-        wfWrap.style.bottom='';
-        return;
-      }
+      if(window.innerWidth >= 768){wfWrap.style.bottom='';return;}
       var r=siteFooter.getBoundingClientRect();
       var overlap=window.innerHeight - r.top;
       wfWrap.style.bottom=(overlap>0?(overlap+12):12)+'px';
@@ -659,8 +626,11 @@
           state.weeklyHours=c.weeklyHours;
           el('weeklyHours').value=c.weeklyHours;
           renderCountries();
-          renderExtraValores();
-          renderResultado();
+          // Recargar tasas del país (intenta API, fallback local)
+          obtenerTasasLegales(code, function(tasas){
+            renderExtraValores();
+            renderResultado();
+          });
         });
         g.appendChild(b);
       });
@@ -682,13 +652,13 @@
 
     /* HORAS EXTRAS */
     function renderExtraValores(){
-      var c=COUNTRIES[state.country];
+      var tasas = tasasCache[state.country] || TASAS_LEGALES[state.country];
       var horasMes=state.weeklyHours*4.33;
       var valorHora=(state.salary||0)/horasMes;
-      el('valorOrd').textContent='= '+fmt(state.extraOrd*valorHora*c.horaExtraOrd);
-      el('valorNight').textContent='= '+fmt(state.extraNight*valorHora*c.horaExtraNoct);
-      el('valorHol').textContent='= '+fmt(state.extraHol*valorHora*c.horaExtraFest);
-      el('valorHolNight').textContent='= '+fmt(state.extraHolNight*valorHora*c.horaExtraFestNoct);
+      el('valorOrd').textContent='= '+fmt(state.extraOrd*valorHora*tasas.horaExtraOrd);
+      el('valorNight').textContent='= '+fmt(state.extraNight*valorHora*tasas.horaExtraNoct);
+      el('valorHol').textContent='= '+fmt(state.extraHol*valorHora*tasas.horaExtraFest);
+      el('valorHolNight').textContent='= '+fmt(state.extraHolNight*valorHora*tasas.horaExtraFestNoct);
     }
     ['extraOrd','extraNight','extraHol','extraHolNight'].forEach(function(id){
       el(id).addEventListener('input',function(e){
@@ -735,36 +705,56 @@
       renderDiscounts();
     });
 
-    /* =========================================================
-       MOTOR DE CÁLCULO SIMPLIFICADO
-       ========================================================= */
+    /* LIMPIAR FORMULARIO */
+    function limpiarFormulario(){
+      state={
+        country:'CL', salary:1000000, workerName:'', weeklyHours:45,
+        turno:'diurno',
+        extraOrd:0,extraNight:0,extraHol:0,extraHolNight:0,
+        discounts:[]
+      };
+      el('salaryInput').value='1000000';
+      el('workerName').value='';
+      el('weeklyHours').value='45';
+      el('extraOrd').value='0';
+      el('extraNight').value='0';
+      el('extraHol').value='0';
+      el('extraHolNight').value='0';
+      document.querySelectorAll('.turno-opt').forEach(function(o){o.classList.toggle('selected', o.getAttribute('data-turno')==='diurno');});
+      renderCountries();
+      renderDiscounts();
+      renderExtraValores();
+      renderResultado();
+      goToStep(0);
+      showToast('Formulario limpiado');
+    }
+    el('btnLimpiar').addEventListener('click',function(){
+      if(confirm('¿Limpiar todo el formulario? Se borrarán los datos ingresados.')){
+        limpiarFormulario();
+      }
+    });
+
+    /* MOTOR DE CÁLCULO */
     function calcular(){
-      var c=COUNTRIES[state.country];
+      var tasas = tasasCache[state.country] || TASAS_LEGALES[state.country];
       var sueldo=state.salary||0;
       var horasMes=state.weeklyHours*4.33;
       var valorHora=sueldo/horasMes;
 
-      // Aportes legales
       var aportes=[];
-      c.aportes.forEach(function(a){
-        var monto=sueldo*a.tasa;
-        aportes.push({label:a.label,monto:monto});
+      tasas.aportes.forEach(function(a){
+        aportes.push({label:a.label,monto:sueldo*a.tasa});
       });
       var totalAportes=aportes.reduce(function(s,a){return s+a.monto;},0);
 
-      // Bono turno nocturno/mixto
       var bonoTurno=0;
-      if(state.turno==='nocturno'){
-        bonoTurno=sueldo*(c.recargoNocturno-1);
-      } else if(state.turno==='mixto'){
-        bonoTurno=sueldo*(c.recargoNocturno-1)*0.5;
-      }
+      if(state.turno==='nocturno'){bonoTurno=sueldo*(tasas.recargoNocturno-1);}
+      else if(state.turno==='mixto'){bonoTurno=sueldo*(tasas.recargoNocturno-1)*0.5;}
 
-      // Horas extras
-      var heOrd=state.extraOrd*valorHora*c.horaExtraOrd;
-      var heNight=state.extraNight*valorHora*c.horaExtraNoct;
-      var heHol=state.extraHol*valorHora*c.horaExtraFest;
-      var heHolNight=state.extraHolNight*valorHora*c.horaExtraFestNoct;
+      var heOrd=state.extraOrd*valorHora*tasas.horaExtraOrd;
+      var heNight=state.extraNight*valorHora*tasas.horaExtraNoct;
+      var heHol=state.extraHol*valorHora*tasas.horaExtraFest;
+      var heHolNight=state.extraHolNight*valorHora*tasas.horaExtraFestNoct;
       var totalExtras=heOrd+heNight+heHol+heHolNight;
 
       var extrasDet=[];
@@ -774,57 +764,34 @@
       if(heHolNight>0)extrasDet.push({label:'Horas extra festivas nocturnas ('+state.extraHolNight+' h)',monto:heHolNight});
       if(bonoTurno>0)extrasDet.push({label:'Bono por turno '+state.turno,monto:bonoTurno});
 
-      // Impuesto
       var baseImp=sueldo-totalAportes;
       var impuesto=0, tasaImp=0;
-      for(var i=0;i<c.impuestoTramos.length;i++){
-        var tr=c.impuestoTramos[i];
+      for(var i=0;i<tasas.impuestoTramos.length;i++){
+        var tr=tasas.impuestoTramos[i];
         if(baseImp<=tr.hasta){impuesto=baseImp*tr.tasa;tasaImp=tr.tasa;break;}
       }
 
-      // Descuentos extra
       var descuentosExtra=state.discounts.filter(function(d){return d.amount>0;});
       var totalDescExtra=descuentosExtra.reduce(function(s,d){return s+d.amount;},0);
 
-      // Total bruto (sueldo + extras)
       var brutoTotal=sueldo+totalExtras+bonoTurno;
-      // Líquido
       var liquido=brutoTotal-totalAportes-impuesto-totalDescExtra;
 
-      return {
-        sueldo:sueldo,
-        valorHora:valorHora,
-        aportes:aportes,
-        totalAportes:totalAportes,
-        extrasDet:extrasDet,
-        totalExtras:totalExtras+bonoTurno,
-        impuesto:impuesto,
-        tasaImp:tasaImp,
-        descuentosExtra:descuentosExtra,
-        totalDescExtra:totalDescExtra,
-        brutoTotal:brutoTotal,
-        liquido:liquido
-      };
+      return {sueldo:sueldo,valorHora:valorHora,aportes:aportes,totalAportes:totalAportes,extrasDet:extrasDet,totalExtras:totalExtras+bonoTurno,impuesto:impuesto,tasaImp:tasaImp,descuentosExtra:descuentosExtra,totalDescExtra:totalDescExtra,brutoTotal:brutoTotal,liquido:liquido};
     }
 
-    /* =========================================================
-       RENDER DEL RESULTADO
-       ========================================================= */
+    /* RENDER DEL RESULTADO */
     function renderResultado(){
       var c=COUNTRIES[state.country];
       var r=calcular();
 
-      // Hero
       el('resFlag').textContent=c.flag;
       el('resNeto').textContent=fmt(r.liquido);
       var subText = state.workerName?esc(state.workerName)+' · ':'';
       subText += 'Sueldo bruto '+fmt(r.sueldo);
       el('resSub').innerHTML=subText;
 
-      // Desglose
       var html='';
-
-      // Haberes
       html+='<div class="desglose"><div class="desglose-head"><i class="fa-solid fa-plus-circle"></i> Lo que ganas</div>';
       html+='<div class="desglose-row"><span class="label"><i class="fa-solid fa-coins"></i> Sueldo bruto</span><span class="value">'+fmt(r.sueldo)+'</span></div>';
       r.extrasDet.forEach(function(e){
@@ -832,7 +799,6 @@
       });
       html+='</div>';
 
-      // Descuentos legales
       if(r.totalAportes>0){
         html+='<div class="desglose" style="margin-top:.85rem;"><div class="desglose-head"><i class="fa-solid fa-building-columns"></i> Descuentos de ley</div>';
         r.aportes.forEach(function(a){
@@ -844,7 +810,6 @@
         html+='</div>';
       }
 
-      // Descuentos adicionales
       if(r.descuentosExtra.length){
         html+='<div class="desglose" style="margin-top:.85rem;"><div class="desglose-head"><i class="fa-solid fa-scissors"></i> Descuentos adicionales</div>';
         r.descuentosExtra.forEach(function(d){
@@ -853,13 +818,9 @@
         html+='</div>';
       }
 
-      // Total
       html+='<div class="desglose" style="margin-top:.85rem;"><div class="desglose-row total"><span class="label"><i class="fa-solid fa-wallet"></i> Líquido a recibir</span><span class="value">'+fmt(r.liquido)+'</span></div></div>';
-
       el('desgloseWrap').innerHTML=html;
 
-      // Gráfico simple
-      var totalDesc=r.totalAportes+r.impuesto+r.totalDescExtra;
       var total=Math.max(r.brutoTotal,1);
       var pctLiq=Math.round((r.liquido/total)*100);
       var pctAp=Math.round((r.totalAportes/total)*100);
@@ -883,83 +844,6 @@
       if(pctDe>0)legend+='<div class="chart-simple-item"><span class="chart-simple-dot" style="background:var(--red);"></span><span class="label">Descuentos adicionales</span><span class="value">'+pctDe+'%</span></div>';
       el('chartLegend').innerHTML=legend;
     }
-
-    /* EXPORT */
-    function download(filename,content,type){
-      var blob=new Blob([content],{type:type});var url=URL.createObjectURL(blob);
-      var a=document.createElement('a');a.href=url;a.download=filename;
-      document.body.appendChild(a);a.click();document.body.removeChild(a);
-      URL.revokeObjectURL(url);return true;
-    }
-    function buildText(){
-      var c=COUNTRIES[state.country];var r=calcular();
-      var L=[];
-      L.push('======================================');
-      L.push('   LIQUIDACIÓN DE SUELDO');
-      L.push('   '+c.flag+' '+c.name);
-      L.push('======================================');
-      L.push('Trabajador: '+(state.workerName||'—'));
-      L.push('Fecha: '+new Date().toLocaleDateString(c.locale));
-      L.push('');
-      L.push('LO QUE GANAS');
-      L.push('Sueldo bruto: '+fmt(r.sueldo));
-      r.extrasDet.forEach(function(e){L.push('+ '+e.label+': '+fmt(e.monto));});
-      L.push('');L.push('DESCUENTOS DE LEY');
-      r.aportes.forEach(function(a){L.push('- '+a.label+': '+fmt(a.monto));});
-      if(r.impuesto>0)L.push('- Impuesto a la renta ('+Math.round(r.tasaImp*100)+'%): '+fmt(r.impuesto));
-      if(r.descuentosExtra.length){L.push('');L.push('DESCUENTOS ADICIONALES');r.descuentosExtra.forEach(function(d){L.push('- '+d.name+': '+fmt(d.amount));});}
-      L.push('');L.push('LÍQUIDO A RECIBIR: '+fmt(r.liquido));
-      return L.join('\n');
-    }
-    function buildCSV(){
-      var c=COUNTRIES[state.country];var r=calcular();var rows=[];
-      rows.push(['Liquidación de sueldo']);
-      rows.push(['País',c.name]);
-      rows.push(['Trabajador',state.workerName||'']);
-      rows.push(['Fecha',new Date().toLocaleDateString(c.locale)]);
-      rows.push([]);
-      rows.push(['Sueldo bruto','','',r.sueldo]);
-      r.extrasDet.forEach(function(e){rows.push([e.label,'','',e.monto]);});
-      rows.push([]);
-      r.aportes.forEach(function(a){rows.push([a.label,'','',-a.monto]);});
-      if(r.impuesto>0)rows.push(['Impuesto a la renta','','',-r.impuesto]);
-      r.descuentosExtra.forEach(function(d){rows.push([d.name,'','',-d.amount]);});
-      rows.push([]);
-      rows.push(['LÍQUIDO A RECIBIR','','',r.liquido]);
-      return '\uFEFF'+rows.map(function(row){return row.map(function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
-    }
-    el('btnTXT').addEventListener('click',function(){if(download(getFileName('txt'),buildText(),'text/plain;charset=utf-8'))showToast('TXT descargado');});
-    el('btnExcel').addEventListener('click',function(){if(download(getFileName('csv'),buildCSV(),'text/csv;charset=utf-8'))showToast('Excel (CSV) descargado');});
-    el('btnPrint').addEventListener('click',function(){window.print();});
-    el('btnPDF').addEventListener('click',function(){
-      if(!window.jspdf){showToast('Cargando librería PDF…');return;}
-      var jsPDF=window.jspdf.jsPDF;
-      var doc=new jsPDF({unit:'pt',format:'a4'});
-      var c=COUNTRIES[state.country];var r=calcular();
-      doc.setFillColor(139,92,246);doc.rect(0,0,595,90,'F');
-      doc.setTextColor(255,255,255);doc.setFontSize(18);doc.setFont(undefined,'bold');
-      doc.text('Liquidación de sueldo',40,40);
-      doc.setFontSize(10);doc.setFont(undefined,'normal');
-      doc.text(c.name+' · '+(state.workerName||'Trabajador'),40,60);
-      doc.setFontSize(9);doc.text(new Date().toLocaleDateString(c.locale),40,75);
-      doc.setTextColor(60,60,60);doc.setFontSize(11);doc.setFont(undefined,'bold');
-      doc.text('Lo que ganas',40,120);
-      doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);doc.setFontSize(10);
-      var y=140;
-      doc.text('Sueldo bruto:',40,y);doc.text(fmt(r.sueldo),555,y,{align:'right'});y+=16;
-      r.extrasDet.forEach(function(e){doc.text('+ '+e.label+':',50,y);doc.text(fmt(e.monto),555,y,{align:'right'});y+=14;});
-      y+=10;doc.setTextColor(60,60,60);doc.setFont(undefined,'bold');doc.text('Descuentos de ley',40,y);y+=16;
-      doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);
-      r.aportes.forEach(function(a){doc.text('- '+a.label+':',50,y);doc.text('-'+fmt(a.monto),555,y,{align:'right'});y+=14;});
-      if(r.impuesto>0){doc.text('- Impuesto ('+Math.round(r.tasaImp*100)+'%):',50,y);doc.text('-'+fmt(r.impuesto),555,y,{align:'right'});y+=14;}
-      if(r.descuentosExtra.length){y+=8;doc.setTextColor(60,60,60);doc.setFont(undefined,'bold');doc.text('Descuentos adicionales',40,y);y+=16;doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);r.descuentosExtra.forEach(function(d){doc.text('- '+d.name+':',50,y);doc.text('-'+fmt(d.amount),555,y,{align:'right'});y+=14;});}
-      y+=15;doc.setFillColor(240,235,247);doc.rect(40,y,515,40,'F');
-      doc.setTextColor(124,58,237);doc.setFontSize(13);doc.setFont(undefined,'bold');
-      doc.text('LÍQUIDO A RECIBIR:',55,y+25);doc.text(fmt(r.liquido),545,y+25,{align:'right'});
-      doc.setFontSize(7);doc.setTextColor(160,160,160);doc.setFont(undefined,'normal');
-      doc.text('Generado con CodeKat · codekat.store',40,820);
-      doc.save(getFileName('pdf'));showToast('PDF descargado');
-    });
 
     /* MENÚ / TEMA */
     var burger=el('burger'),navMenu=el('navMenu'),menuBack=el('menuBack');
@@ -985,7 +869,8 @@
 
     /* INIT */
     buildNav();renderCountries();renderDiscounts();renderExtraValores();
-    renderResultado();updateFooter();positionWizardFooter();
+    obtenerTasasLegales('CL', function(){ renderResultado(); });
+    updateFooter();positionWizardFooter();
     setTimeout(moveIndicator,50);
     window.addEventListener('load',function(){moveIndicator();positionWizardFooter();});
   })();
