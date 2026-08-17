@@ -180,12 +180,18 @@
     .extra-card input{width:100%;}
     .extra-card-valor{font-size:.72rem;color:var(--text-dim);margin-top:.35rem;text-align:right;}
 
+    /* DESCUENTOS - RESPONSIVO */
     .discounts-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.85rem;}
-    .discount-item{display:grid;grid-template-columns:1fr 110px 36px;gap:.5rem;align-items:center;}
-    .discount-item input{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.6rem .75rem;color:var(--white);font-size:.88rem;}
+    .discount-item{display:grid;grid-template-columns:1fr 110px 36px;gap:.5rem;align-items:center;grid-template-areas:"name amount del";}
+    .discount-item input{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.6rem .75rem;color:var(--white);font-size:.88rem;width:100%;}
     .discount-item input:focus{outline:none;border-color:var(--purple);}
-    .discount-item button{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:var(--text-dim);border:1px solid var(--border);transition:all var(--t-fast) var(--ease);flex-shrink:0;}
+    .discount-item input:nth-of-type(1){grid-area:name;}
+    .discount-item input:nth-of-type(2){grid-area:amount;}
+    .discount-item button{grid-area:del;width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:var(--text-dim);border:1px solid var(--border);transition:all var(--t-fast) var(--ease);flex-shrink:0;}
     .discount-item button:hover{color:#ef4444;border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.12);}
+    @media(max-width:520px){
+      .discount-item{grid-template-columns:1fr 36px;grid-template-areas:"name name" "amount del";}
+    }
     .discounts-empty{text-align:center;color:var(--text-dim);padding:1.2rem;border:1px dashed var(--border);border-radius:10px;font-size:.84rem;}
 
     .resultado-hero{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(167,139,250,.06));border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.75rem 1.25rem;text-align:center;margin-bottom:1.1rem;position:relative;overflow:hidden;}
@@ -195,7 +201,6 @@
     .resultado-monto{font-family:var(--font-display);font-size:clamp(2rem,8vw,3rem);font-weight:700;color:var(--white);letter-spacing:-0.02em;line-height:1;margin-bottom:.4rem;}
     .resultado-sub{font-size:.8rem;color:var(--text-dim);}
     .resultado-sub b{color:var(--purple-light);}
-
     .api-badge{display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;font-size:.7rem;color:var(--text-dim);}
     .api-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;}
     @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
@@ -293,7 +298,7 @@
   <main>
     <div class="container">
 
-      <!-- PASO 1: PAÍS Y SUELDO -->
+      <!-- PASO 1: PAÍS, SUELDO Y APORTES -->
       <section class="wpanel active" data-panel="0">
         <div class="rem-card">
           <div class="rem-card-head">
@@ -312,7 +317,7 @@
             <div class="field full">
               <label><i class="fa-solid fa-coins"></i> <span id="salaryLabel">Sueldo bruto mensual</span></label>
               <input type="number" id="salaryInput" value="1000000" min="0" step="1000" placeholder="Ej: 1000000" />
-              <span class="field-hint" id="salaryHint">Es el monto que aparece en tu contrato, antes de AFP, salud e impuestos.</span>
+              <span class="field-hint">Es el monto que aparece en tu contrato, antes de AFP, salud e impuestos.</span>
             </div>
             <div class="field">
               <label><i class="fa-solid fa-clock"></i> Horas por semana</label>
@@ -325,6 +330,15 @@
               <span class="field-hint">Para que aparezca en tu liquidación</span>
             </div>
           </div>
+        </div>
+
+        <!-- SELECTORES DE APORTES (AFP, salud, etc.) -->
+        <div class="rem-card" id="selectoresCard">
+          <div class="rem-card-head">
+            <span class="rem-card-ico"><i class="fa-solid fa-building-columns"></i></span>
+            <div><h2>Tus aportes legales</h2><p>Selecciona las entidades donde cotizas según tu país</p></div>
+          </div>
+          <div id="selectoresWrap"></div>
         </div>
       </section>
 
@@ -390,7 +404,7 @@
         </div>
       </section>
 
-      <!-- PASO 4: RESULTADO (sin descargas) -->
+      <!-- PASO 4: RESULTADO -->
       <section class="wpanel" data-panel="3">
         <div class="rem-card">
           <div class="rem-card-head">
@@ -417,7 +431,6 @@
 
     </div>
 
-    <!-- BARRA DE PASOS -->
     <div class="wizard-footer-wrap" id="wizardFooterWrap">
       <div class="wizard-footer">
         <button class="btn btn-ghost" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
@@ -446,83 +459,96 @@
     function el(id){return document.getElementById(id);}
 
     /* =========================================================
-       ⚠️ SISTEMA DE TASAS LEGALES (punto de conexión API)
-       ---------------------------------------------------------
-       Actualmente NO existe una API pública, gratuita y universal
-       que entregue las tasas legales (AFP, salud, impuestos)
-       actualizadas para TODOS los países de LATAM.
-
-       Si en el futuro consigues una API real, solo cambia la
-       constante API_TASAS_URL por la URL de tu API y el sistema
-       la usará automáticamente (con fallback a las tasas locales
-       si la API falla o no responde).
-
-       Ejemplo de respuesta esperada de la API (por país):
-       {
-         "aportes":[ {"label":"AFP","tasa":0.115} ],
-         "horaExtraOrd":1.5, "horaExtraNoct":1.5,
-         "horaExtraFest":2.0, "horaExtraFestNoct":2.0,
-         "recargoNocturno":1.25,
-         "impuestoTramos":[{"hasta":900360,"tasa":0}, ...]
-       }
+       TASAS LEGALES CON SELECTORES POR PAÍS
+       Cada país puede tener selectores (AFP, salud, etc.)
+       con opciones que tienen tasas distintas.
        ========================================================= */
-    var API_TASAS_URL = null; // <-- Coloca aquí la URL de tu API de tasas (si consigues una)
-    var TASAS_ACTUALIZADAS = '2025'; // Fecha de referencia de las tasas locales
-
-    /* Tasas legales locales (referencia 2025) - fallback si no hay API */
     var TASAS_LEGALES = {
-      CL:{aportes:[{k:'afp',label:'AFP (jubilación + comisión)',tasa:0.115},{k:'salud',label:'Salud (Fonasa/Isapre)',tasa:0.07},{k:'cesantia',label:'Seguro de cesantía',tasa:0.006}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.25,impuestoTramos:[{hasta:900360,tasa:0},{hasta:1997376,tasa:0.04},{hasta:3328956,tasa:0.08},{hasta:4660548,tasa:0.135},{hasta:5992128,tasa:0.23},{hasta:11318520,tasa:0.304},{hasta:18864180,tasa:0.35},{hasta:Infinity,tasa:0.40}]},
-      AR:{aportes:[{k:'jub',label:'Jubilación',tasa:0.11},{k:'os',label:'Obra social',tasa:0.03},{k:'ley',label:'Ley 23.660',tasa:0.03}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.0,impuestoTramos:[{hasta:Infinity,tasa:0}]},
-      PE:{aportes:[{k:'afp',label:'AFP/ONP',tasa:0.1318},{k:'essalud',label:'Essalud',tasa:0.09}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.0,impuestoTramos:[{hasta:144900,tasa:0.08},{hasta:627900,tasa:0.14},{hasta:1110600,tasa:0.17},{hasta:1593300,tasa:0.20},{hasta:Infinity,tasa:0.30}]},
-      MX:{aportes:[{k:'imss',label:'IMSS (cuota obrera)',tasa:0.02875},{k:'sar',label:'SAR (Afore)',tasa:0.02}],horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:3.0,horaExtraFestNoct:3.0,recargoNocturno:1.25,impuestoTramos:[{hasta:10000,tasa:0.0192},{hasta:85000,tasa:0.064},{hasta:150000,tasa:0.1088},{hasta:180000,tasa:0.16},{hasta:500000,tasa:0.2136},{hasta:Infinity,tasa:0.30}]},
-      CO:{aportes:[{k:'pen',label:'Pensión',tasa:0.04},{k:'salud',label:'Salud',tasa:0.04}],horaExtraOrd:1.25,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.35,impuestoTramos:[{hasta:50520000,tasa:0},{hasta:72000000,tasa:0.19},{hasta:156000000,tasa:0.28},{hasta:360000000,tasa:0.33},{hasta:Infinity,tasa:0.39}]},
-      UY:{aportes:[{k:'bps',label:'BPS (jubilación)',tasa:0.15},{k:'fonasa',label:'FONASA (salud)',tasa:0.06}],horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.20,impuestoTramos:[{hasta:696000,tasa:0},{hasta:1008000,tasa:0.10},{hasta:1560000,tasa:0.15},{hasta:2400000,tasa:0.24},{hasta:Infinity,tasa:0.36}]},
-      EC:{aportes:[{k:'iess',label:'IESS (aporto personal)',tasa:0.0945}],horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.25,impuestoTramos:[{hasta:11706,tasa:0},{hasta:14933,tasa:0.05},{hasta:19440,tasa:0.10},{hasta:27530,tasa:0.12},{hasta:Infinity,tasa:0.35}]},
-      BO:{aportes:[{k:'afp',label:'Gestora (jubilación)',tasa:0.1289},{k:'sol',label:'Aporte solidario',tasa:0.01}],horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:2.0,horaExtraFestNoct:3.0,recargoNocturno:1.30,impuestoTramos:[{hasta:156000,tasa:0},{hasta:240000,tasa:0.13},{hasta:600000,tasa:0.16},{hasta:Infinity,tasa:0.25}]},
-      PY:{aportes:[{k:'ips',label:'IPS (jubilación + salud)',tasa:0.095}],horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.30,impuestoTramos:[{hasta:36000000,tasa:0},{hasta:180000000,tasa:0.08},{hasta:540000000,tasa:0.09},{hasta:Infinity,tasa:0.10}]},
-      VE:{aportes:[{k:'sso',label:'SSO',tasa:0.04},{k:'faov',label:'FAOV (vivienda)',tasa:0.01},{k:'incas',label:'INCES',tasa:0.005}],horaExtraOrd:1.5,horaExtraNoct:1.6,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.30,impuestoTramos:[{hasta:12000,tasa:0},{hasta:30000,tasa:0.06},{hasta:54000,tasa:0.09},{hasta:Infinity,tasa:0.34}]}
+      CL:{
+        selectores:[
+          {key:'afp',label:'¿En qué AFP estás?',options:[
+            {key:'capital',label:'AFP Capital (11,44%)',tasa:0.1144},
+            {key:'cuprum',label:'AFP Cuprum (11,44%)',tasa:0.1144},
+            {key:'habitat',label:'AFP Habitat (11,27%)',tasa:0.1127},
+            {key:'modelo',label:'AFP Modelo (10,58%)',tasa:0.1058},
+            {key:'planvital',label:'AFP PlanVital (11,16%)',tasa:0.1116},
+            {key:'provida',label:'AFP Provida (11,45%)',tasa:0.1145},
+            {key:'uno',label:'AFP Uno (10,69%)',tasa:0.1069}
+          ]},
+          {key:'salud',label:'¿Qué sistema de salud tienes?',options:[
+            {key:'fonasa',label:'Fonasa (7%)',tasa:0.07},
+            {key:'isapre',label:'Isapre (7%)',tasa:0.07}
+          ]}
+        ],
+        aportesFijos:[{label:'Seguro de cesantía',tasa:0.006}],
+        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.25,
+        impuestoTramos:[{hasta:900360,tasa:0},{hasta:1997376,tasa:0.04},{hasta:3328956,tasa:0.08},{hasta:4660548,tasa:0.135},{hasta:5992128,tasa:0.23},{hasta:11318520,tasa:0.304},{hasta:18864180,tasa:0.35},{hasta:Infinity,tasa:0.40}]
+      },
+      AR:{
+        selectores:[
+          {key:'obraSocial',label:'¿Tienes obra social?',options:[
+            {key:'os',label:'Obra social (3%)',tasa:0.03},
+            {key:'sinOs',label:'Sin obra social',tasa:0}
+          ]}
+        ],
+        aportesFijos:[{label:'Jubilación (SIPA)',tasa:0.11}],
+        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.0,
+        impuestoTramos:[{hasta:Infinity,tasa:0}]
+      },
+      PE:{
+        selectores:[
+          {key:'pensiones',label:'¿En qué sistema de pensiones estás?',options:[
+            {key:'integra',label:'AFP Integra (12,27%)',tasa:0.1227},
+            {key:'prima',label:'Prima AFP (12,60%)',tasa:0.1260},
+            {key:'habitat',label:'AFP Habitat (11,90%)',tasa:0.1190},
+            {key:'profuturo',label:'Profuturo AFP (12,45%)',tasa:0.1245},
+            {key:'onp',label:'ONP (13%)',tasa:0.13}
+          ]}
+        ],
+        aportesFijos:[],
+        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.0,
+        impuestoTramos:[{hasta:144900,tasa:0.08},{hasta:627900,tasa:0.14},{hasta:1110600,tasa:0.17},{hasta:1593300,tasa:0.20},{hasta:Infinity,tasa:0.30}]
+      },
+      MX:{
+        selectores:[
+          {key:'afore',label:'¿En qué Afore estás?',options:[
+            {key:'afore',label:'Afore (SAR 2%)',tasa:0.02},
+            {key:'sinAfore',label:'Sin Afore',tasa:0}
+          ]}
+        ],
+        aportesFijos:[{label:'IMSS (cuota obrera)',tasa:0.02875}],
+        horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:3.0,horaExtraFestNoct:3.0,recargoNocturno:1.25,
+        impuestoTramos:[{hasta:10000,tasa:0.0192},{hasta:85000,tasa:0.064},{hasta:150000,tasa:0.1088},{hasta:180000,tasa:0.16},{hasta:500000,tasa:0.2136},{hasta:Infinity,tasa:0.30}]
+      },
+      CO:{
+        selectores:[
+          {key:'fondoPension',label:'¿En qué fondo de pensión estás?',options:[
+            {key:'colpensiones',label:'Colpensiones (4%)',tasa:0.04},
+            {key:'porvenir',label:'Porvenir (4%)',tasa:0.04},
+            {key:'proteccion',label:'Protección (4%)',tasa:0.04},
+            {key:'colfondos',label:'Colfondos (4%)',tasa:0.04}
+          ]}
+        ],
+        aportesFijos:[{label:'Salud',tasa:0.04}],
+        horaExtraOrd:1.25,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.35,
+        impuestoTramos:[{hasta:50520000,tasa:0},{hasta:72000000,tasa:0.19},{hasta:156000000,tasa:0.28},{hasta:360000000,tasa:0.33},{hasta:Infinity,tasa:0.39}]
+      },
+      UY:{
+        selectores:[
+          {key:'afap',label:'¿En qué AFAP estás?',options:[
+            {key:'afap',label:'AFAP (5%)',tasa:0.05},
+            {key:'sinAfap',label:'Solo BPS',tasa:0}
+          ]}
+        ],
+        aportesFijos:[{label:'BPS (jubilación)',tasa:0.15},{label:'FONASA (salud)',tasa:0.06}],
+        horaExtraOrd:1.5,horaExtraNoct:1.5,horaExtraFest:2.0,horaExtraFestNoct:2.0,recargoNocturno:1.20,
+        impuestoTramos:[{hasta:696000,tasa:0},{hasta:1008000,tasa:0.10},{hasta:1560000,tasa:0.15},{hasta:2400000,tasa:0.24},{hasta:Infinity,tasa:0.36}]
+      },
+      EC:{selectores:[],aportesFijos:[{label:'IESS (aporto personal)',tasa:0.0945}],horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.25,impuestoTramos:[{hasta:11706,tasa:0},{hasta:14933,tasa:0.05},{hasta:19440,tasa:0.10},{hasta:27530,tasa:0.12},{hasta:Infinity,tasa:0.35}]},
+      BO:{selectores:[],aportesFijos:[{label:'Gestora (jubilación)',tasa:0.1289},{label:'Aporte solidario',tasa:0.01}],horaExtraOrd:2.0,horaExtraNoct:2.0,horaExtraFest:2.0,horaExtraFestNoct:3.0,recargoNocturno:1.30,impuestoTramos:[{hasta:156000,tasa:0},{hasta:240000,tasa:0.13},{hasta:600000,tasa:0.16},{hasta:Infinity,tasa:0.25}]},
+      PY:{selectores:[],aportesFijos:[{label:'IPS (jubilación + salud)',tasa:0.095}],horaExtraOrd:1.5,horaExtraNoct:1.75,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.30,impuestoTramos:[{hasta:36000000,tasa:0},{hasta:180000000,tasa:0.08},{hasta:540000000,tasa:0.09},{hasta:Infinity,tasa:0.10}]},
+      VE:{selectores:[],aportesFijos:[{label:'SSO',tasa:0.04},{label:'FAOV (vivienda)',tasa:0.01},{label:'INCES',tasa:0.005}],horaExtraOrd:1.5,horaExtraNoct:1.6,horaExtraFest:2.0,horaExtraFestNoct:2.5,recargoNocturno:1.30,impuestoTramos:[{hasta:12000,tasa:0},{hasta:30000,tasa:0.06},{hasta:54000,tasa:0.09},{hasta:Infinity,tasa:0.34}]}
     };
-
-    /* Caché de tasas obtenidas de la API (por país) */
-    var tasasCache = {};
-
-    /* Obtiene las tasas legales: intenta la API, si falla usa las locales */
-    function obtenerTasasLegales(pais, callback){
-      // Si ya está en caché, usar caché
-      if(tasasCache[pais]){ callback(tasasCache[pais], true); return; }
-
-      // Si hay API configurada, intentar obtener de ahí
-      if(API_TASAS_URL){
-        fetch(API_TASAS_URL + '?pais=' + pais)
-          .then(function(res){ if(!res.ok) throw new Error('API error'); return res.json(); })
-          .then(function(data){
-            tasasCache[pais] = data;
-            callback(data, true);
-            actualizarBadgeAPI(true);
-          })
-          .catch(function(){
-            // Fallback a tasas locales si la API falla
-            tasasCache[pais] = TASAS_LEGALES[pais];
-            callback(TASAS_LEGALES[pais], false);
-            actualizarBadgeAPI(false);
-          });
-      } else {
-        // Sin API: usar tasas locales actualizadas
-        tasasCache[pais] = TASAS_LEGALES[pais];
-        callback(TASAS_LEGALES[pais], false);
-        actualizarBadgeAPI(false);
-      }
-    }
-
-    function actualizarBadgeAPI(desdeAPI){
-      var badgeText = el('apiBadgeText');
-      if(!badgeText)return;
-      if(desdeAPI){
-        badgeText.textContent = 'Tasas en vivo vía API';
-      } else {
-        badgeText.textContent = 'Tasas legales actualizadas (' + TASAS_ACTUALIZADAS + ')';
-      }
-    }
 
     var COUNTRIES = {
       CL:{name:'Chile',flag:'🇨🇱',symbol:'$',locale:'es-CL',weeklyHours:45},
@@ -548,7 +574,8 @@
       country:'CL', salary:1000000, workerName:'', weeklyHours:45,
       turno:'diurno',
       extraOrd:0,extraNight:0,extraHol:0,extraHolNight:0,
-      discounts:[]
+      discounts:[],
+      selectorOptions:{} // {country: {selectorKey: optionKey}}
     };
 
     function fmt(n){
@@ -625,15 +652,78 @@
           state.country=code;
           state.weeklyHours=c.weeklyHours;
           el('weeklyHours').value=c.weeklyHours;
+          // Inicializar opciones de selectores con la primera opción
+          var tasas=TASAS_LEGALES[code];
+          if(!state.selectorOptions[code]){
+            state.selectorOptions[code]={};
+            if(tasas.selectores){
+              tasas.selectores.forEach(function(sel){
+                state.selectorOptions[code][sel.key]=sel.options[0].key;
+              });
+            }
+          }
           renderCountries();
-          // Recargar tasas del país (intenta API, fallback local)
-          obtenerTasasLegales(code, function(tasas){
-            renderExtraValores();
-            renderResultado();
-          });
+          renderSelectores();
+          renderExtraValores();
+          renderResultado();
         });
         g.appendChild(b);
       });
+    }
+
+    /* SELECTORES DE APORTES (AFP, salud, etc.) */
+    function renderSelectores(){
+      var wrap=el('selectoresWrap');
+      var tasas=TASAS_LEGALES[state.country];
+      var card=el('selectoresCard');
+      if(!tasas.selectores || !tasas.selectores.length){
+        card.style.display='none';
+        return;
+      }
+      card.style.display='';
+      var html='<div class="field-grid">';
+      tasas.selectores.forEach(function(sel){
+        var currentOpt=(state.selectorOptions[state.country] && state.selectorOptions[state.country][sel.key])||sel.options[0].key;
+        html+='<div class="field">';
+        html+='<label><i class="fa-solid fa-building-columns"></i> '+esc(sel.label)+'</label>';
+        html+='<select data-selector="'+sel.key+'">';
+        sel.options.forEach(function(opt){
+          html+='<option value="'+opt.key+'"'+(opt.key===currentOpt?' selected':'')+'>'+esc(opt.label)+'</option>';
+        });
+        html+='</select>';
+        html+='</div>';
+      });
+      html+='</div>';
+      wrap.innerHTML=html;
+      wrap.querySelectorAll('select').forEach(function(selEl){
+        selEl.addEventListener('change',function(){
+          var selKey=selEl.getAttribute('data-selector');
+          if(!state.selectorOptions[state.country])state.selectorOptions[state.country]={};
+          state.selectorOptions[state.country][selKey]=selEl.value;
+          renderResultado();
+        });
+      });
+    }
+
+    /* Obtener aportes según selectores + aportes fijos */
+    function obtenerAportes(){
+      var tasas=TASAS_LEGALES[state.country];
+      var aportes=[];
+      if(tasas.selectores){
+        tasas.selectores.forEach(function(sel){
+          var currentOptKey=(state.selectorOptions[state.country] && state.selectorOptions[state.country][sel.key])||sel.options[0].key;
+          var opt=sel.options.find(function(o){return o.key===currentOptKey;})||sel.options[0];
+          if(opt.tasa>0){
+            aportes.push({label:opt.label,monto:state.salary*opt.tasa});
+          }
+        });
+      }
+      if(tasas.aportesFijos){
+        tasas.aportesFijos.forEach(function(a){
+          aportes.push({label:a.label,monto:state.salary*a.tasa});
+        });
+      }
+      return aportes;
     }
 
     el('salaryInput').addEventListener('input',function(e){state.salary=parseFloat(e.target.value)||0;renderExtraValores();renderResultado();});
@@ -652,7 +742,7 @@
 
     /* HORAS EXTRAS */
     function renderExtraValores(){
-      var tasas = tasasCache[state.country] || TASAS_LEGALES[state.country];
+      var tasas=TASAS_LEGALES[state.country];
       var horasMes=state.weeklyHours*4.33;
       var valorHora=(state.salary||0)/horasMes;
       el('valorOrd').textContent='= '+fmt(state.extraOrd*valorHora*tasas.horaExtraOrd);
@@ -711,7 +801,7 @@
         country:'CL', salary:1000000, workerName:'', weeklyHours:45,
         turno:'diurno',
         extraOrd:0,extraNight:0,extraHol:0,extraHolNight:0,
-        discounts:[]
+        discounts:[], selectorOptions:{}
       };
       el('salaryInput').value='1000000';
       el('workerName').value='';
@@ -722,6 +812,7 @@
       el('extraHolNight').value='0';
       document.querySelectorAll('.turno-opt').forEach(function(o){o.classList.toggle('selected', o.getAttribute('data-turno')==='diurno');});
       renderCountries();
+      renderSelectores();
       renderDiscounts();
       renderExtraValores();
       renderResultado();
@@ -736,15 +827,12 @@
 
     /* MOTOR DE CÁLCULO */
     function calcular(){
-      var tasas = tasasCache[state.country] || TASAS_LEGALES[state.country];
+      var tasas=TASAS_LEGALES[state.country];
       var sueldo=state.salary||0;
       var horasMes=state.weeklyHours*4.33;
       var valorHora=sueldo/horasMes;
 
-      var aportes=[];
-      tasas.aportes.forEach(function(a){
-        aportes.push({label:a.label,monto:sueldo*a.tasa});
-      });
+      var aportes=obtenerAportes();
       var totalAportes=aportes.reduce(function(s,a){return s+a.monto;},0);
 
       var bonoTurno=0;
@@ -790,6 +878,7 @@
       var subText = state.workerName?esc(state.workerName)+' · ':'';
       subText += 'Sueldo bruto '+fmt(r.sueldo);
       el('resSub').innerHTML=subText;
+      el('apiBadgeText').textContent='Tasas legales actualizadas (2025)';
 
       var html='';
       html+='<div class="desglose"><div class="desglose-head"><i class="fa-solid fa-plus-circle"></i> Lo que ganas</div>';
@@ -868,9 +957,14 @@
     if(themeMini)themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});
 
     /* INIT */
-    buildNav();renderCountries();renderDiscounts();renderExtraValores();
-    obtenerTasasLegales('CL', function(){ renderResultado(); });
-    updateFooter();positionWizardFooter();
+    buildNav();
+    renderCountries();
+    renderSelectores();
+    renderDiscounts();
+    renderExtraValores();
+    renderResultado();
+    updateFooter();
+    positionWizardFooter();
     setTimeout(moveIndicator,50);
     window.addEventListener('load',function(){moveIndicator();positionWizardFooter();});
   })();
