@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
@@ -17,15 +18,35 @@
 --tx:#E9EBF2;--dim:#9AA2B5;--faint:#5E6678;
 --amb:#F5A524;--amb2:#FFC96A;--mint:#3ED598;--red:#FF6B6B;
 --disp:'Space Grotesk',sans-serif;--body:'Manrope',sans-serif;--mono:'JetBrains Mono',monospace;
---r:16px;--navh:58px;
+--r:16px;--navh:62px;
+/* ═══ Variables de menú/footer (estilo index.html · CodeKat) ═══ */
+--wa:#25D366;--wa-dark:#128C7E;
+--purple:#A78BFA;--purple-light:#C4B5FD;--purple-soft:#8B5CF6;--purple-dark:#7C3AED;
+--purple-glow:rgba(167,139,250,.35);--purple-bg:rgba(167,139,250,.08);
+--white:#FFFFFF;--text:#FFFFFF;--text-muted:#A8A5B8;--text-dim:#6E6A85;
+--border:rgba(167,139,250,.14);--border-strong:rgba(167,139,250,.32);
+--glass-bg:rgba(23,23,31,.55);--glass-bg-strong:rgba(23,23,31,.78);--glass-border:rgba(167,139,250,.25);
+--surface:#17171F;--surface-2:#1F1F2B;--surface-3:#27273A;
+--font-display:'Space Grotesk','Inter',sans-serif;--font-body:'Inter',system-ui,sans-serif;
+--space-xl:2.5rem;--space-2xl:4rem;--space-3xl:6rem;
+--radius-md:14px;--radius-lg:22px;--t-fast:220ms;--ease:cubic-bezier(.2,.7,.2,1);
+--shadow-color:rgba(0,0,0,.5);
 }
 html[data-theme="light"]{
 --bg:#F3F2EE;--panel:#FFFFFF;--panel2:#F7F6F2;--field:#F0EEE7;
 --line:rgba(20,22,30,.10);--line2:rgba(20,22,30,.20);
 --tx:#171A21;--dim:#565D6C;--faint:#8B909C;
+/* ═══ Variables de menú/footer (modo claro) ═══ */
+--purple:#8B5CF6;--purple-light:#A78BFA;--purple-soft:#7C3AED;--purple-dark:#6D28D9;
+--purple-glow:rgba(139,92,246,.25);--purple-bg:rgba(139,92,246,.08);
+--white:#1A1A2E;--text-muted:#5C5875;--text-dim:#8E88A0;
+--border:rgba(139,92,246,.15);--border-strong:rgba(139,92,246,.35);
+--glass-bg:rgba(255,255,255,.65);--glass-bg-strong:rgba(255,255,255,.88);--glass-border:rgba(139,92,246,.25);
+--surface:#FFFFFF;--surface-2:#F0ECF7;--surface-3:#E8E2F0;
+--shadow-color:rgba(139,92,246,.12);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;display:flex;flex-direction:column;min-height:100vh}
+body{background:var(--bg);color:var(--tx);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;display:flex;flex-direction:column;min-height:100vh;padding-top:var(--navh)}
 main{flex:1}
 a{color:inherit}button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
 img{max-width:100%}::selection{background:rgba(245,165,36,.35)}
@@ -61,9 +82,6 @@ html[data-theme="light"] .bg-fx{background:radial-gradient(700px 420px at 8% -6%
 .menu-back:hover{background:var(--panel2);border-color:var(--amb);color:var(--amb2)}
 .menu-back svg{width:14px;height:14px}
 .menu-theme{display:flex;align-items:center;gap:.35rem;background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:.25rem}
-.mt-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--faint);transition:all .2s}
-.mt-btn svg{width:15px;height:15px}
-.mt-btn.active{background:linear-gradient(135deg,var(--amb),var(--amb2));color:#181203}
 .menu-home-card{display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--panel);border:1px solid var(--line);border-radius:14px;transition:all .2s;text-decoration:none;margin-bottom:.6rem;color:var(--tx)}
 .menu-home-card:hover{border-color:var(--amb);transform:translateX(4px)}
 .mcc-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#181203;flex-shrink:0}
@@ -73,6 +91,111 @@ html[data-theme="light"] .bg-fx{background:radial-gradient(700px 420px at 8% -6%
 .mcc-sub{font-size:.78rem;color:var(--dim)}
 .menu-note{margin-top:1.25rem;font-size:.78rem;color:var(--faint);display:flex;align-items:center;gap:.5rem}
 .menu-note svg{width:13px;height:13px;color:var(--amb);flex:none}
+/* ═══ Menú/footer unificados (estilo index.html · CodeKat) ═══ */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:.75rem 0;background:var(--glass-bg);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid transparent;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;max-width:1200px;margin:0 auto;padding:0 1rem;}
+.brand{display:flex;align-items:center;gap:.65rem;font-weight:700;font-size:1.1rem;text-decoration:none;color:var(--white);}
+.brand-logo{width:38px;height:38px;border-radius:10px;object-fit:contain;background:var(--surface);padding:3px;border:1px solid var(--border);}
+.brand-name{font-family:var(--font-display);} .brand-name span{color:var(--purple-light);}
+.theme-toggle-mini{width:42px;height:42px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;color:var(--white);font-size:1rem;transition:all var(--t-fast) var(--ease);}
+.theme-toggle-mini:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+.theme-toggle-mini svg{width:16px;height:16px;}
+.burger{width:46px;height:46px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-border);display:grid;place-items:center;transition:all var(--t-fast) var(--ease);z-index:110;position:relative;}
+.burger:hover{background:var(--purple-bg);border-color:var(--purple);}
+.burger-lines{position:relative;width:20px;height:14px;}
+.burger-lines span{position:absolute;left:0;height:2px;width:100%;background:var(--white);border-radius:2px;transition:all var(--t-fast) var(--ease);}
+.burger-lines span:nth-child(1){top:0;} .burger-lines span:nth-child(2){top:6px;width:14px;} .burger-lines span:nth-child(3){top:12px;width:16px;}
+.burger.active .burger-lines span:nth-child(1){top:6px;transform:rotate(45deg);}
+.burger.active .burger-lines span:nth-child(2){opacity:0;transform:translateX(10px);}
+.burger.active .burger-lines span:nth-child(3){top:6px;transform:rotate(-45deg);width:20px;}
+.nav-menu{position:fixed;top:0;right:0;width:100%;height:100vh;height:100dvh;z-index:150;background:var(--bg);overflow-y:auto;padding:6rem 1.5rem 2rem;transform:translateX(100%);transition:transform .5s var(--ease),visibility 0s .5s;visibility:hidden;}
+.nav-menu.open{transform:translateX(0);visibility:visible;transition:transform .5s var(--ease),visibility 0s 0s;}
+.menu-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);position:relative;gap:.75rem;}
+.menu-back{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;border-radius:999px;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--white);font-size:.85rem;font-weight:600;transition:all var(--t-fast) var(--ease);}
+.menu-back:hover{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-light);}
+.menu-theme{display:flex;align-items:center;gap:.35rem;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:999px;padding:.25rem;}
+.theme-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--text-dim);font-size:.9rem;transition:all var(--t-fast) var(--ease);}
+.theme-btn.active{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;box-shadow:0 4px 12px var(--purple-glow);}
+.theme-btn:hover:not(.active){color:var(--white);}
+.nav-menu .menu-links>li{opacity:0;transform:translateX(24px);}
+.nav-menu.open .menu-links>li{animation:menuItemIn .5s var(--ease) forwards;}
+.nav-menu.open .menu-links>li:nth-child(1){animation-delay:.08s;}
+.nav-menu.open .menu-links>li:nth-child(2){animation-delay:.16s;}
+.nav-menu.open .menu-links>li:nth-child(3){animation-delay:.24s;}
+.nav-menu.open .menu-links>li:nth-child(4){animation-delay:.32s;}
+.nav-menu.open .menu-links>li:nth-child(5){animation-delay:.4s;}
+.nav-menu .menu-contact-card{opacity:0;transform:translateX(24px);}
+.nav-menu.open .menu-contact-card{animation:menuItemIn .5s var(--ease) forwards;}
+.nav-menu.open .menu-contact-card:nth-child(1){animation-delay:.5s;}
+.nav-menu.open .menu-contact-card:nth-child(2){animation-delay:.58s;}
+@keyframes menuItemIn{to{opacity:1;transform:translateX(0);}}
+.menu-links{display:flex;flex-direction:column;gap:.4rem;margin-bottom:2rem;position:relative;}
+.menu-link{display:flex;align-items:center;justify-content:space-between;padding:1rem 1rem;border:1px solid transparent;border-radius:var(--radius-md);font-family:var(--font-display);font-size:1.25rem;font-weight:500;color:var(--white);transition:all var(--t-fast) var(--ease);}
+.menu-link:hover,.menu-link.active{background:var(--purple-bg);border-color:var(--border-strong);transform:translateX(4px);}
+.menu-link .link-left{display:flex;align-items:center;gap:1rem;flex:1;min-width:0;}
+.menu-link .link-text{display:flex;flex-direction:column;gap:.1rem;min-width:0;}
+.menu-link .num{font-family:var(--font-body);font-size:.68rem;color:var(--text-dim);letter-spacing:.12em;}
+.menu-link .link-title{font-size:1.25rem;}
+.menu-link .link-desc{font-family:var(--font-body);font-size:.78rem;color:var(--text-muted);font-weight:400;margin-top:.15rem;}
+.menu-link .link-icon{width:42px;height:42px;border-radius:12px;background:var(--purple-bg);border:1px solid var(--border);display:grid;place-items:center;color:var(--purple);font-size:1.05rem;flex-shrink:0;transition:all var(--t-fast) var(--ease);}
+.menu-link:hover .link-icon,.menu-link.active .link-icon{background:var(--purple);color:#fff;border-color:var(--purple);}
+.menu-link .link-arrow{color:var(--text-dim);font-size:.95rem;transition:transform var(--t-fast) var(--ease),color var(--t-fast) var(--ease);margin-left:.75rem;}
+.menu-link:hover .link-arrow{transform:translateX(6px);color:var(--purple-light);}
+.menu-footer{padding-top:1.5rem;border-top:1px solid var(--border);display:grid;gap:.75rem;position:relative;}
+.menu-contact-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);transition:all var(--t-fast) var(--ease);position:relative;overflow:hidden;text-decoration:none;color:inherit;}
+.menu-contact-card:hover{border-color:var(--purple);transform:translateY(-2px);box-shadow:0 10px 24px var(--purple-glow);}
+.mcc-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:1.25rem;flex-shrink:0;box-shadow:0 6px 16px rgba(0,0,0,.25);}
+.menu-contact-card.wa .mcc-icon{background:linear-gradient(135deg,var(--wa),var(--wa-dark));}
+.menu-contact-card.mail .mcc-icon{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));}
+.mcc-body{display:flex;flex-direction:column;gap:.15rem;flex:1;min-width:0;}
+.mcc-title{font-size:.95rem;font-weight:600;color:var(--white);}
+.mcc-sub{font-size:.8rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mcc-arrow{color:var(--text-dim);font-size:.9rem;transition:all var(--t-fast) var(--ease);flex-shrink:0;}
+.menu-contact-card:hover .mcc-arrow{color:var(--purple-light);transform:translate(2px,-2px);}
+.back-to-top{position:fixed;bottom:1.4rem;right:1.4rem;width:52px;height:52px;border-radius:50%;background:var(--glass-bg-strong);border:1px solid var(--glass-border);color:var(--white);font-size:1.05rem;display:grid;place-items:center;backdrop-filter:blur(16px);z-index:120;opacity:0;transform:translateY(16px);pointer-events:none;transition:all .4s var(--ease);box-shadow:0 8px 20px var(--shadow-color);}
+.back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+.back-to-top:hover{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark));color:#fff;border-color:var(--purple);transform:translateY(-3px);}
+.wa-float{position:fixed;bottom:1.4rem;right:1.4rem;z-index:120;display:flex;align-items:center;gap:.65rem;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease);}
+.wa-float.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+.wa-tooltip{background:var(--surface);border:1px solid var(--border-strong);padding:.55rem .95rem;border-radius:999px;font-size:.85rem;font-weight:600;color:var(--white);box-shadow:0 8px 24px var(--shadow-color);opacity:0;transform:translateX(10px);transition:opacity .6s var(--ease),transform .6s var(--ease);pointer-events:none;white-space:nowrap;}
+.wa-float:hover .wa-tooltip,.wa-float.show-tip .wa-tooltip{opacity:1;transform:translateX(0);}
+.wa-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--wa),var(--wa-dark));display:grid;place-items:center;color:#fff;font-size:1.7rem;animation:waPulse 2.6s infinite;transition:transform .3s var(--ease);flex-shrink:0;}
+.wa-float:hover .wa-icon{transform:scale(1.06);}
+@keyframes waPulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.45),0 8px 24px rgba(37,211,102,.4);}70%{box-shadow:0 0 0 16px rgba(37,211,102,0),0 8px 24px rgba(37,211,102,.4);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0),0 8px 24px rgba(37,211,102,.4);}}
+.footer{position:relative;border-top:1px solid var(--border);overflow:hidden;margin-top:auto;}
+.footer-cta{padding:var(--space-3xl) 0 var(--space-2xl);text-align:center;position:relative;}
+.footer-title{font-size:clamp(2rem,6vw,3.5rem);color:var(--white);letter-spacing:-0.02em;margin-bottom:1rem;font-family:var(--font-display);}
+.footer-sub{color:var(--text-muted);font-size:1.05rem;margin-bottom:2rem;}
+.footer-actions{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;}
+.footer-marquee{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.1rem 0;background:var(--surface);}
+.marquee-track{display:flex;gap:3rem;width:max-content;animation:marquee 32s linear infinite;}
+.marquee-track span{font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:3rem;white-space:nowrap;}
+.marquee-track i{color:var(--purple);font-size:.7rem;}
+@keyframes marquee{to{transform:translateX(-50%);}}
+.footer-bottom{display:flex;flex-direction:column;gap:1.5rem;padding:2rem 0;align-items:center;text-align:center;}
+.footer-brand-mini{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.05rem;color:var(--white);}
+.footer-brand-mini img{width:32px;height:32px;border-radius:8px;background:var(--surface);padding:2px;border:1px solid var(--border);}
+.footer-links{display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;}
+.footer-links a{font-size:.88rem;color:var(--text-muted);transition:color var(--t-fast) var(--ease);}
+.footer-links a:hover{color:var(--purple-light);}
+.footer-copy{font-size:.82rem;color:var(--text-dim);}
+.container{width:100%;max-width:1200px;margin:0 auto;padding:0 1.25rem;}
+.grad-anim{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark),var(--purple-soft));background-size:200% 200%;animation:gradShift 6s ease infinite;}
+@keyframes gradShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+.grad-text{background:linear-gradient(135deg,var(--purple-light),var(--purple),var(--purple-light));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:textShift 5s linear infinite;}
+@keyframes textShift{to{background-position:200% center;}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.9rem 1.4rem;border-radius:var(--radius-md);font-weight:600;font-size:.95rem;transition:all var(--t-fast) var(--ease);white-space:nowrap;max-width:100%;position:relative;text-decoration:none;}
+.btn-glass{background:var(--glass-bg);color:var(--white);border:1px solid var(--glass-border);backdrop-filter:blur(16px);box-shadow:0 4px 16px var(--shadow-color);}
+.btn-glass:hover{background:var(--glass-bg-strong);border-color:var(--purple);transform:translateY(-2px);}
+.btn-glass i{color:var(--purple-light);}
+.btn-primary{color:#fff;box-shadow:0 8px 24px var(--purple-glow);overflow:hidden;}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-primary::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);pointer-events:none;}
+.btn-primary:hover::after{animation:shine .9s var(--ease);}
+@keyframes shine{from{left:-80%;}to{left:130%;}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;}}
 .hero-strip{padding:24px 16px 4px;max-width:1720px;margin:0 auto}
 .hero-strip h1{font-family:var(--disp);font-weight:700;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:-.02em;line-height:1.05;min-height:1.05em}
 .hero-strip p{color:var(--dim);margin-top:6px;max-width:72ch}
@@ -91,6 +214,13 @@ body[data-ws="diseno"] .stage{display:none}
 body[data-ws="vista"] .controls{display:none}
 }
 .controls{display:flex;flex-direction:column;gap:14px;min-width:0}
+.tabs-bar{display:flex;gap:6px;overflow-x:auto;padding:6px;background:rgba(17,20,28,.9);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;scrollbar-width:none;}
+.tabs-bar::-webkit-scrollbar{display:none}
+@media(min-width:1024px){.tabs-bar{position:sticky;top:calc(var(--navh) + 8px);z-index:80;}}
+.tab-btn{flex:none;font-family:var(--disp);font-size:12.5px;font-weight:600;color:var(--dim);border:1px solid transparent;border-radius:10px;padding:9px 14px;white-space:nowrap;transition:all .2s}
+.tab-btn.on{color:#181203;background:linear-gradient(180deg,var(--amb2),var(--amb));border-color:transparent}
+.tabpanel{display:none;flex-direction:column;gap:14px;min-width:0}
+.tabpanel.on{display:flex}
 .stage{min-width:0}
 .stage-stick{position:sticky;top:calc(var(--navh) + 14px)}
 @media(max-width:1023px){.stage-stick{position:static}}
@@ -249,15 +379,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .fab:active{transform:scale(.9)}
 .dcode.off,.fab.off{transform:translateY(150%);opacity:0;pointer-events:none}
 @media(max-width:560px){.dcode .dc-v{max-width:120px}}
-.app-foot{border-top:1px solid var(--line);background:var(--panel);padding:30px 0;margin-top:auto}
-.footer-slim{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 16px;flex-wrap:wrap;max-width:1720px;margin:0 auto}
-.footer-brand-mini{display:flex;align-items:center;gap:.55rem;font-weight:700;font-size:.95rem;color:var(--tx)}
-.footer-brand-mini img{width:28px;height:28px;border-radius:8px;background:var(--panel2);padding:2px;border:1px solid var(--line)}
-.footer-brand-mini span span{color:var(--amb2)}
-.footer-copy{font-size:.76rem;color:var(--faint)}
-.footer-home{display:inline-flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--dim);padding:.4rem .8rem;border:1px solid var(--line);border-radius:999px;transition:all .2s;text-decoration:none}
-.footer-home:hover{color:var(--amb2);border-color:var(--amb)}
-.footer-home svg{width:13px;height:13px}
+
 .sheet-bd{position:fixed;inset:0;background:rgba(4,6,10,.66);backdrop-filter:blur(3px);z-index:180;opacity:0;pointer-events:none;transition:.25s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:190;max-height:88vh;overflow:auto;background:var(--panel);border-top:1px solid var(--line2);border-radius:22px 22px 0 0;transform:translateY(106%);transition:transform .38s cubic-bezier(.32,.9,.32,1);padding:8px 18px calc(26px + env(safe-area-inset-bottom))}
 .sheet.open{transform:translateY(0)}
@@ -284,48 +406,57 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 </head>
 <body data-ws="diseno">
 <div class="bg-fx" aria-hidden="true"></div>
-<header class="navbar">
-<div class="nav-inner">
-<a href="index.html" class="brand" aria-label="CodeKat — Inicio">
+<header class="navbar" id="navbar" role="banner">
+<div class="container nav-inner">
+<a href="index.html#inicio" class="brand" aria-label="CodeKat — Inicio">
 <img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="CodeKat" class="brand-logo">
 <span class="brand-name">Code<span>Kat</span></span>
 </a>
 <div class="nav-right">
-<button class="theme-toggle-mini" id="btnTheme" aria-label="Cambiar tema">
-<svg id="icoMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-<svg id="icoSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4m0-14.2-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
-</button>
-<button class="burger" id="btnHam" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
+<button class="theme-toggle-mini" id="themeToggleMini" aria-label="Cambiar tema"><i class="fa-solid fa-moon" id="themeIconMini"></i></button>
+<button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
 <span class="burger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
 </button>
 </div>
 </div>
 </header>
-<nav class="nav-menu" id="navMenu" aria-label="Menú" aria-hidden="true">
+<nav class="nav-menu" id="navMenu" aria-label="Menú principal" aria-hidden="true">
 <div class="menu-header">
-<button class="menu-back" id="menuBack" aria-label="Cerrar menú">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
-<span>Volver</span>
-</button>
+<button class="menu-back" id="menuBack" aria-label="Volver y cerrar el menú"><i class="fa-solid fa-arrow-left"></i><span>Volver</span></button>
 <div class="menu-theme" role="group" aria-label="Cambiar tema">
-<button class="mt-btn" data-theme-set="dark" aria-label="Tema oscuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
-<button class="mt-btn active" data-theme-set="light" aria-label="Tema claro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4m0-14.2-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg></button>
+<button class="theme-btn" data-theme-set="dark" aria-label="Tema oscuro"><i class="fa-solid fa-moon"></i></button>
+<button class="theme-btn active" data-theme-set="light" aria-label="Tema claro"><i class="fa-solid fa-sun"></i></button>
 </div>
 </div>
-<a href="index.html" class="menu-home-card">
-<span class="mcc-icon" style="background:linear-gradient(135deg,var(--amb),var(--amb2));"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
-<span class="mcc-body"><span class="mcc-title">Inicio</span><span class="mcc-sub">Ir a la página principal de CodeKat</span></span>
+<ul class="menu-links">
+<li><a class="menu-link active" href="index.html#inicio"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-house"></i></span><span class="link-text"><span class="num">01 — Inicio</span><span class="link-title">Bienvenida</span><span class="link-desc">Tu próxima web comienza aquí</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+<li><a class="menu-link" href="index.html#servicios"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-star"></i></span><span class="link-text"><span class="num">02 — Servicios</span><span class="link-title">Qué ofrecemos</span><span class="link-desc">Soluciones que hacen crecer tu negocio</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+<li><a class="menu-link" href="index.html#plantillas"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-palette"></i></span><span class="link-text"><span class="num">03 — Plantillas</span><span class="link-title">Modelos de web</span><span class="link-desc">Estructuras listas para adaptar</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+<li><a class="menu-link" href="index.html#contacto"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-paper-plane"></i></span><span class="link-text"><span class="num">04 — Contacto</span><span class="link-title">Conversemos</span><span class="link-desc">Cuéntanos sobre tu proyecto</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+<li><a href="cotizador.html" class="menu-link"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-calculator"></i></span><span class="link-text"><span class="num">05 — Cotizador APP</span><span class="link-title">Cotizador online</span><span class="link-desc">Crea una cotización para tu negocio</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+<li><a href="remuneracion.html" class="menu-link"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-university"></i></span><span class="link-text"><span class="num">06 — Remuneración APP</span><span class="link-title">Remuneración online</span><span class="link-desc">Calcula tu remuneración</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+<li><a href="generador.html" class="menu-link"><span class="link-left"><span class="link-icon"><i class="fa-solid fa-bookmark"></i></span><span class="link-text"><span class="num">07 — LandingKat APP BETA</span><span class="link-title">LandingKat online</span><span class="link-desc">Genera tu landing page</span></span></span><i class="fa-solid fa-arrow-right link-arrow"></i></a></li>
+</ul>
+<div class="menu-footer">
+<a href="https://wa.me/56933465843" target="_blank" rel="noopener" class="menu-contact-card wa">
+<span class="mcc-icon"><i class="fa-brands fa-whatsapp"></i></span>
+<span class="mcc-body"><span class="mcc-title">WhatsApp</span><span class="mcc-sub">+56 9 3346 5843 · Respuesta rápida</span></span>
+<span class="mcc-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
 </a>
-<a href="cotizador.html" class="menu-home-card">
-<span class="mcc-icon" style="background:linear-gradient(135deg,var(--amb),var(--amb2));"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></span>
-<span class="mcc-body"><span class="mcc-title">Cotizador</span><span class="mcc-sub">Crea cotizaciones profesionales</span></span>
+<a href="mailto:crisdev.chile@gmail.com" class="menu-contact-card mail">
+<span class="mcc-icon"><i class="fa-regular fa-envelope"></i></span>
+<span class="mcc-body"><span class="mcc-title">Correo</span><span class="mcc-sub">crisdev.chile@gmail.com</span></span>
+<span class="mcc-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
 </a>
-<a href="remuneraciones.html" class="menu-home-card">
-<span class="mcc-icon" style="background:linear-gradient(135deg,var(--amb),var(--amb2));"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></span>
-<span class="mcc-body"><span class="mcc-title">Remuneraciones</span><span class="mcc-sub">Calcula tu remuneración</span></span>
-</a>
-<p class="menu-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> LandingKat es una herramienta de CodeKat.</p>
+</div>
 </nav>
+
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba"><i class="fa-solid fa-arrow-up"></i></button>
+
+<a href="https://wa.me/56933465843" class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="Asesórate con nosotros por WhatsApp">
+<span class="wa-tooltip" id="waTooltip">Asesórate con nosotros</span>
+<span class="wa-icon"><i class="fa-brands fa-whatsapp"></i></span>
+</a>
 <section class="hero-strip">
 <h1 id="appTitle" data-text="Generador Pro">LandingKat</h1>
 <p>Crea landing pages profesionales: elige una aleación, personaliza cada pieza y descarga el código. Cada diseño tiene un <em>código único</em> que puedes copiar, guardar y volver a cargar.</p>
@@ -339,125 +470,139 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 </div>
 <main class="workspace">
 <aside class="controls">
-<section class="panel">
-<div class="panel-h"><span class="panel-num">01</span><h2>Aleación</h2></div>
-<p class="panel-sub">La personalidad visual: colores, tipografías y forma coordinados.</p>
-<div class="filter-row" id="alloyFilters"></div>
-<div class="search-wrap">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-<input type="text" id="alloySearch" placeholder="Buscar aleación… (ej: neón, elegante, rosa)">
-</div>
-<div class="rail" id="alloyRail"></div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">02</span><h2>Tipo de landing</h2></div>
-<p class="panel-sub">100 estructuras curadas. Filtra por familia.</p>
-<select class="sel-mini" id="typeFamily"></select>
-<div class="rail" id="typeRail"></div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">03</span><h2>Secciones</h2></div>
-<p class="panel-sub">Toca ✎ para editar textos · ↑↓ para cambiar el orden.</p>
-<div class="sec-list" id="secList"></div>
-<div style="margin-top:12px"><button class="add-sec" id="btnAddSec">
-<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Agregar sección…</button></div>
-<div style="margin-top:10px;text-align:right"><button class="link-btn" id="btnRestoreType">↺ Restaurar del tipo elegido</button></div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">04</span><h2>Tu marca</h2></div>
-<p class="panel-sub">Logo, nombre y textos. Elige un rubro para usar sugerencias.</p>
-<div class="logo-zone">
-<div class="logo-prev" id="logoPrev">✦</div>
-<div style="display:flex;flex-direction:column;gap:7px;flex:1">
-<input type="file" id="logoFile" accept="image/*" hidden>
-<button class="btn-app ghost" id="btnLogoFile" style="padding:9px 13px;font-size:12px">Subir logo</button>
-<button class="link-btn" id="btnLogoDel">Quitar logo</button>
-</div>
-</div>
-<label class="fld"><span>O pegar URL del logo</span><input type="text" id="logoUrl" placeholder="https://…/logo.png"></label>
-<div class="fld-row" style="margin-bottom:12px">
-<label class="fld" style="margin:0"><span>Nombre de marca</span><input type="text" id="inBrand" value="Lumen"></label>
-<label class="fld" style="margin:0"><span>Rubro</span><select id="selRubro"></select></label>
-</div>
-<div class="packs" id="rubroPacks"></div>
-<label class="fld"><span>Eslogan (título principal)</span><input type="text" id="inSlogan" value="Ilumina la forma en que trabajas"></label>
-<label class="fld"><span>Descripción corta</span><textarea id="inDesc">Lumen es la plataforma que centraliza tus proyectos, automatiza lo repetible y le da a tu equipo claridad en tiempo real.</textarea></label>
-<div class="fld-row">
-<label class="fld" style="margin:0"><span>Botón principal</span><input type="text" id="inCta1" value="Empezar gratis"></label>
-<label class="fld" style="margin:0"><span>Botón secundario</span><input type="text" id="inCta2" value="Ver demo"></label>
-</div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">05</span><h2>Fondo de la página</h2></div>
-<p class="panel-sub">100 fondos con previsualización real.</p>
-<div class="bg-live" id="bgLive" title="Vista previa del fondo actual"></div>
-<div class="filter-row" id="bgFilters"></div>
-<div class="rail" id="bgRail"></div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">06</span><h2>Colores</h2></div>
-<p class="panel-sub">Parte con una paleta sugerida y ajusta a gusto.</p>
-<div class="rail" id="palettesRail"></div>
-<div class="fld-row" style="margin-bottom:12px">
-<label class="color-field"><input type="color" id="colPrimary" value="#6E56F8"><span class="cf-t"><b>Principal</b><small id="hexP">#6E56F8</small></span></label>
-<label class="color-field"><input type="color" id="colAccent" value="#37D4C0"><span class="cf-t"><b>Acento</b><small id="hexA">#37D4C0</small></span></label>
-</div>
-<div style="display:flex;gap:16px">
-<button class="link-btn" id="btnSwapColors">⇄ Intercambiar</button>
-<button class="link-btn" id="btnResetColors">↺ Colores de la aleación</button>
-</div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">07</span><h2>Tipografía</h2></div>
-<div class="fld-row" style="margin-bottom:12px">
-<label class="fld" style="margin:0"><span>Títulos</span><select id="selFontH"></select></label>
-<label class="fld" style="margin:0"><span>Texto</span><select id="selFontB"></select></label>
-</div>
-<label class="fld"><span>Tamaño de títulos</span>
-<div class="range-row"><input type="range" id="rngHead" min="1" max="3" step="1" value="2"><output id="outHead">Grande</output></div>
-</label>
-<div class="font-prev" id="fontPrev">
-<div class="fp-h">Convierte visitas en clientes</div>
-<div class="fp-b">Así se verá el cuerpo de texto.</div>
-</div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">08</span><h2>Forma</h2></div>
-<label class="fld"><span>Radio de bordes</span>
-<div class="range-row"><input type="range" id="rngRadius" min="0" max="28" step="1" value="16"><output id="outRadius">16px</output></div>
-</label>
-<div class="fld"><span>Botones (forma)</span>
-<div class="seg" id="segBtn"><button data-v="recto">Rectos</button><button data-v="redondeado" class="on">Redondeados</button><button data-v="pildora">Píldora</button></div></div>
-<div class="fld" style="margin-bottom:0"><span>Sombras</span>
-<div class="seg" id="segShadow"><button data-v="ninguna">Sin</button><button data-v="sutil">Sutil</button><button data-v="media" class="on">Media</button><button data-v="alta">Alta</button></div></div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">09</span><h2>Componentes de la landing</h2></div>
-<p class="panel-sub">Elige el estilo de cada pieza.</p>
-<div class="fld"><span>Navbar</span><div class="rail tight" id="railNav"></div></div>
-<div class="fld"><span>Tarjetas</span><div class="rail tight" id="railCard"></div></div>
-<div class="fld"><span>Botones</span><div class="rail tight" id="railBtn"></div></div>
-<div class="fld" style="margin-bottom:0"><span>Animaciones</span><div class="rail tight" id="railAnim"></div></div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">10</span><h2>Posición y estructura</h2></div>
-<div class="fld"><span>Alineación del hero</span>
-<div class="seg" id="segAlign"><button data-v="auto" class="on">Según tipo</button><button data-v="izq">Izquierda</button><button data-v="centro">Centrado</button></div></div>
-<div class="fld"><span>Ancho del contenedor</span>
-<div class="seg" id="segContainer"><button data-v="estrecho">Estrecho</button><button data-v="normal" class="on">Normal</button><button data-v="ancho">Ancho</button></div></div>
-<div class="fld"><span>Tamaño de botones</span>
-<div class="seg" id="segBtnSize"><button data-v="compacto">Compacto</button><button data-v="normal" class="on">Normal</button><button data-v="grande">Grande</button></div></div>
-<div class="tgl-row"><span class="tt"><b>Bloques alternados</b><small>Invierte la posición de cada bloque destacado</small></span><span class="tgl"><input type="checkbox" id="tglAlt"><i></i></span></div>
-<div class="tgl-row"><span class="tt"><b>Navbar fija al hacer scroll</b><small>Si lo apagas, queda estática arriba</small></span><span class="tgl"><input type="checkbox" id="tglNavSticky" checked><i></i></span></div>
-<div class="fld" style="margin:12px 0 0"><span>Espaciado entre secciones</span>
-<div class="seg" id="segDensity"><button data-v="compacto">Compacto</button><button data-v="normal" class="on">Normal</button><button data-v="amplio">Amplio</button></div></div>
-</section>
-<section class="panel">
-<div class="panel-h"><span class="panel-num">11</span><h2>Efectos</h2></div>
-<div class="tgl-row"><span class="tt"><b>Brillo ambiental</b><small>Halos de color en el fondo</small></span><span class="tgl"><input type="checkbox" id="tglGlow" checked><i></i></span></div>
-<div class="tgl-row"><span class="tt"><b>Textura de grano</b><small>Acabado mate tipo impresión</small></span><span class="tgl"><input type="checkbox" id="tglGrain"><i></i></span></div>
-<div class="tgl-row"><span class="tt"><b>Barra translúcida</b><small>Navbar con desenfoque</small></span><span class="tgl"><input type="checkbox" id="tglGlass" checked><i></i></span></div>
-</section>
+  <div class="tabs-bar" role="tablist">
+    <button class="tab-btn on" data-tab="contenido">Contenido</button>
+    <button class="tab-btn" data-tab="estilo">Estilo</button>
+    <button class="tab-btn" data-tab="fondo">Fondo</button>
+    <button class="tab-btn" data-tab="componentes">Componentes</button>
+  </div>
+  <div class="tabpanel on" data-panel="contenido">
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">01</span><h2>Secciones</h2></div>
+    <p class="panel-sub">Toca ✎ para editar textos · ↑↓ para cambiar el orden.</p>
+    <div class="sec-list" id="secList"></div>
+    <div style="margin-top:12px"><button class="add-sec" id="btnAddSec">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Agregar sección…</button></div>
+    <div style="margin-top:10px;text-align:right"><button class="link-btn" id="btnRestoreType">↺ Restaurar del tipo elegido</button></div>
+    </section>
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">02</span><h2>Tu marca</h2></div>
+    <p class="panel-sub">Logo, nombre y textos. Elige un rubro para usar sugerencias.</p>
+    <div class="logo-zone">
+    <div class="logo-prev" id="logoPrev">✦</div>
+    <div style="display:flex;flex-direction:column;gap:7px;flex:1">
+    <input type="file" id="logoFile" accept="image/*" hidden>
+    <button class="btn-app ghost" id="btnLogoFile" style="padding:9px 13px;font-size:12px">Subir logo</button>
+    <button class="link-btn" id="btnLogoDel">Quitar logo</button>
+    </div>
+    </div>
+    <label class="fld"><span>O pegar URL del logo</span><input type="text" id="logoUrl" placeholder="https://…/logo.png"></label>
+    <div class="fld-row" style="margin-bottom:12px">
+    <label class="fld" style="margin:0"><span>Nombre de marca</span><input type="text" id="inBrand" value="Lumen"></label>
+    <label class="fld" style="margin:0"><span>Rubro</span><select id="selRubro"></select></label>
+    </div>
+    <div class="packs" id="rubroPacks"></div>
+    <label class="fld"><span>Eslogan (título principal)</span><input type="text" id="inSlogan" value="Ilumina la forma en que trabajas"></label>
+    <label class="fld"><span>Descripción corta</span><textarea id="inDesc">Lumen es la plataforma que centraliza tus proyectos, automatiza lo repetible y le da a tu equipo claridad en tiempo real.</textarea></label>
+    <div class="fld-row">
+    <label class="fld" style="margin:0"><span>Botón principal</span><input type="text" id="inCta1" value="Empezar gratis"></label>
+    <label class="fld" style="margin:0"><span>Botón secundario</span><input type="text" id="inCta2" value="Ver demo"></label>
+    </div>
+    </section>
+  </div>
+  <div class="tabpanel" data-panel="estilo">
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">01</span><h2>Aleación</h2></div>
+    <p class="panel-sub">La personalidad visual: colores, tipografías y forma coordinados.</p>
+    <div class="filter-row" id="alloyFilters"></div>
+    <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input type="text" id="alloySearch" placeholder="Buscar aleación… (ej: neón, elegante, rosa)">
+    </div>
+    <div class="rail" id="alloyRail"></div>
+    </section>
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">02</span><h2>Tipo de landing</h2></div>
+    <p class="panel-sub">100 estructuras curadas. Filtra por familia.</p>
+    <select class="sel-mini" id="typeFamily"></select>
+    <div class="rail" id="typeRail"></div>
+    </section>
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">03</span><h2>Colores</h2></div>
+    <p class="panel-sub">Parte con una paleta sugerida y ajusta a gusto.</p>
+    <div class="rail" id="palettesRail"></div>
+    <div class="fld-row" style="margin-bottom:12px">
+    <label class="color-field"><input type="color" id="colPrimary" value="#6E56F8"><span class="cf-t"><b>Principal</b><small id="hexP">#6E56F8</small></span></label>
+    <label class="color-field"><input type="color" id="colAccent" value="#37D4C0"><span class="cf-t"><b>Acento</b><small id="hexA">#37D4C0</small></span></label>
+    </div>
+    <div style="display:flex;gap:16px">
+    <button class="link-btn" id="btnSwapColors">⇄ Intercambiar</button>
+    <button class="link-btn" id="btnResetColors">↺ Colores de la aleación</button>
+    </div>
+    </section>
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">04</span><h2>Tipografía</h2></div>
+    <div class="fld-row" style="margin-bottom:12px">
+    <label class="fld" style="margin:0"><span>Títulos</span><select id="selFontH"></select></label>
+    <label class="fld" style="margin:0"><span>Texto</span><select id="selFontB"></select></label>
+    </div>
+    <label class="fld"><span>Tamaño de títulos</span>
+    <div class="range-row"><input type="range" id="rngHead" min="1" max="3" step="1" value="2"><output id="outHead">Grande</output></div>
+    </label>
+    <div class="font-prev" id="fontPrev">
+    <div class="fp-h">Convierte visitas en clientes</div>
+    <div class="fp-b">Así se verá el cuerpo de texto.</div>
+    </div>
+    </section>
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">05</span><h2>Forma</h2></div>
+    <label class="fld"><span>Radio de bordes</span>
+    <div class="range-row"><input type="range" id="rngRadius" min="0" max="28" step="1" value="16"><output id="outRadius">16px</output></div>
+    </label>
+    <div class="fld"><span>Botones (forma)</span>
+    <div class="seg" id="segBtn"><button data-v="recto">Rectos</button><button data-v="redondeado" class="on">Redondeados</button><button data-v="pildora">Píldora</button></div></div>
+    <div class="fld" style="margin-bottom:0"><span>Sombras</span>
+    <div class="seg" id="segShadow"><button data-v="ninguna">Sin</button><button data-v="sutil">Sutil</button><button data-v="media" class="on">Media</button><button data-v="alta">Alta</button></div></div>
+    </section>
+  </div>
+  <div class="tabpanel" data-panel="fondo">
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">01</span><h2>Fondo de la página</h2></div>
+    <p class="panel-sub">100 fondos con previsualización real.</p>
+    <div class="bg-live" id="bgLive" title="Vista previa del fondo actual"></div>
+    <div class="filter-row" id="bgFilters"></div>
+    <div class="rail" id="bgRail"></div>
+    </section>
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">02</span><h2>Efectos</h2></div>
+    <div class="tgl-row"><span class="tt"><b>Brillo ambiental</b><small>Halos de color en el fondo</small></span><span class="tgl"><input type="checkbox" id="tglGlow" checked><i></i></span></div>
+    <div class="tgl-row"><span class="tt"><b>Textura de grano</b><small>Acabado mate tipo impresión</small></span><span class="tgl"><input type="checkbox" id="tglGrain"><i></i></span></div>
+    <div class="tgl-row"><span class="tt"><b>Barra translúcida</b><small>Navbar con desenfoque</small></span><span class="tgl"><input type="checkbox" id="tglGlass" checked><i></i></span></div>
+    </section>
+  </div>
+  <div class="tabpanel" data-panel="componentes">
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">01</span><h2>Componentes de la landing</h2></div>
+    <p class="panel-sub">Elige el estilo de cada pieza.</p>
+    <div class="fld"><span>Navbar</span><div class="rail tight" id="railNav"></div></div>
+    <div class="fld"><span>Tarjetas</span><div class="rail tight" id="railCard"></div></div>
+    <div class="fld"><span>Botones</span><div class="rail tight" id="railBtn"></div></div>
+    <div class="fld" style="margin-bottom:0"><span>Animaciones</span><div class="rail tight" id="railAnim"></div></div>
+    </section>
+    <section class="panel">
+    <div class="panel-h"><span class="panel-num">02</span><h2>Posición y estructura</h2></div>
+    <div class="fld"><span>Alineación del hero</span>
+    <div class="seg" id="segAlign"><button data-v="auto" class="on">Según tipo</button><button data-v="izq">Izquierda</button><button data-v="centro">Centrado</button></div></div>
+    <div class="fld"><span>Ancho del contenedor</span>
+    <div class="seg" id="segContainer"><button data-v="estrecho">Estrecho</button><button data-v="normal" class="on">Normal</button><button data-v="ancho">Ancho</button></div></div>
+    <div class="fld"><span>Tamaño de botones</span>
+    <div class="seg" id="segBtnSize"><button data-v="compacto">Compacto</button><button data-v="normal" class="on">Normal</button><button data-v="grande">Grande</button></div></div>
+    <div class="tgl-row"><span class="tt"><b>Bloques alternados</b><small>Invierte la posición de cada bloque destacado</small></span><span class="tgl"><input type="checkbox" id="tglAlt"><i></i></span></div>
+    <div class="tgl-row"><span class="tt"><b>Navbar fija al hacer scroll</b><small>Si lo apagas, queda estática arriba</small></span><span class="tgl"><input type="checkbox" id="tglNavSticky" checked><i></i></span></div>
+    <div class="fld" style="margin:12px 0 0"><span>Espaciado entre secciones</span>
+    <div class="seg" id="segDensity"><button data-v="compacto">Compacto</button><button data-v="normal" class="on">Normal</button><button data-v="amplio">Amplio</button></div></div>
+    </section>
+  </div>
 </aside>
 <section class="stage">
 <div class="stage-stick">
@@ -510,11 +655,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 </section>
 </section>
 </main>
-<footer class="app-foot" id="appFoot">
-<div class="footer-slim">
-<div class="footer-brand-mini"><img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="CodeKat"><span>Code<span>Kat</span></span></div>
-<span class="footer-copy">Generador Pro · una herramienta de CodeKat</span>
-<a href="index.html" class="footer-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg> Ir al inicio</a>
+<footer class="footer" role="contentinfo">
+<div class="footer-cta">
+<div class="container reveal">
+<h2 class="footer-title">Tu próxima web <em class="grad-text">te está esperando</em>.</h2>
+<p class="footer-sub">Conversemos hoy y hagámosla realidad.</p>
+<div class="footer-actions">
+<a href="https://wa.me/56933465843" class="btn btn-primary grad-anim" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp</a>
+<a href="index.html#contacto" class="btn btn-glass">Ver formas de contacto <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+<div class="footer-marquee" aria-hidden="true">
+<div class="marquee-track">
+<span>Landing Pages <i class="fa-solid fa-star"></i> Páginas informativas <i class="fa-solid fa-star"></i> Captación de clientes <i class="fa-solid fa-star"></i> SEO <i class="fa-solid fa-star"></i> Desarrollo a medida <i class="fa-solid fa-star"></i></span>
+<span>Landing Pages <i class="fa-solid fa-star"></i> Páginas informativas <i class="fa-solid fa-star"></i> Captación de clientes <i class="fa-solid fa-star"></i> SEO <i class="fa-solid fa-star"></i> Desarrollo a medida <i class="fa-solid fa-star"></i></span>
+</div>
+</div>
+<div class="container footer-bottom">
+<div class="footer-brand-mini"><img src="https://pub-7efcc224bcc346c2a67e1096531f9a38.r2.dev/CodeKat/Logo.png" alt="CodeKat" loading="lazy" /><span>Code<span style="color:var(--purple-light)">Kat</span></span></div>
+<nav class="footer-links" aria-label="Enlaces del pie"><a href="index.html#inicio">Inicio</a><a href="index.html#servicios">Servicios</a><a href="index.html#plantillas">Plantillas</a><a href="index.html#contacto">Contacto</a><a href="cotizador.html">Cotizador</a></nav>
+<span class="footer-copy">© 2026 CodeKat — Desarrollo Web</span>
 </div>
 </footer>
 <button class="eye-fab" id="eyeFab" aria-label="Vista previa rápida" title="Vista previa rápida">
@@ -1335,13 +1496,34 @@ state.navV=pk.nv||"clasica";state.cardV=pk.cv||"borde";state.btnV=pk.bv||"solido
 state.layout=Object.assign({align:"auto",container:"normal",alt:false,btnSize:"normal",navSticky:true},pk.lo||{});
 renderAll();refresh();save();updateCodeLabel()
 }
+/* ═══ Bancos para el generador aleatorio ═══ */
+var RN_PRE=["Lumen","Nova","Vertex","Aurora","Kima","Nexo","Senda","Pulso","Alba","Orbe","Faro","Norte","Zelta","Mango","Punta","Cima","Brava","Ritmo","Vega","Torno","Lúa","Milko","Aero","Brio","Fen","Halo"];
+var RN_SUF=["Lab","Studios","& Co","Club","Space","Soft","House","Group","Tech","Colectivo","Móvil","App","360","Directo","Nube","Kit","Pro","Base","Forge","Bridge","Works"];
+var RN_DOM=Object.keys(RUBROS);
+var RN_FONT_PAIRS=[["Space Grotesk","Inter"],["Sora","Manrope"],["Outfit","Manrope"],["Syne","Inter"],["Fraunces","Sora"],["Playfair Display","Manrope"],["DM Serif Display","Inter"],["Syne","Outfit"],["Fraunces","Outfit"],["Space Grotesk","Sora"],["Outfit","Inter"],["Playfair Display","Sora"],["DM Serif Display","Fraunces"],["Sora","Outfit"],["Syne","Manrope"]];
 function randomPack(){
 var A=pick(ALLOYS),tid=pick(Object.keys(TYPES));
-var bgPool=BGS.filter(function(b){return b.dark===A.dark});
-return{v:5,a:A.id,t:tid,bg:pick(bgPool).id,p:A.primary,ac:A.accent,fh:A.fh,fb:A.fb,hs:A.headScale,r:A.radius,bs:A.btn,sh:A.shadow,dn:pick(["compacto","normal","amplio"]),
-fx:{glow:A.glow,grain:A.grain,glass:A.glass},br:state.brand,sc:TYPES[tid].secs.map(function(t){return[t,{}]}),
-nv:pick(NAVS)[0],cv:A.card,bv:pick(BTNS)[0],an:pick(ANIMS)[0],
-lo:{align:pick(["auto","izq","centro"]),container:pick(["estrecho","normal","ancho"]),alt:Math.random()>.6,btnSize:"normal",navSticky:true}}
+/* Paleta de color aleatoria (máxima variedad) */
+var pal=pick(PALETTES);
+var mixPalette=Math.random()>.3;
+var primary=mixPalette?pal[1]:(Math.random()>.5?A.primary:pick(PALETTES)[1]);
+var accent=mixPalette?pal[2]:(Math.random()>.6?A.accent:pick(PALETTES)[2]);
+/* Marca: rubro + pack de textos + nombre aleatorio */
+var rubro=pick(RN_DOM),rub=RUBROS[rubro],pkt=pick(rub.packs);
+var nombre=pick(RN_PRE)+(Math.random()>.45?" "+pick(RN_SUF):"");
+/* Fondo coherente con un tema claro/oscuro elegido al azar */
+var dark=Math.random()>.45;
+var bgs2=BGS.filter(function(b){return b.dark===dark});if(!bgs2.length)bgs2=BGS;
+var fp=pick(RN_FONT_PAIRS);
+/* Secciones del tipo, con contenido real por defecto (para que no salgan vacías/repetidas) */
+var scs=TYPES[tid].secs.map(function(t){var d=Object.assign({},defaultsFor(t));if(t==="hero"){d.t=pkt.e;d.sub=pkt.d;d.b1=pkt.c1;d.b2=pkt.c2;}return[t,d]});
+return{v:5,a:A.id,t:tid,bg:pick(bgs2).id,p:primary,ac:accent,fh:fp[0],fb:fp[1],hs:pick([1,2,2,3]),r:pick([8,12,16,20,24,28]),
+bs:pick(["recto","redondeado","pildora"]),sh:pick(["ninguna","sutil","media","alta"]),dn:pick(["compacto","normal","amplio"]),
+fx:{glow:Math.random()>.3,grain:Math.random()>.75,glass:Math.random()>.35},
+br:{nombre:nombre,eslogan:pkt.e,desc:pkt.d,cta:pkt.c1,cta2:pkt.c2,logo:"",rubro:rubro},
+sc:scs,
+nv:pick(NAVS)[0],cv:pick(CARDS)[0],bv:pick(BTNS)[0],an:pick(ANIMS)[0],
+lo:{align:pick(["auto","izq","centro"]),container:pick(["estrecho","normal","ancho"]),alt:Math.random()>.5,btnSize:pick(["compacto","normal","normal","grande"]),navSticky:Math.random()>.25}}
 }
 /* ═══ UI ═══ */
 var pvT=null,alloyFilter="Todas",alloyQ="",bgFilter="Todos",typeFam="Todas";
@@ -1586,9 +1768,12 @@ var T=TYPES[state.landingType];
 var msg="¡Hola CodeKat! Quiero que hagan por mí esta landing del Generador Pro.\n• Marca: "+state.brand.nombre+"\n• Tipo: "+(T?T.name:"")+"\n• Aleación: "+(A?A.name:"")+"\n• Mi código de diseño: "+currentCode;
 el.href="https://wa.me/56933465843?text="+encodeURIComponent(msg)
 }
-function setTheme(t){document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("ckpro-theme",t)}catch(e){}
-$("#icoMoon").hidden=t==="light";$("#icoSun").hidden=t!=="light";
-$$(".mt-btn").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-theme-set")===t)})}
+function setTheme(t){
+var root=document.documentElement,themeIconMini=$("#themeIconMini");
+if(t==="light"){root.setAttribute("data-theme","light");if(themeIconMini)themeIconMini.className="fa-solid fa-sun";}
+else{root.removeAttribute("data-theme");if(themeIconMini)themeIconMini.className="fa-solid fa-moon";}
+$$(".theme-btn").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-theme-set")===t)});
+try{localStorage.setItem("ckpro-theme",t)}catch(e){}}
 function scramble(){var el=$("#appTitle"),final=el.getAttribute("data-text");
 if(matchMedia("(prefers-reduced-motion: reduce)").matches){el.textContent=final;return}
 var glyphs="#</>*{}=+·",f=0;
@@ -1599,15 +1784,15 @@ function renderAll(){renderAlloyFilters();renderAlloys();renderTypes();renderBgF
 function init(){
 setTheme((function(){try{return localStorage.getItem("ckpro-theme")||"dark"}catch(e){return "dark"}})());
 renderAll();updateCodeLabel();
-var burger=$("#btnHam"),navMenu=$("#navMenu"),menuBack=$("#menuBack");
+var burger=$("#burger"),navMenu=$("#navMenu"),menuBack=$("#menuBack"),themeMini=$("#themeToggleMini");
 function isMenuOpen(){return navMenu&&navMenu.classList.contains("open")}
 function openMenu(){if(!navMenu)return;navMenu.classList.add("open");burger.classList.add("active");burger.setAttribute("aria-expanded","true");navMenu.setAttribute("aria-hidden","false")}
 function closeMenu(){if(!navMenu)return;navMenu.classList.remove("open");burger.classList.remove("active");burger.setAttribute("aria-expanded","false");navMenu.setAttribute("aria-hidden","true")}
 if(burger)burger.addEventListener("click",function(e){e.stopPropagation();isMenuOpen()?closeMenu():openMenu()});
 if(menuBack)menuBack.addEventListener("click",closeMenu);
 document.addEventListener("click",function(e){if(isMenuOpen()&&navMenu&&!navMenu.contains(e.target)&&!burger.contains(e.target))closeMenu()});
-$("#btnTheme").addEventListener("click",function(){setTheme(document.documentElement.getAttribute("data-theme")==="light"?"dark":"light")});
-$$(".mt-btn").forEach(function(b){b.addEventListener("click",function(){setTheme(b.getAttribute("data-theme-set"))})});
+if(themeMini)themeMini.addEventListener("click",function(){setTheme(document.documentElement.getAttribute("data-theme")==="light"?"dark":"light")});
+$$(".theme-btn").forEach(function(b){b.addEventListener("click",function(){setTheme(b.getAttribute("data-theme-set"))})});
 $("#eyeFab").addEventListener("click",openEye);
 $("#eyeClose").addEventListener("click",closeEye);
 $$("#eyeDevice button").forEach(function(b){b.addEventListener("click",function(){
@@ -1700,11 +1885,18 @@ $$("#wsSwitch button").forEach(function(x){x.classList.toggle("on",x===b)});
 if(b.getAttribute("data-w")==="vista")renderPreview()
 })});
 var footIO=new IntersectionObserver(function(es){es.forEach(function(e){var off=e.isIntersecting;$("#dcode").classList.toggle("off",off);$("#fabRnd").classList.toggle("off",off);$("#eyeFab").classList.toggle("off",off)})},{threshold:.05});
-footIO.observe($("#appFoot"));
+var _appFooter=document.querySelector(".footer");if(_appFooter)footIO.observe(_appFooter);
 window.addEventListener("resize",function(){renderPreview();if($("#eyeOverlay").classList.contains("open"))renderEyePreview()});
 renderPreview();renderCode();scramble()
 }
+/* ═══ TABS del panel de controles ═══ */
+$$(".tab-btn").forEach(function(b){b.addEventListener("click",function(){
+  var t=b.getAttribute("data-tab");
+  $$(".tab-btn").forEach(function(x){x.classList.toggle("on",x===b)});
+  $$(".tabpanel").forEach(function(p){p.classList.toggle("on",p.getAttribute("data-panel")===t)});
+})});
 try{init()}catch(err){var _t=document.getElementById("toast");if(_t){_t.innerHTML='<span class="tk" style="color:#FF6B6B">✕</span> Error de inicio: '+esc(String(err.message||err));_t.classList.add("show")}}
 </script>
+<script>(function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("visible");io.unobserve(e.target)}})},{threshold:.12,rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".reveal").forEach(function(el){io.observe(el)})})();</script>
 </body>
 </html>
