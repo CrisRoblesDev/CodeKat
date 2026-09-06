@@ -469,6 +469,8 @@ main{flex:1!important;min-height:0!important;overflow:hidden!important;display:f
   .wizard-footer{gap:.5rem!important}
 }
 </style>
+<script>/* Compat CodeKat: WebView antiguos sin IntersectionObserver — muestra el contenido en vez de romper el script */
+if(!('IntersectionObserver' in window)){window.IntersectionObserver=function(cb){this.observe=function(el){try{cb([{target:el,isIntersecting:true}],this);}catch(e){}};this.unobserve=function(){};this.disconnect=function(){}};}</script>
 </head>
 <body data-ws="diseno">
 <div class="bg-fx" aria-hidden="true"></div>
@@ -1965,41 +1967,46 @@ try{init()}catch(err){var _t=document.getElementById("toast");if(_t){_t.innerHTM
 </script>
 <script>(function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("visible");io.unobserve(e.target)}})},{threshold:.12,rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".reveal").forEach(function(el){io.observe(el)})})();</script>
 
-<script type="importmap">{"imports":{"motion":"https://cdn.jsdelivr.net/npm/motion@12/+esm"}}</script>
-<script type="module">
-/* CodeKat shell Motion (tool pages): transiciones sin scroll vertical */
-try{
-  const motion=await import('motion');
-  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(!reduced){
-    // Animar cada cambio de paso wizard
-    const panels=[...document.querySelectorAll('.wpanel')];
+<script>
+/* CodeKat Motion clásico (tool pages) · compatible Acode/WebView/file:// — Motion opcional, nada se rompe sin red */
+(function(){
+'use strict';
+var motion=null, reduced=false;
+try{ reduced=window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+function enhance(){
+  if(!motion||reduced) return;
+  try{
+    var panels=Array.prototype.slice.call(document.querySelectorAll('.wpanel'));
     if(panels.length){
-      const obs=new MutationObserver(()=>{
-        const act=document.querySelector('.wpanel.active');
-        if(act){ try{motion.animate(act,{opacity:[0,1],y:[12,0],scale:[.992,1]},{duration:.38,easing:[.2,.7,.2,1]});}catch(e){} }
+      var obs=new MutationObserver(function(){
+        var act=document.querySelector('.wpanel.active');
+        if(act){ try{ motion.animate(act,{opacity:[0,1],y:[12,0],scale:[0.992,1]},{duration:0.38,easing:[0.2,0.7,0.2,1]}); }catch(e){} }
       });
-      panels.forEach(p=>obs.observe(p,{attributes:true,attributeFilter:['class']}));
+      panels.forEach(function(p){ obs.observe(p,{attributes:true,attributeFilter:['class']}); });
     }
-    // Micro-interacción botones
-    document.querySelectorAll('.btn,.btn-app,.btn-primary,.btn-ghost').forEach(el=>{
-      el.addEventListener('pointerdown',()=>{try{motion.animate(el,{scale:.97},{duration:.12});}catch(e){}});
-      el.addEventListener('pointerup',()=>{try{motion.animate(el,{scale:1},{duration:.18});}catch(e){}});
+    document.querySelectorAll('.btn,.btn-app,.btn-primary,.btn-ghost').forEach(function(el){
+      el.addEventListener('pointerdown',function(){ try{ motion.animate(el,{scale:0.97},{duration:0.12}); }catch(e){} });
+      el.addEventListener('pointerup',function(){ try{ motion.animate(el,{scale:1},{duration:0.18}); }catch(e){} });
     });
-  }
-  // Generador: switch móvil Editar/Vista (sin scroll página)
-  const ws=document.querySelector('.workspace');
-  if(ws && !document.getElementById('ckMobileSwitch')){
-    const bar=document.createElement('div');
-    bar.id='ckMobileSwitch';
-    bar.innerHTML='<button class="on" data-m="edit">✎ Editar</button><button data-m="view">▶ Vista previa</button>';
-    ws.prepend(bar);
-    bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-      bar.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
-      ws.classList.toggle('show-preview',b.dataset.m==='view');
-    }));
-  }
-}catch(e){ /* fallback CSS puro, sin Motion */ }
+  }catch(e){}
+}
+try{
+  var p=null;
+  try{ p=Function('return import("https://cdn.jsdelivr.net/npm/motion@12/+esm")')(); }catch(e){ p=null; }
+  if(p&&p.then){ p.then(function(m){ motion=m; enhance(); }).catch(function(){}); }
+}catch(e){}
+var ws=document.querySelector('.workspace');
+if(ws && !document.getElementById('ckMobileSwitch')){
+  var bar=document.createElement('div');
+  bar.id='ckMobileSwitch';
+  bar.innerHTML='<button class="on" data-m="edit">Editar</button><button data-m="view">Vista previa</button>';
+  ws.insertBefore(bar, ws.firstChild);
+  bar.querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){
+    bar.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
+    ws.classList.toggle('show-preview', b.getAttribute('data-m')==='view');
+  });});
+}
+})();
 </script>
 
 </body>
