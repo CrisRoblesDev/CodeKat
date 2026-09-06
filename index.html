@@ -370,7 +370,7 @@
       position:absolute;top:0;left:0;width:100%;height:100%;
       transform-style:preserve-3d;
     }
-    .faq-carousel-track .faq-list{position:relative;width:100%;height:100%;margin:0;padding:0;}
+    .faq-carousel-track .faq-list{position:relative;width:100%;height:100%;margin:0;padding:0;display:block;}
     .faq-carousel-track .faq-item{
       position:absolute;left:8%;width:84%;
       opacity:0;pointer-events:none;
@@ -394,7 +394,6 @@
      /* ── END FAQ CARRUSEL ── */
 
      @media(max-width:959px){
-       .faq-list{display:none!important;}
        .faq-cta{display:none!important;}
        .faq-carousel-wrapper{display:block!important;}
        .faq-carousel-viewport{display:block!important;}
@@ -1171,57 +1170,57 @@
           <div class="faq-carousel-viewport" id="faqViewport">
             <div class="faq-carousel-track" id="faqTrack">
               <div class="faq-list" id="faqList">
-          <div class="faq-item reveal">
-            <div class="faq-q" data-faq="0" role="button" aria-expanded="false" tabindex="0">
-              <span class="faq-q-num">01</span>
-              <span class="faq-q-text">¿Cuánto dura el servicio?</span>
-              <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
-            </div>
-            <div class="faq-a" id="faq-a0">
-              <div class="faq-a-inner">El servicio funciona con un <strong>límite de más de 500,000 consultas mensuales</strong> (tope del plan gratuito de Cloudflare Pages para funciones). Los activos estáticos tienen ancho de banda ilimitado. Estadísticas oficiales: <strong>500,000 consultas/mes</strong> · <strong>Ilimitado</strong> en activos estáticos · <strong>$0</strong> hosting + funciones gratis. Si necesitas renovar la página, solo debes <strong>renovar el dominio</strong>. Sin costo extra de mantenimiento mientras el dominio esté activo.</div>
-            </div>
-          </div>
-          <div class="faq-item reveal delay-1">
-            <div class="faq-q" data-faq="1" role="button" aria-expanded="false" tabindex="0">
-              <span class="faq-q-num">02</span>
-              <span class="faq-q-text">¿Qué es el SEO?</span>
-              <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
-            </div>
-            <div class="faq-a" id="faq-a1">
-              <div class="faq-a-inner">Nuestra configuración de SEO incluye la <strong>indexación básica</strong> para que puedas posicionarte por el nombre de tu empresa y te encuentren de forma sencilla. La indexación está a cargo de <strong>Google Search Console</strong>, lo que no asegura posicionarte entre los primeros al buscar por servicios genéricos. Si requieres otra forma de promoción, se debe incluir <strong>por separado</strong>, ya que los precios son variables, dependen del tiempo y <strong>no garantizan el resultado esperado</strong>.</div>
-            </div>
-          </div>
-          <div class="faq-item reveal delay-2">
-            <div class="faq-q" data-faq="2" role="button" aria-expanded="false" tabindex="0">
-              <span class="faq-q-num">03</span>
-              <span class="faq-q-text">¿Puedo obtener mi código de desarrollo?</span>
-              <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
-            </div>
-            <div class="faq-a" id="faq-a2">
-              <div class="faq-a-inner">¡Sí! Trabajamos con nuestro <strong>repositorio público de GitHub</strong>. Puedes solicitar el código o pedirnos acceso al repositorio. Así podrás editarlo mediante <strong>Git</strong> o directamente desde <strong>GitHub</strong>. Solo necesitas poseer una cuenta de GitHub.</div>
-            </div>
-          </div>
-          <div class="faq-item reveal delay-1">
-            <div class="faq-q" data-faq="3" role="button" aria-expanded="false" tabindex="0">
-              <span class="faq-q-num">04</span>
-              <span class="faq-q-text">¿Qué debo tener en cuenta?</span>
-              <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
-            </div>
-            <div class="faq-a" id="faq-a3">
-              <div class="faq-a-inner">Debes tener en cuenta un <strong>nombre de dominio</strong> y, en caso de querer correo, un <strong>nombre de correo</strong>. Por la dificultad de encontrar nombres de dominio disponibles, es bueno tener un nombre <strong>ingenioso, simple y poco utilizado</strong> que facilite tanto el dominio como el correo.</div>
-            </div>
-          </div>
-          <div class="faq-item reveal delay-2">
-            <div class="faq-q" data-faq="4" role="button" aria-expanded="false" tabindex="0">
-              <span class="faq-q-num">05</span>
-              <span class="faq-q-text">¿Hosting y colaboración?</span>
-              <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
-            </div>
-            <div class="faq-a" id="faq-a4">
-              <div class="faq-a-inner">Debido a que ocupamos <strong>Cloudflare</strong> para el despliegue del hosting, y requiere que otro desarrollador intervenga, solo se puede facilitar <strong>acceso a GitHub</strong>. La mayoría de los trabajos son estáticos y sin cPanel, lo que nos permite <strong>desplegar tu página más rápido</strong> y <strong>realizar cambios de manera más sencilla</strong>.</div>
-            </div>
-          </div>
-        </div>
+                <div class="faq-item reveal">
+                  <div class="faq-q" data-faq="0" role="button" aria-expanded="false" tabindex="0">
+                    <span class="faq-q-num">01</span>
+                    <span class="faq-q-text">¿Cuánto dura el servicio?</span>
+                    <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
+                  </div>
+                  <div class="faq-a" id="faq-a0">
+                    <div class="faq-a-inner">El servicio funciona con un <strong>límite de más de 500,000 consultas mensuales</strong> (tope del plan gratuito de Cloudflare Pages para funciones). Los activos estáticos tienen ancho de banda ilimitado. Estadísticas oficiales: <strong>500,000 consultas/mes</strong> · <strong>Ilimitado</strong> en activos estáticos · <strong>$0</strong> hosting + funciones gratis. Si necesitas renovar la página, solo debes <strong>renovar el dominio</strong>. Sin costo extra de mantenimiento mientras el dominio esté activo.</div>
+                  </div>
+                </div>
+                <div class="faq-item reveal delay-1">
+                  <div class="faq-q" data-faq="1" role="button" aria-expanded="false" tabindex="0">
+                    <span class="faq-q-num">02</span>
+                    <span class="faq-q-text">¿Qué es el SEO?</span>
+                    <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
+                  </div>
+                  <div class="faq-a" id="faq-a1">
+                    <div class="faq-a-inner">Nuestra configuración de SEO incluye la <strong>indexación básica</strong> para que puedas posicionarte por el nombre de tu empresa y te encuentren de forma sencilla. La indexación está a cargo de <strong>Google Search Console</strong>, lo que no asegura posicionarte entre los primeros al buscar por servicios genéricos. Si requieres otra forma de promoción, se debe incluir <strong>por separado</strong>, ya que los precios son variables, dependen del tiempo y <strong>no garantizan el resultado esperado</strong>.</div>
+                  </div>
+                </div>
+                <div class="faq-item reveal delay-2">
+                  <div class="faq-q" data-faq="2" role="button" aria-expanded="false" tabindex="0">
+                    <span class="faq-q-num">03</span>
+                    <span class="faq-q-text">¿Puedo obtener mi código de desarrollo?</span>
+                    <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
+                  </div>
+                  <div class="faq-a" id="faq-a2">
+                    <div class="faq-a-inner">¡Sí! Trabajamos con nuestro <strong>repositorio público de GitHub</strong>. Puedes solicitar el código o pedirnos acceso al repositorio. Así podrás editarlo mediante <strong>Git</strong> o directamente desde <strong>GitHub</strong>. Solo necesitas poseer una cuenta de GitHub.</div>
+                  </div>
+                </div>
+                <div class="faq-item reveal delay-1">
+                  <div class="faq-q" data-faq="3" role="button" aria-expanded="false" tabindex="0">
+                    <span class="faq-q-num">04</span>
+                    <span class="faq-q-text">¿Qué debo tener en cuenta?</span>
+                    <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
+                  </div>
+                  <div class="faq-a" id="faq-a3">
+                    <div class="faq-a-inner">Debes tener en cuenta un <strong>nombre de dominio</strong> y, en caso de querer correo, un <strong>nombre de correo</strong>. Por la dificultad de encontrar nombres de dominio disponibles, es bueno tener un nombre <strong>ingenioso, simple y poco utilizado</strong> que facilite tanto el dominio como el correo.</div>
+                  </div>
+                </div>
+                <div class="faq-item reveal delay-2">
+                  <div class="faq-q" data-faq="4" role="button" aria-expanded="false" tabindex="0">
+                    <span class="faq-q-num">05</span>
+                    <span class="faq-q-text">¿Hosting y colaboración?</span>
+                    <span class="faq-chev"><i class="fa-solid fa-plus"></i></span>
+                  </div>
+                  <div class="faq-a" id="faq-a4">
+                    <div class="faq-a-inner">Debido a que ocupamos <strong>Cloudflare</strong> para el despliegue del hosting, y requiere que otro desarrollador intervenga, solo se puede facilitar <strong>acceso a GitHub</strong>. La mayoría de los trabajos son estáticos y sin cPanel, lo que nos permite <strong>desplegar tu página más rápido</strong> y <strong>realizar cambios de manera más sencilla</strong>.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="faq-carousel-dots" id="faqDots"></div>
