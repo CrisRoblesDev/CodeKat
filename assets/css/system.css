@@ -1,0 +1,50 @@
+/* CodeKat · assets/css/system.css — extraído de index.html */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal.delay-1{transition-delay:120ms;} .reveal.delay-2{transition-delay:240ms;}
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
+      .reveal{opacity:1;transform:none;}
+    }
+    @media (min-width:640px){
+      .container{padding:0 2rem;}
+      .hero-contact-row{grid-template-columns:1fr 1fr;}
+       .modal-cta{flex-direction:row;align-items:center;justify-content:space-between;}
+       .footer-bottom{flex-direction:row;justify-content:space-between;text-align:left;}
+    }
+    @media (min-width:960px){
+      .hero-intro{max-width:720px;}
+      .hx-ghost{font-size:clamp(3rem,9vw,7rem);margin-bottom:2rem;}
+      .steps-flow{grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:1rem;}
+      .step-arrow{display:flex;} .step-arrow-down{display:none;}
+      .modal{height:auto;max-height:calc(100vh - 1.5rem);}
+      .modal-body{padding:.9rem 1.25rem 1rem;overflow:auto;}
+      .modal-head{padding:.75rem 1.25rem;}
+      .modal-layout{grid-template-columns:1.5fr 1fr;align-items:center;gap:1.1rem;}
+      .modal-preview-slide{aspect-ratio:16/10.5;}
+      .modal-preview-slide svg{width:100%;height:100%;}
+      .modal-side{max-height:calc(100vh - 10rem);overflow-y:auto;padding-right:.35rem;scrollbar-gutter:stable;}
+      .modal-advantages{grid-template-columns:1fr 1fr;}
+      .modal-cta{padding:.8rem .9rem;flex-direction:column;align-items:stretch;gap:.55rem;}
+      .modal-cta .btn{width:100%;justify-content:center;}
+      .menu-link .link-title{font-size:1.6rem;}
+    }
+    @media (min-width:1200px){
+      .hero-title{font-size:clamp(2.8rem,5vw,4.6rem);}
+      .section-title{font-size:clamp(2rem,4vw,3rem);}
+    }
+    /* PAGE LOADER HYPER FUTURISTIC */
+    #pageLoader{position:fixed;inset:0;z-index:9999;background:#0A0A0F;display:grid;place-items:center;overflow:hidden;transition:opacity .8s var(--ease),visibility .8s var(--ease),filter .8s var(--ease),transform .8s var(--ease);filter:blur(0) scale(1);}
+    #pageLoader.hidden{opacity:0;visibility:hidden;pointer-events:none;filter:blur(18px) scale(1.04);transform:scale(1.04);}
+    #pageLoader::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%, rgba(167,139,250,.18), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167,139,250,.12), transparent 60%);opacity:.7;}
+    .pl-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1.4rem;}
+    .pl-ring{position:relative;width:110px;height:110px;display:grid;place-items:center;}
+    .pl-ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(167,139,250,.15);}
+    .pl-ring::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid transparent;border-top-color:var(--purple-soft);border-right-color:var(--purple-light);animation:spin 1.8s cubic-bezier(.4,0,.2,1) infinite;box-shadow:0 0 18px var(--purple-glow);}
+    .pl-logo{width:72px;height:72px;border-radius:18px;object-fit:contain;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);padding:8px;animation:loaderPulse 1.4s ease-in-out infinite;}
+    .pl-brand{font-family:var(--font-display);font-weight:700;font-size:1.6rem;color:#fff;letter-spacing:-.02em;}
+    .pl-brand span{color:var(--purple-light);}
+    .pl-sub{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);}
+    .pl-bar{width:160px;height:3px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;}
+    .pl-bar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));animation:plFill 3.2s ease-in-out forwards;box-shadow:0 0 10px var(--purple-glow);}

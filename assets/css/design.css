@@ -1,0 +1,36 @@
+/* CodeKat · assets/css/design.css — extraído de index.html */
+    *,*::before,*::after{box-sizing:border-box;}
+    html{scroll-behavior:smooth;scrollbar-gutter:stable;scroll-snap-type:y proximity;}
+    body{margin:0;font-family:var(--font-body);color:var(--text);background:var(--bg);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background var(--t-slow) var(--ease),color var(--t-slow) var(--ease);background-image:radial-gradient(circle at 1px 1px,var(--pattern-color) 1px,transparent 0);background-size:28px 28px;}
+    body.menu-open{overflow:hidden;scrollbar-gutter:stable;}
+    img,svg{max-width:100%;display:block;}
+    a{color:inherit;text-decoration:none;}
+    button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+    h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;line-height:1.2;letter-spacing:-0.01em;}
+    p{margin:0;} ul{list-style:none;padding:0;margin:0;}
+    ::selection{background:var(--purple);color:#fff;}
+    :focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:4px;}
+    ::-webkit-scrollbar{width:10px;height:10px;} ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:5px;} ::-webkit-scrollbar-thumb:hover{background:var(--purple-soft);}
+
+    .bg-aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+    .bg-aurora::before{content:'';position:absolute;inset:-60%;background:conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(167,139,250,.07) 80deg, transparent 160deg, rgba(167,139,250,.05) 240deg, transparent 320deg);animation:bgRotate 50s linear infinite;}
+    @keyframes bgRotate{to{transform:rotate(360deg);}}
+    .aurora{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;}
+    .a1{width:560px;height:560px;background:radial-gradient(circle,rgba(167,139,250,.5),transparent 70%);top:-14%;left:-12%;animation:aur1 16s ease-in-out infinite alternate;}
+    .a2{width:480px;height:480px;background:radial-gradient(circle,rgba(124,58,237,.45),transparent 70%);top:30%;right:-12%;animation:aur2 20s ease-in-out infinite alternate;}
+    .a3{width:520px;height:520px;background:radial-gradient(circle,rgba(167,139,250,.4),transparent 70%);bottom:-16%;left:20%;animation:aur3 24s ease-in-out infinite alternate;}
+    .a4{width:420px;height:420px;background:radial-gradient(circle,rgba(196,181,253,.32),transparent 70%);top:55%;left:-12%;animation:aur4 22s ease-in-out infinite alternate;}
+    @keyframes aur1{to{transform:translate(130px,90px) scale(1.15);}}
+    @keyframes aur2{to{transform:translate(-110px,70px) scale(1.1);}}
+    @keyframes aur3{to{transform:translate(90px,-80px) scale(1.2);}}
+    @keyframes aur4{to{transform:translate(120px,-60px) scale(1.1);}}
+
+    .container{width:100%;max-width:1200px;margin:0 auto;padding:0 1.25rem;}
+    section{padding:var(--space-3xl) 0;position:relative;}
+    .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));z-index:130;box-shadow:0 0 10px var(--purple-glow);}
+    .grad-anim{background:linear-gradient(135deg,var(--purple-soft),var(--purple-dark),var(--purple-soft));background-size:200% 200%;animation:gradShift 6s ease infinite;}
+    @keyframes gradShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+    .grad-text{background:linear-gradient(135deg,var(--purple-light),var(--purple),var(--purple-light));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:textShift 5s linear infinite;}
+    @keyframes textShift{to{background-position:200% center;}}
+
