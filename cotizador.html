@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es-CL">
 <head>
+<!-- CodeKat Rediseño: Motion (motion.dev/docs/react) + UI-UX-Pro-Max + 21st.dev · App-shell sin scroll vertical, responsive móvil/escritorio. Contenido y lógica originales preservados. -->
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Cotizador Profesional | CodeKat</title>
   <meta name="description" content="Cotizador profesional y general. Crea cotizaciones para cualquier negocio: emisor, cliente, ítems, creador de logo, diseño y colores. Descarga en PDF, Excel o TXT." />
     <link rel="icon" href="/favicon.ico" sizes="any">
@@ -400,7 +401,56 @@
     .footer-links a{font-size:.88rem;color:var(--text-muted);transition:color var(--t-fast) var(--ease);}
     .footer-links a:hover{color:var(--purple-light);}
     .footer-copy{font-size:.82rem;color:var(--text-dim);}
-  </style>
+  
+/* ===== CodeKat Rediseño App-Shell · Stack: Motion + UI-UX-Pro-Max + 21st (sin scroll vertical) ===== */
+html,body{height:100dvh!important;overflow:hidden!important;overscroll-behavior:none!important}
+body{display:flex!important;flex-direction:column!important;min-height:0!important;height:100dvh!important;overflow:hidden!important}
+main{flex:1!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+/* Header compacto */
+.navbar{position:sticky!important;top:0;z-index:50}
+.footer,.siteFooter,#siteFooter{flex-shrink:0!important}
+/* Motion: transiciones suaves de paneles */
+.wpanel{animation:ckIn .38s cubic-bezier(.2,.7,.2,1)}
+@keyframes ckIn{from{opacity:0;transform:translateY(12px) scale(.992)}}
+/* Cotizador + Remuneración: wizard ocupa viewport, solo scroll interno en tarjeta */
+.container{flex:1!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;width:100%!important}
+.wpanel{display:none!important;flex:1!important;min-height:0!important;overflow:hidden!important;flex-direction:column!important;gap:.7rem!important}
+.wpanel.active{display:flex!important}
+.cot-card,.rem-card{flex:1!important;min-height:0!important;overflow:auto!important;scrollbar-width:thin;overscroll-behavior:contain}
+.wizard-footer-wrap,.wizard-footer{flex-shrink:0!important;position:sticky!important;bottom:0;z-index:5}
+.quote-doc{max-height:100%!important;overflow:auto!important}
+/* Generador: workspace 2 columnas que llenan viewport */
+.workspace{flex:1!important;min-height:0!important;display:grid!important;grid-template-columns:minmax(300px,400px) minmax(0,1fr)!important;gap:.8rem!important;overflow:hidden!important;width:100%!important;max-width:1720px!important;margin:0 auto!important;padding:.7rem 1rem!important}
+.controls,.stage{min-height:0!important;overflow:auto!important;overscroll-behavior:contain;scrollbar-width:thin}
+.stage-stick{position:sticky;top:0}
+.pv-frame iframe{max-height:52vh}
+#ckMobileSwitch{display:none}
+/* Footer mini sin scroll */
+.footer{padding:.7rem 0!important}
+.footer-links{display:flex;gap:.6rem;flex-wrap:nowrap;overflow-x:auto}
+/* Accesibilidad UI-UX-Pro-Max */
+:focus-visible{outline:2px solid var(--purple,#A78BFA)!important;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* Móvil: sin scroll de página, paneles internos */
+@media (max-width:900px){
+  .workspace{grid-template-columns:1fr!important;grid-template-rows:auto minmax(0,1fr)!important;overflow:hidden!important}
+  .workspace.show-preview .controls{display:none!important}
+  .workspace:not(.show-preview) .stage{display:none!important}
+  .controls,.stage{overflow:auto!important}
+  #ckMobileSwitch{display:flex!important;gap:.4rem;flex-shrink:0;background:var(--panel,#11141C);border:1px solid var(--line,rgba(255,255,255,.1));padding:.3rem;border-radius:13px}
+  #ckMobileSwitch button{flex:1;min-height:40px;border-radius:9px;font-weight:800;font-size:.78rem;color:var(--dim,#9AA2B5)}
+  #ckMobileSwitch button.on{background:linear-gradient(135deg,#7C3AED,#8B5CF6);color:#fff}
+  .container{padding-bottom:.4rem!important}
+  .field-grid{grid-template-columns:1fr!important}
+  .extra-grid{grid-template-columns:1fr 1fr!important}
+  .actions-grid{grid-template-columns:1fr 1fr!important}
+}
+@media (max-width:560px){
+  .extra-grid{grid-template-columns:1fr!important}
+  .actions-grid{grid-template-columns:1fr!important}
+  .wizard-footer{gap:.5rem!important}
+}
+</style>
 </head>
 <body>
 
@@ -1266,5 +1316,43 @@
   })();
   </script>
   <script>(function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -60px 0px'});document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});})();</script>
+
+<script type="importmap">{"imports":{"motion":"https://cdn.jsdelivr.net/npm/motion@12/+esm"}}</script>
+<script type="module">
+/* CodeKat shell Motion (tool pages): transiciones sin scroll vertical */
+try{
+  const motion=await import('motion');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduced){
+    // Animar cada cambio de paso wizard
+    const panels=[...document.querySelectorAll('.wpanel')];
+    if(panels.length){
+      const obs=new MutationObserver(()=>{
+        const act=document.querySelector('.wpanel.active');
+        if(act){ try{motion.animate(act,{opacity:[0,1],y:[12,0],scale:[.992,1]},{duration:.38,easing:[.2,.7,.2,1]});}catch(e){} }
+      });
+      panels.forEach(p=>obs.observe(p,{attributes:true,attributeFilter:['class']}));
+    }
+    // Micro-interacción botones
+    document.querySelectorAll('.btn,.btn-app,.btn-primary,.btn-ghost').forEach(el=>{
+      el.addEventListener('pointerdown',()=>{try{motion.animate(el,{scale:.97},{duration:.12});}catch(e){}});
+      el.addEventListener('pointerup',()=>{try{motion.animate(el,{scale:1},{duration:.18});}catch(e){}});
+    });
+  }
+  // Generador: switch móvil Editar/Vista (sin scroll página)
+  const ws=document.querySelector('.workspace');
+  if(ws && !document.getElementById('ckMobileSwitch')){
+    const bar=document.createElement('div');
+    bar.id='ckMobileSwitch';
+    bar.innerHTML='<button class="on" data-m="edit">✎ Editar</button><button data-m="view">▶ Vista previa</button>';
+    ws.prepend(bar);
+    bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      bar.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+      ws.classList.toggle('show-preview',b.dataset.m==='view');
+    }));
+  }
+}catch(e){ /* fallback CSS puro, sin Motion */ }
+</script>
+
 </body>
 </html>
