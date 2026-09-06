@@ -358,7 +358,57 @@
     .faq-cta{margin-top:var(--space-3xl);text-align:center;}
     .faq-cta .section-subtitle{margin-bottom:var(--space-xl);}
 
-    .footer{position:relative;border-top:1px solid var(--border);overflow:hidden;}
+    /* ── FAQ CARRUSEL VERTICAL RULETA ── */
+    .faq-carousel-wrapper{display:none;position:relative;width:100%;}
+    .faq-carousel-viewport{
+      position:relative;height:78vh;overflow:hidden;
+      perspective:900px;perspective-origin:50% 45%;
+      mask-image:linear-gradient(to bottom,transparent 0%,black 10%,black 90%,transparent 100%);
+      -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 10%,black 90%,transparent 100%);
+    }
+    .faq-carousel-track{
+      position:absolute;top:0;left:0;width:100%;height:100%;
+      transform-style:preserve-3d;
+    }
+    .faq-carousel-track .faq-list{position:relative;width:100%;height:100%;margin:0;padding:0;}
+    .faq-carousel-track .faq-item{
+      position:absolute;left:8%;width:84%;
+      opacity:0;pointer-events:none;
+      transform:translateY(0) scale(.82) rotateX(25deg);
+      transition:opacity .4s ease,transform .5s cubic-bezier(.23,1,.32,1);
+    }
+    .faq-carousel-track .faq-item.reveal{opacity:0;transform:translateY(0) scale(.82) rotateX(25deg);}
+    .faq-carousel-track .faq-item.carousel-active{
+      opacity:1;pointer-events:auto;
+      transform:translateY(0) scale(1) rotateX(0deg);
+    }
+    .faq-carousel-track .faq-item.carousel-prev{
+      opacity:.25;transform:translateY(-110%) scale(.7) rotateX(-35deg);pointer-events:none;
+    }
+    .faq-carousel-track .faq-item.carousel-next{
+      opacity:.25;transform:translateY(110%) scale(.7) rotateX(35deg);pointer-events:none;
+    }
+    .faq-carousel-dots{display:none;justify-content:center;gap:.5rem;margin-top:1.25rem;}
+    .faq-carousel-dot{width:8px;height:8px;border-radius:999px;background:var(--border);transition:all var(--t-normal) var(--ease);cursor:pointer;}
+    .faq-carousel-dot.on{background:var(--amb);width:24px;box-shadow:0 0 12px var(--amb-glow);}
+     /* ── END FAQ CARRUSEL ── */
+
+     @media(max-width:959px){
+       .faq-list{display:none!important;}
+       .faq-cta{display:none!important;}
+       .faq-carousel-wrapper{display:block!important;}
+       .faq-carousel-viewport{display:block!important;}
+       .faq-carousel-dots{display:flex!important;}
+     }
+     @media(min-width:960px){
+       .faq-carousel-wrapper{display:none!important;}
+       .faq-carousel-viewport{display:none!important;}
+       .faq-carousel-dots{display:none!important;}
+       .faq-list{display:grid!important;}
+       .faq-cta{display:block!important;}
+     }
+
+     .footer{position:relative;border-top:1px solid var(--border);overflow:hidden;}
     .footer-cta{padding:var(--space-3xl) 0 var(--space-2xl);text-align:center;position:relative;}
     .footer-title{font-size:clamp(2rem,6vw,3.5rem);color:var(--white);letter-spacing:-0.02em;margin-bottom:1rem;}
     .footer-sub{color:var(--text-muted);font-size:1.05rem;margin-bottom:2rem;}
@@ -1117,7 +1167,10 @@
           <h2 class="section-title" id="faq-titulo">FAQ — <em class="grad-text">Resuelve tus consultas</em>.</h2>
           <p class="section-subtitle">Respuestas directas a las preguntas más comunes sobre nuestros servicios.</p>
         </div>
-        <div class="faq-list" id="faqList">
+        <div class="faq-carousel-wrapper">
+          <div class="faq-carousel-viewport" id="faqViewport">
+            <div class="faq-carousel-track" id="faqTrack">
+              <div class="faq-list" id="faqList">
           <div class="faq-item reveal">
             <div class="faq-q" data-faq="0" role="button" aria-expanded="false" tabindex="0">
               <span class="faq-q-num">01</span>
@@ -1168,6 +1221,10 @@
               <div class="faq-a-inner">Debido a que ocupamos <strong>Cloudflare</strong> para el despliegue del hosting, y requiere que otro desarrollador intervenga, solo se puede facilitar <strong>acceso a GitHub</strong>. La mayoría de los trabajos son estáticos y sin cPanel, lo que nos permite <strong>desplegar tu página más rápido</strong> y <strong>realizar cambios de manera más sencilla</strong>.</div>
             </div>
           </div>
+        </div>
+            </div>
+          </div>
+          <div class="faq-carousel-dots" id="faqDots"></div>
         </div>
         <div class="faq-cta reveal">
           <p class="section-subtitle">¿Aún tienes dudas? Escribenos por WhatsApp y te respondemos al instante.</p>
@@ -1508,6 +1565,123 @@
       marq.addEventListener('mousemove',function(e){if(!down)return;e.preventDefault();marq.scrollLeft=sl-(e.pageX-startX);});
       marq.addEventListener('touchstart',function(e){startX=e.touches[0].pageX;sl=marq.scrollLeft;},{passive:true});
       marq.addEventListener('touchmove',function(e){marq.scrollLeft=sl-(e.touches[0].pageX-startX);},{passive:true});
+    })();
+
+    // FAQ carousel (vertical roulette)
+    (function(){
+      var viewport=document.getElementById('faqViewport');
+      var track=document.getElementById('faqTrack');
+      var items=document.querySelectorAll('.faq-carousel-track .faq-item');
+      var dotsEl=document.getElementById('faqDots');
+      if(!viewport||!track||!items.length){return;}
+      var total=items.length;
+      var cur=0;
+      var height=viewport.offsetHeight||600;
+      var pos=0;
+      var dragging=false;
+      var startY=0;
+      var startPos=0;
+      var vel=0;
+      var lastT=0;
+      var lastY=0;
+      // create dots
+      for(var i=0;i<total;i++){
+        var d=document.createElement('button');
+        d.className='faq-carousel-dot'+(i===0?' on':'');
+        d.setAttribute('aria-label','Ir a pregunta '+(i+1));
+        d.addEventListener('click',function(){goTo(this.getAttribute('data-idx'));});
+        d.setAttribute('data-idx',i);
+        dotsEl.appendChild(d);
+      }
+      function setPos(p){
+        pos=Math.max(-(total-1)*height,Math.min(0,p));
+        track.style.transform='translateY('+pos+'px)';
+        items.forEach(function(item,i){
+          var rel=(i*height+pos)/height;
+          item.classList.remove('carousel-active','carousel-prev','carousel-next');
+          if(i===cur) item.classList.add('carousel-active');
+          else if(rel<-0.5) item.classList.add('carousel-prev');
+          else if(rel>0.5) item.classList.add('carousel-next');
+        });
+        updateDots();
+      }
+      function goTo(idx){
+        cur=Math.max(0,Math.min(total-1,idx));
+        setPos(-cur*height);
+      }
+      function updateDots(){
+        var dots=dotsEl.querySelectorAll('.faq-carousel-dot');
+        dots.forEach(function(d,i){d.classList.toggle('on',parseInt(d.getAttribute('data-idx'))===cur);});
+      }
+      function onDown(y){
+        dragging=true;startY=y;startPos=pos;lastY=y;lastT=Date.now();vel=0;
+        viewport.style.cursor='grabbing';
+      }
+      function onMove(y){
+        if(!dragging)return;
+        var dy=y-startY;
+        var damped=dy*0.6;
+        var target=startPos+damped;
+        var friction=0.3;
+        var bounded=Math.max(-(total-1)*height,Math.min(0,target));
+        setPos(bounded);
+        vel=(y-lastY)/(Date.now()-lastT+1);
+        lastY=y;lastT=Date.now();
+      }
+      function onUp(){
+        if(!dragging)return;
+        dragging=false;
+        viewport.style.cursor='';
+        var v=vel*25;
+        var target=pos-v;
+        var snapped=Math.round(target/height);
+        snapped=Math.max(-(total-1),Math.min(0,snapped));
+        cur=-snapped;
+        // animate
+        var from=pos;
+        var to=-cur*height;
+        var duration=400;
+        var t0=Date.now();
+        function anim(){
+          var p=Math.min(1,(Date.now()-t0)/duration);
+          var e=1-Math.pow(1-p,3);
+          setPos(from+(to-from)*e);
+          if(p<1)requestAnimationFrame(anim);
+        }
+        requestAnimationFrame(anim);
+      }
+      // touch
+      viewport.addEventListener('touchstart',function(e){onDown(e.touches[0].clientY);},{passive:true});
+      viewport.addEventListener('touchmove',function(e){onMove(e.touches[0].clientY);},{passive:true});
+      viewport.addEventListener('touchend',onUp);
+      viewport.addEventListener('touchcancel',onUp);
+      // mouse
+      viewport.addEventListener('mousedown',function(e){e.preventDefault();onDown(e.clientY);});
+      window.addEventListener('mousemove',function(e){onMove(e.clientY);});
+      window.addEventListener('mouseup',onUp);
+      // wheel
+      viewport.addEventListener('wheel',function(e){
+        e.preventDefault();
+        var step=e.deltaY*0.8;
+        var target=pos-step;
+        var snapped=Math.round(target/height);
+        snapped=Math.max(-(total-1),Math.min(0,snapped));
+        cur=-snapped;
+        setPos(-cur*height);
+      },{passive:false});
+      // keyboard
+      viewport.setAttribute('tabindex','0');
+      viewport.setAttribute('role','region');
+      viewport.setAttribute('aria-label','Carrusel de preguntas frecuentes');
+      viewport.addEventListener('keydown',function(e){
+        if(e.key==='ArrowDown'){e.preventDefault();goTo(cur+1);}
+        if(e.key==='ArrowUp'){e.preventDefault();goTo(cur-1);}
+      });
+      // resize
+      function resize(){height=viewport.offsetHeight||600;setPos(-cur*height);}
+      window.addEventListener('resize',resize);
+      // init
+      setPos(0);
     })();
 
     // FAQ accordion
