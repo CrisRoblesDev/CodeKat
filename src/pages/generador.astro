@@ -8,6 +8,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   themeColor="#08080D"
   fontHref="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
   bodyData={{ "data-ws": "diseno" }}
+  mainClass="workspace"
   footerAccent="purple"
   bgVariant="fx"
   css={["/assets/css/pages/generador.css"]}
@@ -34,8 +35,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </Fragment>
 
-  <main class="workspace">
-    <aside class="controls">
+  <aside class="controls">
       <div class="tabs-bar" role="tablist">
         <button class="tab-btn on" data-tab="contenido">Contenido</button>
         <button class="tab-btn" data-tab="estilo">Estilo</button>
@@ -220,7 +220,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
       </section>
     </section>
-  </main>
+  </section>
 
   <Fragment slot="after-footer">
     <button class="eye-fab" id="eyeFab" aria-label="Vista previa rápida" title="Vista previa rápida">

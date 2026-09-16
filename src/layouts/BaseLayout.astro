@@ -8,6 +8,8 @@ interface Props {
   fontHref: string;
   css?: string[];
   bodyData?: Record<string, string>;
+  mainClass?: string;
+  footerId?: string;
   isHome?: boolean;
   footerAccent?: "purple" | "amber";
   withLoader?: boolean;
@@ -25,6 +27,8 @@ const {
   fontHref,
   css = [],
   bodyData,
+  mainClass,
+  footerId,
   isHome = false,
   footerAccent = "amber",
   withLoader = false,
@@ -157,11 +161,11 @@ const orgLd = {
 
   <slot name="pre-main" />
 
-  <main>
+  <main class={mainClass}>
     <slot />
   </main>
 
-  <footer class="footer" role="contentinfo">
+  <footer class="footer" id={footerId} role="contentinfo">
     <div class="footer-cta">
       {isHome && <div class="footer-aurora" aria-hidden="true"></div>}
       <div class="container reveal">
