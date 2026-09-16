@@ -1,0 +1,174 @@
+---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Calculadora de Sueldo | CodeKat"
+  description="Calcula tu sueldo líquido en Chile y Latinoamérica. Incluye horas extras, descuentos legales y adicionales. Simple y rápido."
+  themeColor="#08080D"
+  fontHref="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+  footerAccent="amber"
+  bgVariant="aurora"
+  css={["/assets/css/pages/remuneracion.css"]}
+  scripts={[
+    "/assets/js/functions/remuneracion-app.js",
+    "/assets/js/functions/reveal.js",
+  ]}
+>
+  <Fragment slot="pre-main">
+    <div class="app-intro">
+      <h1>¿Cuánto <em class="grad-text">recibirás</em> este mes?</h1>
+      <p>Calcula tu sueldo líquido con horas extras y descuentos</p>
+      <button class="btn-limpiar-modern" id="btnLimpiar" aria-label="Borrar datos" title="Borrar datos"><span class="bl-icon"><i class="fa-solid fa-eraser"></i></span> Borrar datos</button>
+    </div>
+
+    <div class="wizard-nav-wrap">
+      <div class="container"><div class="wizard-nav" id="wizardNav" role="tablist" aria-label="Pasos del calculador"></div></div>
+    </div>
+  </Fragment>
+
+  <div class="container">
+
+    <section class="wpanel active" data-panel="0">
+      <div class="rem-card">
+        <div class="rem-card-head">
+          <span class="rem-card-ico"><i class="fa-solid fa-flag"></i></span>
+          <div><h2>¿En qué país trabajas?</h2><p>Selecciona tu país para aplicar las leyes correctas</p></div>
+        </div>
+        <div class="country-grid" id="countryGrid"></div>
+      </div>
+
+      <div class="rem-card">
+        <div class="rem-card-head">
+          <span class="rem-card-ico"><i class="fa-solid fa-money-bill-wave"></i></span>
+          <div><h2>¿Cuánto ganas al mes?</h2><p>Ingresa tu sueldo bruto (antes de descuentos)</p></div>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label><i class="fa-solid fa-coins"></i> <span id="salaryLabel">Sueldo bruto mensual</span></label>
+            <input type="number" id="salaryInput" value="1000000" min="0" step="1000" placeholder="Ej: 1000000" />
+            <span class="field-hint">Es el monto que aparece en tu contrato, antes de AFP, salud e impuestos.</span>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-clock"></i> Horas por semana</label>
+            <input type="number" id="weeklyHours" value="45" min="1" max="80" />
+            <span class="field-hint">Generalmente son 40, 44 o 48 horas</span>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-user"></i> Nombre (opcional)</label>
+            <input type="text" id="workerName" placeholder="Ej: Juan Pérez" />
+            <span class="field-hint">Para que aparezca en tu liquidación</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rem-card" id="selectoresCard">
+        <div class="rem-card-head">
+          <span class="rem-card-ico"><i class="fa-solid fa-building-columns"></i></span>
+          <div><h2>Tus aportes legales</h2><p>Selecciona las entidades donde cotizas según tu país</p></div>
+        </div>
+        <div id="selectoresWrap"></div>
+      </div>
+    </section>
+
+    <section class="wpanel" data-panel="1">
+      <div class="rem-card">
+        <div class="rem-card-head">
+          <span class="rem-card-ico"><i class="fa-solid fa-sun"></i></span>
+          <div><h2>¿Cuál es tu turno?</h2><p>El turno nocturno o mixto puede sumar un bono a tu sueldo</p></div>
+        </div>
+        <div class="turno-grid" id="turnoGrid">
+          <button type="button" class="turno-opt selected" data-turno="diurno"><i class="fa-solid fa-sun"></i><b>Diurno</b><span>Día completo</span></button>
+          <button type="button" class="turno-opt" data-turno="nocturno"><i class="fa-solid fa-moon"></i><b>Nocturno</b><span>Noche completa</span></button>
+          <button type="button" class="turno-opt" data-turno="mixto"><i class="fa-solid fa-cloud-sun"></i><b>Mixto</b><span>Día y noche</span></button>
+        </div>
+      </div>
+
+      <div class="rem-card">
+        <div class="rem-card-head">
+          <span class="rem-card-ico"><i class="fa-solid fa-clock"></i></span>
+          <div><h2>Horas extras este mes</h2><p>Indica cuántas horas extra trabajaste. Si no hiciste, déjalo en 0.</p></div>
+        </div>
+        <div class="extra-grid">
+          <div class="extra-card">
+            <div class="extra-card-head"><i class="fa-solid fa-calendar-day"></i><b>Días normales</b></div>
+            <div class="extra-card-desc">Horas extra en días de semana, horario diurno</div>
+            <input type="number" id="extraOrd" value="0" min="0" step="0.5" />
+            <div class="extra-card-valor" id="valorOrd"></div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-card-head"><i class="fa-solid fa-moon"></i><b>Nocturnas</b></div>
+            <div class="extra-card-desc">Horas extra trabajadas de noche (20:00 a 6:00)</div>
+            <input type="number" id="extraNight" value="0" min="0" step="0.5" />
+            <div class="extra-card-valor" id="valorNight"></div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-card-head"><i class="fa-solid fa-star"></i><b>Domingos y festivos</b></div>
+            <div class="extra-card-desc">Horas extra en domingos o días feriados</div>
+            <input type="number" id="extraHol" value="0" min="0" step="0.5" />
+            <div class="extra-card-valor" id="valorHol"></div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-card-head"><i class="fa-solid fa-triangle-exclamation"></i><b>Festivos nocturnos</b></div>
+            <div class="extra-card-desc">Festivos de noche, máximo recargo</div>
+            <input type="number" id="extraHolNight" value="0" min="0" step="0.5" />
+            <div class="extra-card-valor" id="valorHolNight"></div>
+          </div>
+        </div>
+        <div class="info-box"><i class="fa-solid fa-circle-info"></i><span>Las horas extras se pagan con un recargo sobre tu valor hora normal. El monto se muestra automáticamente debajo de cada campo.</span></div>
+      </div>
+    </section>
+
+    <section class="wpanel" data-panel="2">
+      <div class="rem-card">
+        <div class="rem-card-head">
+          <span class="rem-card-ico"><i class="fa-solid fa-scissors"></i></span>
+          <div><h2>¿Tienes descuentos adicionales?</h2><p>Préstamos de la empresa, anticipos, pensión de alimentos, etc.</p></div>
+        </div>
+        <div class="discounts-list" id="discountsList"></div>
+        <button class="btn btn-ghost btn-sm" id="addDiscount" type="button" style="width:100%;"><i class="fa-solid fa-plus"></i> Agregar descuento</button>
+        <div class="info-box"><i class="fa-solid fa-circle-info"></i><span>Los descuentos legales (AFP, salud, impuestos) se calculan automáticamente según la ley de tu país. Aquí solo agrega descuentos que te descuenten directamente de tu sueldo.</span></div>
+      </div>
+    </section>
+
+    <section class="wpanel" data-panel="3">
+      <div class="rem-card">
+        <div class="rem-card-head">
+          <span class="rem-card-ico"><i class="fa-solid fa-wallet"></i></span>
+          <div><h2>Tu liquidación</h2><p>Así queda tu sueldo este mes</p></div>
+        </div>
+        <div class="resultado-hero">
+          <span class="resultado-flag" id="resFlag">🇨🇱</span>
+          <div class="resultado-label">Líquido a recibir</div>
+          <div class="resultado-monto" id="resNeto">—</div>
+          <div class="resultado-sub" id="resSub">—</div>
+          <div class="api-badge" id="apiBadge"><span class="dot"></span><span id="apiBadgeText">Tasas legales actualizadas</span></div>
+        </div>
+
+        <div id="desgloseWrap"></div>
+
+        <div class="chart-simple" id="chartWrap">
+          <div class="chart-simple-title"><i class="fa-solid fa-chart-pie"></i> Distribución de tu sueldo</div>
+          <div class="chart-simple-bar" id="chartBar"></div>
+          <div class="chart-simple-legend" id="chartLegend"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="wizard-footer-wrap" id="wizardFooterWrap">
+    <div class="wizard-footer">
+      <button class="btn btn-ghost" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
+      <div class="wf-center">
+        <span class="wf-counter">Paso <b id="stepNow">1</b> de <span id="stepTotal">4</span></span>
+        <div class="wf-progress"><span id="progressBar"></span></div>
+      </div>
+      <button class="btn btn-primary" id="nextBtn">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <Fragment slot="after-footer">
+    <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+  </Fragment>
+</BaseLayout>

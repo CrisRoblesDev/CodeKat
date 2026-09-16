@@ -1,0 +1,3 @@
+# Evita que wrangler suba el bundle del servidor como asset público.
+# (Astro lo genera en dist/_worker.js y expondría código server-side.)
+_worker.js
