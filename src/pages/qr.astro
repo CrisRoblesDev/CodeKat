@@ -68,7 +68,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <div class="qr-mid">
           <div class="qr-stage">
-            <div id="qrPreview" role="img" aria-label="Vista previa del código QR"></div>
+            <div class="qr-mini" id="qrMini" data-style="marca">
+              <div class="qr-mini-title" id="qrMiniTitle">Mi QR</div>
+              <div class="qr-mini-sub" id="qrMiniSub" hidden></div>
+              <div id="qrPreview" role="img" aria-label="Vista previa del código QR"></div>
+              <div class="qr-mini-nets" id="qrMiniNets" hidden></div>
+            </div>
             <div class="qr-stage-meta">
               <small>Vista previa en vivo</small>
               <div id="qrStatus">Listo para escanear</div>
@@ -106,6 +111,31 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               </div>
               <div class="qr-field"><label for="qrEcc">Nivel de corrección (más alto = aguanta logo)</label>
                 <select id="qrEcc"><option value="L">L · Simple</option><option value="M" selected>M · Recomendado</option><option value="Q">Q · Con logo</option><option value="H">H · Máximo</option></select>
+              </div>
+              <div class="qr-cardfields">
+                <div class="qr-field"><label for="qrCardTitle">Título (se ve en el preview y la tarjeta)</label><input type="text" id="qrCardTitle" placeholder="Ej: Café Aurora — Menú" /></div>
+                <div class="qr-field"><label for="qrCardSub">Subtítulo</label><input type="text" id="qrCardSub" placeholder="Ej: Escanea y síguenos" /></div>
+                <div class="qr-row2">
+                  <div class="qr-field"><label for="qrNet1">Red 1</label><select id="qrNet1"><option value="ig">Instagram</option><option value="tt">TikTok</option><option value="wa">WhatsApp</option><option value="fb">Facebook</option><option value="x">X</option><option value="web">Web</option></select></div>
+                  <div class="qr-field"><label for="qrHandle1">Usuario 1</label><input type="text" id="qrHandle1" placeholder="@tu_cuenta" /></div>
+                </div>
+                <div class="qr-row2">
+                  <div class="qr-field"><label for="qrNet2">Red 2</label><select id="qrNet2"><option value="tt">TikTok</option><option value="ig">Instagram</option><option value="wa">WhatsApp</option><option value="fb">Facebook</option><option value="x">X</option><option value="web">Web</option></select></div>
+                  <div class="qr-field"><label for="qrHandle2">Usuario 2</label><input type="text" id="qrHandle2" placeholder="@tu_cuenta" /></div>
+                </div>
+                <div class="qr-field"><label>Estilo de tarjeta</label>
+                  <input type="hidden" id="qrCardStyle" value="marca" />
+                  <div class="qr-seg qr-seg-4" id="qrCardSeg">
+                    <button type="button" data-card="claro">Clara</button>
+                    <button type="button" data-card="oscuro">Oscura</button>
+                    <button type="button" data-card="marca" class="on">Marca</button>
+                    <button type="button" data-card="custom">Mía</button>
+                  </div>
+                </div>
+                <div class="qr-grid2" id="qrCardCustom" hidden>
+                  <div class="qr-color"><input type="color" id="qrCardBg1" value="#8b5cf6" /><span>Fondo 1</span></div>
+                  <div class="qr-color"><input type="color" id="qrCardBg2" value="#f5a524" /><span>Fondo 2</span></div>
+                </div>
               </div>
             </div>
 
@@ -210,23 +240,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               </div>
               <div class="qr-cardbox">
                 <h3><i class="fa-solid fa-id-card"></i> Tarjeta para compartir</h3>
-                <p>Tu QR en una tarjeta 1080×1350 con título y redes, lista para Instagram y WhatsApp.</p>
-                <div class="qr-field"><label for="qrCardTitle">Título de la tarjeta</label><input type="text" id="qrCardTitle" placeholder="Ej: Café Aurora — Menú" /></div>
-                <div class="qr-field"><label for="qrCardSub">Subtítulo (opcional)</label><input type="text" id="qrCardSub" placeholder="Ej: Escanea y síguenos" /></div>
-                <div class="qr-row2">
-                  <div class="qr-field"><label for="qrNet1">Red 1</label><select id="qrNet1"><option value="ig">Instagram</option><option value="tt">TikTok</option><option value="wa">WhatsApp</option><option value="fb">Facebook</option><option value="x">X</option><option value="web">Web</option></select></div>
-                  <div class="qr-field"><label for="qrHandle1">Usuario 1</label><input type="text" id="qrHandle1" placeholder="@tu_cuenta" /></div>
-                </div>
-                <div class="qr-row2">
-                  <div class="qr-field"><label for="qrNet2">Red 2</label><select id="qrNet2"><option value="tt">TikTok</option><option value="ig">Instagram</option><option value="wa">WhatsApp</option><option value="fb">Facebook</option><option value="x">X</option><option value="web">Web</option></select></div>
-                  <div class="qr-field"><label for="qrHandle2">Usuario 2</label><input type="text" id="qrHandle2" placeholder="@tu_cuenta" /></div>
-                </div>
-                <input type="hidden" id="qrCardStyle" value="marca" />
-                <div class="qr-seg" id="qrCardSeg">
-                  <button type="button" data-card="claro">Clara</button>
-                  <button type="button" data-card="oscuro">Oscura</button>
-                  <button type="button" data-card="marca" class="on">Mi marca</button>
-                </div>
+                <p>1080×1350 con tu título, redes y estilo del paso 1. Lista para Instagram y WhatsApp.</p>
                 <button class="btn btn-glass qr-dl-big" id="qrCardDownload" type="button"><i class="fa-solid fa-image"></i> Descargar tarjeta PNG</button>
               </div>
               <p class="qr-tip"><i class="fa-solid fa-circle-info"></i> Tip: usa fondo claro y puntos oscuros para que cualquier cámara lo lea al instante.</p>

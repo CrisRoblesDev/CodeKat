@@ -99,6 +99,24 @@
   background: rgba(255,255,255,.05); border: 1px solid rgba(167,139,250,.2); cursor: pointer; }
 .qr-seg button.on { background: rgba(139,92,246,.2); border-color: #8B5CF6; color: #fff; }
 .qr-seg-2 { grid-template-columns: repeat(2,1fr); }
+.qr-seg-4 { grid-template-columns: repeat(4,1fr); }
+.qr-seg-4 button { font-size: .7rem; }
+.qr-cardfields { display: flex; flex-direction: column; gap: 10px;
+  background: rgba(139,92,246,.06); border: 1px dashed rgba(139,92,246,.3);
+  border-radius: 14px; padding: 10px; }
+
+/* Mini tarjeta en vivo */
+.qr-mini { border-radius: 14px; padding: 8px 10px 10px; text-align: center; min-width: 138px;
+  background: #fff; color: #1a1a2e; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+.qr-mini[data-style="oscuro"] { background: #151522; color: #fff; }
+.qr-mini[data-style="marca"], .qr-mini[data-style="custom"] {
+  background: linear-gradient(135deg, var(--mk1, #8b5cf6), var(--mk2, #f5a524)); color: #fff; }
+.qr-mini-title { font-weight: 800; font-size: .78rem; line-height: 1.25; }
+.qr-mini-sub { font-size: .64rem; opacity: .72; margin-top: 1px; }
+.qr-mini #qrPreview { width: 104px; height: 104px; min-width: 104px; margin: 6px auto; }
+.qr-mini-nets { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+.qr-mini-nets span { font-size: .6rem; font-weight: 700; background: rgba(127,127,160,.20);
+  padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
 .qr-presets { display: grid; grid-template-columns: repeat(6,1fr); gap: 6px; }
 .qr-presets button { min-height: 52px; border-radius: 12px; font-size: .64rem; font-weight: 700;
   background: rgba(255,255,255,.05); border: 1px solid rgba(167,139,250,.2); cursor: pointer;

@@ -11,6 +11,8 @@
     gradient: true, gradType: "linear", gradColor: "#f5a524",
     dots: "rounded", corners: "extra-rounded", cornersDot: "dot",
     logo: null, frame: "card", size: 1024, margin: 12,
+    cardTitle: "", cardSub: "", net1: "ig", handle1: "", net2: "tt", handle2: "",
+    cardStyle: "marca", cardBg1: "#8b5cf6", cardBg2: "#f5a524",
   };
 
   const PRESETS = {
@@ -83,6 +85,7 @@
     }
     preview.classList.remove("pop"); void preview.offsetWidth; preview.classList.add("pop");
     setStatus(`${payload().length} caracteres · ECC-${state.ecc}`);
+    updateMini();
   }
 
   const schedule = () => { clearTimeout(timer); timer = setTimeout(apply, 280); };
@@ -212,9 +215,21 @@
       $$("#qrFmtSeg button").forEach(x => x.classList.toggle("on", x === b));
       $("#qrFormat").value = b.dataset.fmt;
     }));
+    [["qrCardTitle", "cardTitle"], ["qrCardSub", "cardSub"], ["qrHandle1", "handle1"], ["qrHandle2", "handle2"]].forEach(([id, key]) => {
+      $("#" + id)?.addEventListener("input", (e) => { state[key] = e.target.value; updateMini(); });
+    });
+    [["qrNet1", "net1"], ["qrNet2", "net2"]].forEach(([id, key]) => {
+      $("#" + id)?.addEventListener("change", (e) => { state[key] = e.target.value; updateMini(); });
+    });
+    color("qrCardBg1", "cardBg1"); color("qrCardBg2", "cardBg2");
+    $("#qrCardBg1")?.addEventListener("input", updateMini);
+    $("#qrCardBg2")?.addEventListener("input", updateMini);
     $$("#qrCardSeg button").forEach(b => b.addEventListener("click", () => {
       $$("#qrCardSeg button").forEach(x => x.classList.toggle("on", x === b));
-      $("#qrCardStyle").value = b.dataset.card;
+      state.cardStyle = b.dataset.card;
+      const h = $("#qrCardStyle"); if (h) h.value = b.dataset.card;
+      const c = $("#qrCardCustom"); if (c) c.hidden = b.dataset.card !== "custom";
+      updateMini();
     }));
     $("#qrCardDownload")?.addEventListener("click", downloadCard);
     $("#qrPng")?.addEventListener("click", () => exportQr("png"));
@@ -258,6 +273,27 @@
     } finally { URL.revokeObjectURL(url); }
   }
   const SOCIALS = { ig: "IG", tt: "TT", wa: "WA", fb: "FB", x: "X", web: "WB" };
+  const escHtml = (v) => String(v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  /* Mini tarjeta en vivo dentro del preview */
+  function updateMini() {
+    const m = $("#qrMini");
+    if (!m) return;
+    const t = $("#qrMiniTitle"), s = $("#qrMiniSub"), n = $("#qrMiniNets");
+    const title = (state.cardTitle || "").trim() || "Mi QR";
+    const sub = (state.cardSub || "").trim();
+    if (t) t.textContent = title;
+    if (s) { s.textContent = sub; s.hidden = !sub; }
+    const nets = [{ n: state.net1, h: state.handle1 }, { n: state.net2, h: state.handle2 }]
+      .filter(x => (x.h || "").trim()).slice(0, 2);
+    if (n) {
+      n.innerHTML = nets.map(x => `<span>${SOCIALS[x.n] || "IG"} ${escHtml(x.h.trim())}</span>`).join("");
+      n.hidden = !nets.length;
+    }
+    m.dataset.style = state.cardStyle;
+    m.style.setProperty("--mk1", state.cardStyle === "custom" ? state.cardBg1 : state.dotColor);
+    m.style.setProperty("--mk2", state.cardStyle === "custom" ? state.cardBg2 : (state.gradient ? state.gradColor : state.dotColor));
+  }
   async function downloadCard() {
     if (!ensureQr()) return;
     setStatus("Armando tu tarjeta…");
@@ -272,11 +308,18 @@
         net: $("#qrNet" + i)?.value || "ig",
         handle: ($("#qrHandle" + i)?.value || "").trim().slice(0, 40),
       })).filter(n => n.handle);
+      const lum = (hex) => {
+        const c = String(hex || "#000000").replace("#", "");
+        const f = (i) => parseInt(c.substr(i, 2), 16) / 255;
+        return 0.2126 * f(0) + 0.7152 * f(2) + 0.0722 * f(4);
+      };
       const palettes = {
         claro: { bg1: "#ffffff", bg2: "#efe9ff", ink: "#1a1a2e", dim: "#5c5875", pill: "rgba(139,92,246,.12)" },
         oscuro: { bg1: "#12121a", bg2: "#241d3d", ink: "#ffffff", dim: "#b9b3d4", pill: "rgba(255,255,255,.10)" },
         marca: { bg1: state.dotColor, bg2: state.gradient ? state.gradColor : state.dotColor, ink: "#ffffff", dim: "rgba(255,255,255,.85)", pill: "rgba(255,255,255,.18)" },
       };
+      const cb1 = $("#qrCardBg1")?.value || state.cardBg1, cb2 = $("#qrCardBg2")?.value || state.cardBg2;
+      palettes.custom = { bg1: cb1, bg2: cb2, ink: lum(cb1) > 0.55 ? "#1a1a2e" : "#ffffff", dim: lum(cb1) > 0.55 ? "#5c5875" : "rgba(255,255,255,.85)", pill: lum(cb1) > 0.55 ? "rgba(20,20,40,.08)" : "rgba(255,255,255,.18)" };
       const pal = palettes[style] || palettes.marca;
       const bg = ctx.createLinearGradient(0, 0, W, H);
       bg.addColorStop(0, pal.bg1); bg.addColorStop(1, pal.bg2);
@@ -301,8 +344,9 @@
         ctx.font = "500 42px Outfit, system-ui, sans-serif";
         ctx.fillText(sub, W / 2, 190 + lines.slice(0, 2).length * 84 + 10);
       }
-      // QR en panel blanco
-      const blob = await qr.getRawData("png");
+      // QR en alta (instancia temporal a 1024, no el preview de 300)
+      const hi = new QRCodeStyling({ ...fullOptions(1024), type: "canvas" });
+      const blob = await hi.getRawData("png");
       const bmp = await blobToBitmap(blob);
       const q = 660, qx = (W - q) / 2, qy = 430;
       ctx.save();
@@ -355,5 +399,5 @@
     } catch (e) { /* queda el SVG de respaldo */ }
   }
 
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", () => { bind(); goStep(0); renderDemo(); }) : (bind(), goStep(0), renderDemo());
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", () => { bind(); goStep(0); updateMini(); renderDemo(); }) : (bind(), goStep(0), updateMini(), renderDemo());
 })();
