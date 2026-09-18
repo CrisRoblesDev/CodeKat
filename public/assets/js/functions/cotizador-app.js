@@ -484,16 +484,39 @@
       var c=state.colors;var t=totals();var s=state.sender;var cl=state.client;
       function hex(h){h=h.replace('#','');return[parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
       var pr=hex(c.primary),ac=hex(c.accent);
-      /* El encabezado respeta el diseño elegido en el paso Diseño */
-      var DARK=['elegante','oscuro'];
-      var LIGHT=['minimal','corporativo','lateral','cinta','marco','banda','factura','suave','tarjeta','linea'];
-      var mode=DARK.indexOf(state.design)>=0?'dark':(LIGHT.indexOf(state.design)>=0?'light':'gradient');
-      var PW=595,PH=842,M=40,CW=PW-M*2;
-      if(mode==='dark'){doc.setFillColor(20,22,31);doc.rect(0,0,PW,120,'F');doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,114,PW,6,'F');}
-      else if(mode==='light'){doc.setFillColor(255,255,255);doc.rect(0,0,PW,120,'F');doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,PW,10,'F');doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,110,PW,4,'F');}
-      else{doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,PW,110,'F');doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,104,PW,6,'F');}
-      var headTx=mode==='light'?[26,26,46]:[255,255,255];
-      var headSub=mode==='light'?[120,120,130]:[232,232,238];
+      /* El encabezado replica el diseño elegido en el paso Diseño */
+      var cfg0=getHeaderCfg(state.design,c);
+      function pdfCol(str,fb){try{if(str&&str.charAt(0)==='#'){var h=str.length===4?('#'+str[1]+str[1]+str[2]+str[2]+str[3]+str[3]):str;return hex(h);}}catch(e){}return fb;}
+      function mixW(rgb,t){return[Math.round(rgb[0]+(255-rgb[0])*t),Math.round(rgb[1]+(255-rgb[1])*t),Math.round(rgb[2]+(255-rgb[2])*t)];}
+      var PW=595,PH=842,M=40,CW=PW-M*2,HH=120;
+      var dk=state.design;
+      var darkBg=(dk==='elegante'||dk==='oscuro');
+      /* fondo según diseño */
+      if(dk==='oscuro'){doc.setFillColor(20,22,31);doc.rect(0,0,PW,HH,'F');}
+      else if(dk==='elegante'){doc.setFillColor(20,20,20);doc.rect(0,0,PW,HH,'F');}
+      else if(dk==='factura'){doc.setFillColor(245,245,247);doc.rect(0,0,PW,HH,'F');}
+      else if(dk==='suave'){var sb=mixW(hex(c.secondary),0.85);doc.setFillColor(sb[0],sb[1],sb[2]);doc.rect(0,0,PW,HH,'F');}
+      else if(dk==='moderno'||dk==='creativo'||dk==='clasico'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,PW,HH,'F');}
+      else if(dk==='doble'){doc.setFillColor(255,255,255);doc.rect(0,0,PW,HH,'F');doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,Math.round(PW*0.28),HH,'F');}
+      else{doc.setFillColor(255,255,255);doc.rect(0,0,PW,HH,'F');}
+      /* marcas distintivas de cada diseño */
+      if(dk==='moderno'||dk==='creativo'){doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,HH-6,PW,6,'F');}
+      else if(dk==='clasico'){doc.setFillColor(255,255,255);doc.rect(0,HH-2,PW,2,'F');}
+      else if(dk==='minimal'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,HH-4,PW,4,'F');}
+      else if(dk==='corporativo'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,PW,6,'F');doc.setFillColor(238,238,238);doc.rect(0,HH-1,PW,1,'F');}
+      else if(dk==='elegante'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,HH-3,PW,3,'F');}
+      else if(dk==='oscuro'){doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,HH-6,PW,6,'F');}
+      else if(dk==='lateral'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,8,HH,'F');doc.setFillColor(238,238,238);doc.rect(0,HH-1,PW,1,'F');}
+      else if(dk==='factura'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,8,HH,'F');}
+      else if(dk==='cinta'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,HH-8,PW,2,'F');doc.rect(0,HH-4,PW,2,'F');}
+      else if(dk==='marco'){doc.setDrawColor(pr[0],pr[1],pr[2]);doc.setLineWidth(2);doc.rect(8,8,PW-16,HH-16,'S');}
+      else if(dk==='banda'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,PW,10,'F');doc.setFillColor(238,238,238);doc.rect(0,HH-1,PW,1,'F');}
+      else if(dk==='suave'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,HH-3,PW,3,'F');}
+      else if(dk==='tarjeta'){doc.setFillColor(238,238,238);doc.rect(0,HH-1,PW,1,'F');}
+      else if(dk==='linea'){doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,HH-6,PW,3,'F');doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,HH-3,PW,3,'F');}
+      else if(dk==='doble'){doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,HH-4,PW,4,'F');}
+      var headTx=pdfCol(cfg0.title,darkBg?[255,255,255]:[26,26,46]);
+      var headSub=pdfCol(cfg0.sub,darkBg?[210,210,220]:[120,120,130]);
       var metaX=state.logo?462:555;
       doc.setTextColor(headTx[0],headTx[1],headTx[2]);doc.setFontSize(20);doc.setFont(undefined,'bold');
       doc.text(doc.splitTextToSize(state.title,300)[0],M,50);
@@ -526,7 +549,7 @@
         head:[['Concepto','Cant.','Precio unit.','Total']],body:body,
         theme:'striped',headStyles:{fillColor:pr,fontSize:9},
         styles:{fontSize:9,cellPadding:6,overflow:'linebreak'},
-        columnStyles:{0:{cellWidth:295},1:{halign:'right',cellWidth:60},2:{halign:'right',cellWidth:80},3:{halign:'right',cellWidth:80}},
+        columnStyles:{1:{halign:'right'},2:{halign:'right'},3:{halign:'right'}},
         margin:{left:M,right:M}
       });
       /* Totales en caja estructurada, con salto de página si no caben */
