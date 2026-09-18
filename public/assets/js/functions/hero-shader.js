@@ -189,8 +189,7 @@ void main(){gl_Position=position;}`;
     }, { passive: true });
   }
 
-  let raf = 0, running = false, t0 = 0, lastT = 0, emaDt = 16, qLevel = 0;
-  let lastVW = 0, lastVH = 0, tick = 0;
+  let raf = 0, running = false, t0 = 0, lastT = 0, emaDt = 16, qLevel = 0, tick = 0;
   function render(now) {
     const coords = pointers.size > 0 ? Array.from(pointers.values()).flat() : [0, 0];
     const first = pointers.size > 0 ? pointers.values().next().value : lastCoords;
@@ -212,13 +211,12 @@ void main(){gl_Position=position;}`;
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
   function frame(now) {
-    // La barra del navegador cambia el viewport sin disparar resize:
-    // se revisa el tamaño cada ~32 frames para no dejar bandas negras.
+    // Autoreparación: si la caja CSS y el bitmap difieren, se re-mide.
+    // (El viewport puede no cambiar aunque el layout sí.)
     if ((tick++ & 31) === 0) {
-      const r = cv.parentElement.getBoundingClientRect();
-      const w = Math.round(r.width), h = Math.round(r.height);
-      if ((w && w !== lastVW) || (h && h !== lastVH)) {
-        lastVW = w; lastVH = h;
+      const s = pxScale() * ([1, 0.75, 0.6][qLevel] || 0.6);
+      const bw = cv.clientWidth, bh = cv.clientHeight;
+      if (bw > 0 && bh > 0 && (Math.abs(cv.width - bw * s) > 2 || Math.abs(cv.height - bh * s) > 2)) {
         sizeCanvas();
       }
     }
@@ -249,6 +247,13 @@ void main(){gl_Position=position;}`;
   }
 
   window.addEventListener("resize", () => { if (running) sizeCanvas(); else start(); }, { passive: true });
+  // Vigilante: si al volver (pestaña, bfcache, scroll) el loop está muerto, se reanima solo.
+  setInterval(() => {
+    if (document.hidden || running || !cv.isConnected) return;
+    const r = cv.parentElement.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < window.innerHeight) start();
+  }, 2000);
+  document.addEventListener("pageshow", () => start());
   const first = cv.parentElement;
   if (first && "IntersectionObserver" in window) {
     new IntersectionObserver((es) => {
