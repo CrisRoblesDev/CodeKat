@@ -33,8 +33,13 @@
       return false;
     }
     if (!qr) {
-      qr = new QRCodeStyling({ width: 300, height: 300, type: "canvas", data: payload(), image: undefined, dotsOptions: {}, cornersSquareOptions: {}, cornersDotOptions: {}, backgroundOptions: {}, imageOptions: {} });
-      qr.append(preview);
+      try {
+        qr = new QRCodeStyling({ width: 300, height: 300, type: "canvas", data: payload(), image: undefined, dotsOptions: {}, cornersSquareOptions: {}, cornersDotOptions: {}, backgroundOptions: {}, imageOptions: {} });
+        qr.append(preview);
+      } catch (e) {
+        setStatus("El motor QR falló al iniciar.");
+        return false;
+      }
     }
     return true;
   }
@@ -43,7 +48,8 @@
     if (!ensureQr()) return;
     const dotsType = { square: "square", dots: "dots", rounded: "rounded", "extra-rounded": "extra-rounded" }[state.dots] || "rounded";
     const cornerSq = { square: "square", rounded: "rounded", "extra-rounded": "extra-rounded" }[state.corners] || "extra-rounded";
-    qr.update({
+    try {
+      qr.update({
       data: payload(),
       image: state.logo || undefined,
       dotsOptions: {
@@ -56,7 +62,11 @@
       backgroundOptions: { color: state.bgColor },
       imageOptions: { crossOrigin: "anonymous", margin: 6, imageSize: 0.42 },
       qrOptions: { errorCorrectionLevel: state.ecc },
-    });
+      });
+    } catch (e) {
+      setStatus("No se pudo actualizar el QR.");
+      return;
+    }
     preview.classList.remove("pop"); void preview.offsetWidth; preview.classList.add("pop");
     setStatus(`${payload().length} caracteres · ECC-${state.ecc}`);
   }
