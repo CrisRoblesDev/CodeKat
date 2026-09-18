@@ -1,0 +1,179 @@
+---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="QR Kat | Generador de códigos QR personalizados"
+  description="Crea códigos QR hiper-personalizados en segundos: colores, degradados, formas, logo y descarga en PNG o SVG. Fácil de usar desde tu celular."
+  themeColor="#8B5CF6"
+  canonical="https://codekat.store/qr/"
+  fontHref="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+  footerAccent="purple"
+  bgVariant="aurora4"
+  css={["/assets/css/pages/qr.css"]}
+  scripts={[
+    "https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js",
+    "/assets/js/functions/qr-app.js",
+  ]}
+  bodyData={{ class: "qr-page" }}
+>
+  <Fragment slot="head">
+    <meta name="keywords" content="generador QR, código QR personalizado, QR con logo, QR Chile, CodeKat" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://codekat.store/qr/" />
+    <meta property="og:site_name" content="CodeKat" />
+    <meta property="og:title" content="QR Kat | Generador de códigos QR personalizados" />
+    <meta property="og:description" content="QR hiper-personalizados en segundos: colores, formas, logo y descarga PNG/SVG." />
+    <meta property="og:locale" content="es_CL" />
+  </Fragment>
+
+  <Fragment slot="pre-main">
+    <div class="container qr-intro">
+      <h1>QR <em class="grad-text">Kat</em></h1>
+      <p>Códigos QR con tu estilo, listos para escanear</p>
+    </div>
+  </Fragment>
+
+  <div class="container">
+    <div class="qr-shell">
+      <!-- VISTA 0 · LANDING -->
+      <section class="qr-view qr-landing on" id="qrLanding" aria-label="Presentación">
+        <span class="qr-badge">Nuevo · Gratis · Sin registro</span>
+        <h2>Crea un QR <em>imposible de ignorar</em></h2>
+        <p>Con tus colores, tus formas y tu logo. En 3 toques y desde tu celular.</p>
+        <div class="qr-demo" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="14" fill="#fff"/><g fill="#8B5CF6"><rect x="12" y="12" width="26" height="26" rx="7"/><rect x="62" y="12" width="26" height="26" rx="7"/><rect x="12" y="62" width="26" height="26" rx="7"/><rect x="18" y="18" width="14" height="14" rx="4" fill="#fff"/><rect x="68" y="18" width="14" height="14" rx="4" fill="#fff"/><rect x="18" y="68" width="14" height="14" rx="4" fill="#fff"/><circle cx="68" cy="68" r="4"/><circle cx="78" cy="68" r="4"/><circle cx="68" cy="78" r="4"/><rect x="46" y="14" width="8" height="8" rx="2"/><rect x="46" y="46" width="8" height="8" rx="4"/><rect x="14" y="46" width="8" height="8" rx="4"/><circle cx="82" cy="46" r="4" fill="#F5A524"/><rect x="46" y="78" width="8" height="8" rx="2" fill="#F5A524"/></g></svg>
+        </div>
+        <div class="qr-perks"><span>4 estilos de puntos</span><span>Logo al centro</span><span>PNG + SVG</span></div>
+        <button class="btn btn-primary grad-anim qr-cta" id="qrStart" type="button"><i class="fa-solid fa-qrcode"></i> Crear mi QR</button>
+        <p class="qr-note">Sin cuenta · Sin marca de agua · Funciona en tu celular</p>
+      </section>
+
+      <!-- VISTA 1 · GENERADOR -->
+      <section class="qr-view" id="qrApp" data-view="app" aria-label="Generador QR" hidden>
+        <div class="qr-topbar">
+          <button class="qr-back" id="qrBack" type="button" aria-label="Volver al inicio">‹ Inicio</button>
+          <b>Tu QR en vivo</b>
+          <button class="qr-reset" id="qrReset" type="button" aria-label="Quitar logo">✕ logo</button>
+        </div>
+
+        <div class="qr-mid">
+          <div class="qr-stage">
+            <div id="qrPreview" role="img" aria-label="Vista previa del código QR"></div>
+            <div class="qr-stage-meta">
+              <small>Vista previa en vivo</small>
+              <div id="qrStatus">Listo para escanear</div>
+              <div class="qr-quick">
+                <button id="qrPng" type="button"><i class="fa-solid fa-download"></i> PNG</button>
+                <button id="qrCopy" type="button"><i class="fa-solid fa-copy"></i> Copiar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="qr-tabs" role="tablist" aria-label="Pasos">
+            <button type="button" role="tab" data-step="0" class="on" aria-selected="true">1 · Contenido</button>
+            <button type="button" role="tab" data-step="1" aria-selected="false">2 · Diseño</button>
+            <button type="button" role="tab" data-step="2" aria-selected="false">3 · Descargar</button>
+          </div>
+
+          <div class="qr-panels">
+            <div class="qr-panel on" data-panel="0" role="tabpanel" aria-label="Contenido">
+              <div class="qr-seg" id="qrType" role="tablist" aria-label="Tipo de contenido">
+                <button type="button" data-type="url" class="on">Link</button>
+                <button type="button" data-type="text">Texto</button>
+                <button type="button" data-type="wifi">WiFi</button>
+              </div>
+              <div class="qr-field" id="qrTextWrap">
+                <label for="qrText">Contenido del QR</label>
+                <textarea id="qrText">https://codekat.store</textarea>
+                <span class="qr-count" id="qrCount">21 caracteres</span>
+              </div>
+              <div class="qr-wifi" id="qrWifiWrap" hidden>
+                <div class="qr-field"><label for="qrSsid">Nombre de la red (SSID)</label><input type="text" id="qrSsid" placeholder="MiCasa_5G" /></div>
+                <div class="qr-row2">
+                  <div class="qr-field"><label for="qrWifiPass">Clave</label><input type="text" id="qrWifiPass" placeholder="••••••••" /></div>
+                  <div class="qr-field"><label for="qrWifiEnc">Seguridad</label><select id="qrWifiEnc"><option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="none">Abierta</option></select></div>
+                </div>
+              </div>
+              <div class="qr-field"><label for="qrEcc">Nivel de corrección (más alto = aguanta logo)</label>
+                <select id="qrEcc"><option value="L">L · Simple</option><option value="M" selected>M · Recomendado</option><option value="Q">Q · Con logo</option><option value="H">H · Máximo</option></select>
+              </div>
+            </div>
+
+            <div class="qr-panel" data-panel="1" role="tabpanel" aria-label="Diseño">
+              <div class="qr-grid2">
+                <div class="qr-color"><input type="color" id="qrDot" value="#8b5cf6" /><span>Puntos</span></div>
+                <div class="qr-color"><input type="color" id="qrBg" value="#ffffff" /><span>Fondo</span></div>
+              </div>
+              <label class="qr-check"><input type="checkbox" id="qrGradient" checked /> Degradado con <input type="color" id="qrGrad" value="#f5a524" aria-label="Segundo color del degradado" /></label>
+              <div class="qr-field"><label>Estilo de puntos</label>
+                <div class="qr-opts" id="qrDots">
+                  <button type="button" data-v="square">■ Recto</button>
+                  <button type="button" data-v="dots">● Puntos</button>
+                  <button type="button" data-v="rounded" class="on">◧ Suave</button>
+                  <button type="button" data-v="extra-rounded">⬢ Redondo</button>
+                </div>
+              </div>
+              <div class="qr-field"><label>Esquinas</label>
+                <div class="qr-opts cols3" id="qrCorners">
+                  <button type="button" data-v="square">Rectas</button>
+                  <button type="button" data-v="rounded">Suaves</button>
+                  <button type="button" data-v="extra-rounded" class="on">Redondas</button>
+                </div>
+              </div>
+              <div class="qr-field"><label>Marco del preview</label>
+                <div class="qr-opts cols3" id="qrFrame">
+                  <button type="button" data-v="card" class="on">Tarjeta</button>
+                  <button type="button" data-v="plain">Sin marco</button>
+                  <button type="button" data-v="dark">Oscuro</button>
+                </div>
+              </div>
+              <div class="qr-field"><label>Logo al centro</label>
+                <div class="qr-logo-row">
+                  <label for="qrLogo"><i class="fa-solid fa-image"></i> Subir logo<input type="file" id="qrLogo" accept="image/*" hidden /></label>
+                  <button type="button" id="qrNoLogo">Quitar</button>
+                </div>
+              </div>
+              <div class="qr-field"><label for="qrMargin">Margen <b id="qrMarginVal">12</b></label>
+                <div class="qr-range"><input type="range" id="qrMargin" min="0" max="40" value="12" /></div>
+              </div>
+            </div>
+
+            <div class="qr-panel" data-panel="2" role="tabpanel" aria-label="Descargar">
+              <input type="hidden" id="qrFormat" value="png" />
+              <div class="qr-field"><label>Tamaño de descarga <b id="qrSizeVal">1024px</b></label>
+                <div class="qr-range"><input type="range" id="qrSize" min="512" max="2048" step="256" value="1024" /></div>
+              </div>
+              <div class="qr-seg" id="qrFmtSeg">
+                <button type="button" data-fmt="png" class="on">PNG</button>
+                <button type="button" data-fmt="svg">SVG</button>
+                <button type="button" data-fmt="jpeg">JPG</button>
+              </div>
+              <button class="btn btn-primary grad-anim qr-dl-big" id="qrDownload" type="button"><i class="fa-solid fa-download"></i> Descargar QR</button>
+              <div class="qr-dl-grid">
+                <button type="button" id="qrCopyImg">Copiar imagen</button>
+                <button type="button" id="qrCopy">Copiar texto</button>
+              </div>
+              <p class="qr-tip"><i class="fa-solid fa-circle-info"></i> Tip: usa fondo claro y puntos oscuros para que cualquier cámara lo lea al instante.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="qr-foot">
+          <button class="btn btn-ghost" id="qrPrev" type="button">‹ Atrás</button>
+          <div class="qr-progress"><small>Paso <b id="stepNow">1</b> de 3</small><i><b id="qrBar"></b></i></div>
+          <button class="btn btn-primary" id="qrNext" type="button">Siguiente ›</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  // Mostrar app al pulsar CTA (progresivo, por si el JS principal tarda)
+  document.getElementById('qrStart')?.addEventListener('click', () => {
+    const app = document.getElementById('qrApp');
+    if (app) app.hidden = false;
+  }, { once: true });
+</script>
