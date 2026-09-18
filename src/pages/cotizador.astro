@@ -146,7 +146,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <div class="totals-row"><span>Impuesto (<span id="tTaxLabel">0</span>%)</span><span id="tTax">—</span></div>
           <div class="totals-row total"><span>Total</span><span id="tTotal">—</span></div>
         </div>
-        <div class="field full" style="margin-bottom:.85rem;">
+        <div class="field full filename-input-wrapper">
           <label>Nombre del archivo a descargar</label>
           <input type="text" id="fileName" placeholder="Ej: Cotización Cliente X" value="Cotización" />
         </div>
@@ -155,9 +155,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <button class="btn btn-ghost" id="btnExcel"><i class="fa-solid fa-file-excel"></i> Excel (CSV)</button>
           <button class="btn btn-ghost" id="btnTXT"><i class="fa-solid fa-file-lines"></i> TXT</button>
           <button class="btn btn-ghost" id="btnPrint"><i class="fa-solid fa-print"></i> Imprimir</button>
-          <button class="btn btn-primary" id="btnEmail" style="grid-column:1/-1;"><i class="fa-regular fa-envelope"></i> Enviar por correo</button>
+          <button class="btn btn-primary btn-email-full" id="btnEmail"><i class="fa-regular fa-envelope"></i> Enviar por correo</button>
         </div>
-        <p style="font-size:.74rem;color:var(--text-dim);margin-top:.85rem;"><i class="fa-solid fa-circle-info" style="color:var(--amb);"></i> El envío por correo abre tu aplicación de correo (gratis). Adjunta el PDF si lo necesitas.</p>
+        <p class="info-text-small"><i class="fa-solid fa-circle-info info-text-icon"></i> El envío por correo abre tu aplicación de correo (gratis). Adjunta el PDF si lo necesitas.</p>
       </div>
     </section>
 
@@ -218,8 +218,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <button class="fm-close" id="itemClose" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="fm-body">
-          <div class="field" style="margin-bottom:.7rem;"><label>Concepto *</label><input id="itemModalName" placeholder="Ej: Producto o servicio" /></div>
-          <div class="field" style="margin-bottom:.7rem;"><label>Descripción</label><input id="itemModalDesc" placeholder="Detalle breve (opcional)" /></div>
+          <div class="field modal-field-mb"><label>Concepto *</label><input id="itemModalName" placeholder="Ej: Producto o servicio" /></div>
+          <div class="field modal-field-mb"><label>Descripción</label><input id="itemModalDesc" placeholder="Detalle breve (opcional)" /></div>
           <div class="im-row2">
             <div class="field"><label>Cantidad</label><input id="itemModalQty" type="number" value="1" min="0" step="any" /></div>
             <div class="field"><label>Precio unitario</label><input id="itemModalPrice" type="number" value="0" min="0" step="any" /></div>
