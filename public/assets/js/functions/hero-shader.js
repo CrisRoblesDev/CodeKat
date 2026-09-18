@@ -140,20 +140,25 @@ void main(){gl_Position=position;}`;
     return [x * s, cv.height - y * s];
   }
 
+  // Fondo fijo a toda la página: el canvas cubre el viewport (no la sección),
+  // así el diseño es continuo y no existe ningún corte entre secciones.
   function sizeCanvas() {
-    const r = (hero || cv.parentElement).getBoundingClientRect();
-    if (!r.width || !r.height) return false;
-    const s = pxScale();
-    const w = Math.round(r.width * s), h = Math.round(r.height * s);
+    const qf = [1, 0.75, 0.6][qLevel] || 0.6;
+    const w = Math.round(window.innerWidth * pxScale() * qf);
+    const h = Math.round(window.innerHeight * pxScale() * qf);
+    if (!w || !h) return false;
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     gl.viewport(0, 0, cv.width, cv.height);
     return true;
   }
 
   if (host) {
-    host.addEventListener("pointerdown", (e) => {
-      const r = cv.getBoundingClientRect();
-      pointers.set(e.pointerId, toGL(e.clientX - r.left, e.clientY - r.top));
+    window.addEventListener("pointermove", (e) => {
+      mouse.tx = e.clientX / window.innerWidth;
+      mouse.ty = 1 - e.clientY / window.innerHeight;
+    }, { passive: true });
+    window.addEventListener("pointerdown", (e) => {
+      pointers.set(e.pointerId, toGL(e.clientX, e.clientY));
     });
     const release = (e) => {
       if (pointers.size === 1) {
@@ -162,18 +167,17 @@ void main(){gl_Position=position;}`;
       }
       pointers.delete(e.pointerId);
     };
-    host.addEventListener("pointerup", release);
-    host.addEventListener("pointerleave", release);
-    host.addEventListener("pointermove", (e) => {
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
+    window.addEventListener("pointermove", (e) => {
       if (!pointers.size) return;
-      const r = cv.getBoundingClientRect();
       lastCoords = [e.clientX, e.clientY];
-      pointers.set(e.pointerId, toGL(e.clientX - r.left, e.clientY - r.top));
+      pointers.set(e.pointerId, toGL(e.clientX, e.clientY));
       moves = [moves[0] + (e.movementX || 0), moves[1] + (e.movementY || 0)];
     }, { passive: true });
   }
 
-  let raf = 0, running = false, visible = true, t0 = 0;
+  let raf = 0, running = false, t0 = 0, lastT = 0, emaDt = 16, qLevel = 0;
   function render(now) {
     const coords = pointers.size > 0 ? Array.from(pointers.values()).flat() : [0, 0];
     const first = pointers.size > 0 ? pointers.values().next().value : lastCoords;
@@ -182,7 +186,7 @@ void main(){gl_Position=position;}`;
     gl.useProgram(prog);
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.uniform2f(uRes, cv.width, cv.height);
-    gl.uniform1f(uTime, now * 1e-3 * 0.56);
+    gl.uniform1f(uTime, now * 1e-3 * 0.2);
     gl.uniform2f(uMove, moves[0], moves[1]);
     gl.uniform2f(uTouch, first[0] || 0, first[1] || 0);
     gl.uniform1i(uCount, pointers.size);
@@ -195,11 +199,21 @@ void main(){gl_Position=position;}`;
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
   function frame(now) {
+    // Calidad adaptativa: si el GPU no da abasto, baja la resolución (máx 2 niveles)
+    if (lastT) {
+      emaDt = emaDt * 0.95 + (now - lastT) * 0.05;
+      if (emaDt > 42 && qLevel < 2) {
+        qLevel++;
+        emaDt = 16;
+        sizeCanvas();
+      }
+    }
+    lastT = now;
     render(now);
     if (running) raf = requestAnimationFrame(frame);
   }
   function start() {
-    if (running || !visible) return;
+    if (running) return;
     if (reduced) { if (sizeCanvas()) render(t0); return; }
     if (!sizeCanvas()) return;
     running = true;
@@ -211,12 +225,6 @@ void main(){gl_Position=position;}`;
     raf = 0;
   }
 
-  if (hero && "IntersectionObserver" in window) {
-    new IntersectionObserver((es) => {
-      visible = es[0].isIntersecting;
-      if (visible) start(); else stop();
-    }, { threshold: 0.02 }).observe(hero);
-  }
   window.addEventListener("resize", () => { if (running) sizeCanvas(); else start(); }, { passive: true });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stop();

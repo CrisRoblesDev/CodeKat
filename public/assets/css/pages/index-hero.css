@@ -45,8 +45,9 @@
     @keyframes arrowBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
     .step-arrow-down i{animation:arrowBounce 2.25s ease-in-out infinite;}
 
-    /* ── Shader aurora CodeKat (estilo animated-shader-hero) ── */
-    #heroShader{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+    /* ── Shader fijo a toda la página: fondo continuo, sin cortes ── */
+    #heroShader{position:fixed;inset:0;width:100%;height:100dvh;z-index:-2;pointer-events:none;}
+    body{background-image:none;}
     .hero-grid,.hero-conic{z-index:0;opacity:.5;}
     .hx-behind,.hx-first,.hero-steps{position:relative;z-index:1;}
     .hero-title,.hero-subtitle{text-shadow:0 2px 26px rgba(0,0,0,.6);}
@@ -77,11 +78,8 @@
     .hero-ctas .btn{transition:transform .3s ease,box-shadow .3s ease;}
     .hero-ctas .btn:hover{transform:scale(1.05);}
     .hero-ctas .btn-primary:hover{box-shadow:0 12px 40px rgba(139,92,246,.45);}
-    html[data-theme="light"] #heroShader{opacity:.28;}
+    html[data-theme="light"] #heroShader{display:none;}
     html[data-theme="light"] .hero-title,html[data-theme="light"] .hero-subtitle{text-shadow:none;}
-    /* ── Fundido final: el hero se disuelve en el fondo, sin corte ── */
-    .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:clamp(140px,24vw,260px);
-      z-index:0;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,var(--bg) 92%);}
     /* ── Contraste: pastilla legible sobre el fantasma ── */
     .hero-steps-title{display:inline-block;position:relative;z-index:2;color:var(--purple);
       align-self:center;background:var(--glass-bg-strong);border:1px solid var(--glass-border);
