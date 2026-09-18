@@ -38,6 +38,12 @@
 
   function setStatus(msg) { if (status) status.textContent = msg; }
 
+  const fileName = () => {
+    const el = $("#qrFileName");
+    const v = (el ? el.value : "").replace(/[^\w\-áéíóúñü ]+/gi, "").trim().replace(/\s+/g, "-");
+    return v || "qr-kat";
+  };
+
   function ensureQr() {
     if (typeof QRCodeStyling === "undefined") {
       setStatus("Sin conexión: no se pudo cargar el motor QR.");
@@ -196,11 +202,6 @@
     $("#qrNoLogo")?.addEventListener("click", () => { state.logo = null; const i = $("#qrLogo"); if (i) i.value = ""; schedule(); });
 
     /* descargas (siempre al tamaño elegido, instancia temporal de exportación) */
-    const fileName = () => {
-      const el = $("#qrFileName");
-      const v = (el ? el.value : "").replace(/[^\w\-áéíóúñü ]+/gi, "").trim().replace(/\s+/g, "-");
-      return v || "qr-kat";
-    };
     async function exportQr(ext) {
       if (!ensureQr()) return;
       setStatus("Generando archivo en alta calidad…");
