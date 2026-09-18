@@ -142,10 +142,18 @@ void main(){gl_Position=position;}`;
 
   // Fondo fijo a toda la página: el canvas cubre el viewport (no la sección),
   // así el diseño es continuo y no existe ningún corte entre secciones.
+  function vpSize() {
+    const vv = window.visualViewport;
+    return {
+      w: Math.round((vv && vv.width) || window.innerWidth || 0),
+      h: Math.round((vv && vv.height) || window.innerHeight || 0),
+    };
+  }
   function sizeCanvas() {
     const qf = [1, 0.75, 0.6][qLevel] || 0.6;
-    const w = Math.round(window.innerWidth * pxScale() * qf);
-    const h = Math.round(window.innerHeight * pxScale() * qf);
+    const vp = vpSize();
+    const w = Math.round(vp.w * pxScale() * qf);
+    const h = Math.round(vp.h * pxScale() * qf);
     if (!w || !h) return false;
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     gl.viewport(0, 0, cv.width, cv.height);
@@ -203,8 +211,9 @@ void main(){gl_Position=position;}`;
     // La barra del navegador cambia el viewport sin disparar resize:
     // se revisa el tamaño cada ~32 frames para no dejar bandas negras.
     if ((tick++ & 31) === 0) {
-      if (window.innerWidth !== lastVW || window.innerHeight !== lastVH) {
-        lastVW = window.innerWidth; lastVH = window.innerHeight;
+      const vp = vpSize();
+      if (vp.w !== lastVW || vp.h !== lastVH) {
+        lastVW = vp.w; lastVH = vp.h;
         sizeCanvas();
       }
     }
