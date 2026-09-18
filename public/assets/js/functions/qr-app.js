@@ -92,6 +92,7 @@
     preview.classList.remove("pop"); void preview.offsetWidth; preview.classList.add("pop");
     setStatus(`${payload().length} caracteres · ECC-${state.ecc}`);
     updateMini();
+    syncRows();
   }
 
   const schedule = () => { clearTimeout(timer); timer = setTimeout(apply, 280); };
@@ -104,9 +105,56 @@
       a.hidden = false;
       l.classList.remove("on"); l.classList.add("off-left");
       a.classList.add("on"); ensureQr(); apply();
+      if (window.__qrAether) window.__qrAether.stop();
     } else {
       a.classList.remove("on"); l.classList.remove("off-left"); l.classList.add("on");
+      if (window.__qrAether) window.__qrAether.start();
     }
+  }
+
+  /* ----- modal de edición (mueve el bloque real, conserva estado) ----- */
+  const modalHome = new Map();
+  let modalFocus = null;
+  function openModal(title, blockId) {
+    const modal = $("#qrModal"), body = $("#qrModalBody");
+    const block = blockId && document.getElementById(blockId);
+    if (!modal || !body || !block) return;
+    modalFocus = document.activeElement;
+    modalHome.set(blockId, { parent: block.parentNode, next: block.nextSibling });
+    body.appendChild(block);
+    $("#qrModalTitle").textContent = title || "Editar";
+    modal.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("on")));
+    document.body.style.overflow = "hidden";
+    const x = $("#qrModalX");
+    if (x) x.focus({ preventScroll: true });
+  }
+  function closeModal() {
+    const modal = $("#qrModal"), body = $("#qrModalBody");
+    if (!modal || modal.hidden) return;
+    [...body.children].forEach((ch) => {
+      const h = modalHome.get(ch.id);
+      if (h) h.parent.insertBefore(ch, h.next);
+    });
+    modalHome.clear();
+    modal.classList.remove("on");
+    setTimeout(() => { if (!modal.classList.contains("on")) modal.hidden = true; }, 240);
+    document.body.style.overflow = "";
+    if (modalFocus && modalFocus.focus) modalFocus.focus({ preventScroll: true });
+  }
+
+  /* ----- resúmenes de las filas ----- */
+  const DOTS_NAMES = { square: "Recto", dots: "Puntos", rounded: "Suave", "extra-rounded": "Redondo", classy: "Elegante", "classy-rounded": "Curvo" };
+  const CORNERS_NAMES = { square: "Rectas", dot: "Punto", "extra-rounded": "Redondas" };
+  const FRAME_NAMES = { card: "Tarjeta", plain: "Sin marco", dark: "Oscuro" };
+  function syncRows() {
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set("sumColors", `${state.dotColor} · fondo ${state.bgColor}`);
+    set("sumGrad", state.gradient ? `${state.gradType === "radial" ? "Radial" : "Lineal"} → ${state.gradColor}` : "Apagado");
+    set("sumDots", DOTS_NAMES[state.dots] || state.dots);
+    set("sumCorners", `${CORNERS_NAMES[state.corners] || state.corners} + ${state.cornersDot === "square" ? "cuadro" : "punto"}`);
+    set("sumLogo", state.logo ? "Logo aplicado" : "Sin logo");
+    set("sumFrame", `${FRAME_NAMES[state.frame] || "Tarjeta"} · margen ${state.margin}`);
   }
 
   /* ----- pasos ----- */
@@ -123,8 +171,21 @@
 
   function bind() {
     $("#qrStart")?.addEventListener("click", () => showView("app"));
+    $("#qrSample")?.addEventListener("click", () => {
+      Object.assign(state, PRESETS.sunset);
+      state.cardTitle = "Café Aurora";
+      state.handle1 = "@cafe.aurora";
+      const t = $("#qrCardTitle"); if (t) t.value = state.cardTitle;
+      const h1 = $("#qrHandle1"); if (h1) h1.value = state.handle1;
+      syncUI(); showView("app"); goStep(0);
+    });
     $("#qrBack")?.addEventListener("click", () => showView("landing"));
-    $("#qrReset")?.addEventListener("click", () => { state.logo = null; apply(); setStatus("Diseño restablecido."); });
+    $("#qrReset")?.addEventListener("click", () => { state.logo = null; apply(); syncRows(); setStatus("Diseño restablecido."); });
+    $$(".qr-row").forEach((b) => b.addEventListener("click", () => openModal(b.dataset.title || "Editar", b.dataset.modal)));
+    $("#qrModalX")?.addEventListener("click", closeModal);
+    $("#qrModalDone")?.addEventListener("click", closeModal);
+    $("#qrModalBg")?.addEventListener("click", closeModal);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
     $("#qrPrev")?.addEventListener("click", () => goStep(state.step - 1));
     $("#qrNext")?.addEventListener("click", () => goStep(state.step + 1));
     $$(".qr-tabs button").forEach(b => b.addEventListener("click", () => goStep(+b.dataset.step)));

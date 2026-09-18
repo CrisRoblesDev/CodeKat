@@ -22,6 +22,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     "https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js",
     "/assets/js/functions/theme.js",
     "/assets/js/functions/menu.js",
+    "/assets/js/functions/qr-aether.js",
     "/assets/js/functions/qr-app.js",
   ]}
   bodyData={{ class: "qr-page" }}
@@ -46,18 +47,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <div class="container">
     <div class="qr-shell">
-      <!-- VISTA 0 · LANDING -->
+      <!-- VISTA 0 · LANDING estilo Aether Flow -->
       <section class="qr-view qr-landing on" id="qrLanding" aria-label="Presentación">
-        <span class="qr-badge"><i class="fa-solid fa-bolt"></i> Nuevo · Gratis · Sin registro</span>
-        <h2>QR con tu marca, <em>listo en segundos</em></h2>
-        <p>Tus colores, tus formas, tu logo. Se escanea con cualquier cámara.</p>
-        <div class="qr-demo" aria-hidden="true">
-          <div id="qrDemoMini"></div>
-          <svg id="qrDemoFallback" viewBox="0 0 100 100"><rect width="100" height="100" rx="14" fill="#fff"></rect><g fill="#8B5CF6"><rect x="12" y="12" width="26" height="26" rx="7"></rect><rect x="62" y="12" width="26" height="26" rx="7"></rect><rect x="12" y="62" width="26" height="26" rx="7"></rect><rect x="18" y="18" width="14" height="14" rx="4" fill="#fff"></rect><rect x="68" y="18" width="14" height="14" rx="4" fill="#fff"></rect><rect x="18" y="68" width="14" height="14" rx="4" fill="#fff"></rect><circle cx="68" cy="68" r="4"></circle><circle cx="78" cy="68" r="4"></circle><circle cx="68" cy="78" r="4"></circle><rect x="46" y="14" width="8" height="8" rx="2"></rect><rect x="46" y="46" width="8" height="8" rx="4"></rect><rect x="14" y="46" width="8" height="8" rx="4"></rect><circle cx="82" cy="46" r="4" fill="#F5A524"></circle><rect x="46" y="78" width="8" height="8" rx="2" fill="#F5A524"></circle></g></svg>
+        <canvas id="qrAether" aria-hidden="true"></canvas>
+        <div class="qr-hero">
+          <span class="qr-badge"><i class="fa-solid fa-bolt"></i> QR Kat · 100% gratis</span>
+          <h2>QR que se sienten <em>vivos</em></h2>
+          <p>Tus colores, tus formas, tu logo. Listo en segundos, desde tu celular.</p>
+          <div class="qr-demo" aria-hidden="true">
+            <div id="qrDemoMini"></div>
+            <svg id="qrDemoFallback" viewBox="0 0 100 100"><rect width="100" height="100" rx="14" fill="#fff"></rect><g fill="#8B5CF6"><rect x="12" y="12" width="26" height="26" rx="7"></rect><rect x="62" y="12" width="26" height="26" rx="7"></rect><rect x="12" y="62" width="26" height="26" rx="7"></rect><rect x="18" y="18" width="14" height="14" rx="4" fill="#fff"></rect><rect x="68" y="18" width="14" height="14" rx="4" fill="#fff"></rect><rect x="18" y="68" width="14" height="14" rx="4" fill="#fff"></rect><circle cx="68" cy="68" r="4"></circle><circle cx="78" cy="68" r="4"></circle><circle cx="68" cy="78" r="4"></circle><rect x="46" y="14" width="8" height="8" rx="2"></rect><rect x="46" y="46" width="8" height="8" rx="4"></rect><rect x="14" y="46" width="8" height="8" rx="4"></rect><circle cx="82" cy="46" r="4" fill="#F5A524"></circle><rect x="46" y="78" width="8" height="8" rx="2" fill="#F5A524"></circle></g></svg>
+          </div>
+          <div class="qr-cta-row">
+            <button class="btn btn-primary grad-anim qr-cta" id="qrStart" type="button"><i class="fa-solid fa-qrcode"></i> Crear mi QR gratis</button>
+            <button class="btn btn-glass" id="qrSample" type="button">Ver ejemplo</button>
+          </div>
+          <div class="qr-stats" aria-label="Ventajas"><span><b>6</b> estilos</span><span><b>0</b> registro</span><span><b>3</b> formatos</span></div>
+          <p class="qr-note">Sin cuenta · Sin marca de agua</p>
         </div>
-        <div class="qr-perks"><span><i class="fa-solid fa-shapes"></i> 6 estilos</span><span><i class="fa-solid fa-image"></i> Con tu logo</span><span><i class="fa-solid fa-file-arrow-down"></i> PNG + SVG</span></div>
-        <button class="btn btn-primary grad-anim qr-cta" id="qrStart" type="button"><i class="fa-solid fa-qrcode"></i> Crear mi QR gratis</button>
-        <p class="qr-note">Sin cuenta · Sin marca de agua · Hecho en Chile</p>
       </section>
 
       <!-- VISTA 1 · GENERADOR -->
@@ -152,36 +159,51 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                   <button type="button" data-p="vino" aria-label="Tema vino"><i style="background:linear-gradient(135deg,#7C2D12,#DB2777)"></i>Vino</button>
                 </div>
               </div>
-              <div class="qr-grid2">
-                <div class="qr-color"><input type="color" id="qrDot" value="#8b5cf6" /><span>Puntos</span></div>
-                <div class="qr-color"><input type="color" id="qrBg" value="#ffffff" /><span>Fondo</span></div>
+              <div class="qr-rows" role="list" aria-label="Opciones de personalización">
+                <button type="button" class="qr-row" data-modal="opt-colors" data-title="Colores" role="listitem"><span class="qr-row-ico"><i class="fa-solid fa-palette"></i></span><span class="qr-row-tx"><b>Colores</b><small id="sumColors">—</small></span><i class="fa-solid fa-chevron-right"></i></button>
+                <button type="button" class="qr-row" data-modal="opt-gradient" data-title="Degradado" role="listitem"><span class="qr-row-ico"><i class="fa-solid fa-fill-drip"></i></span><span class="qr-row-tx"><b>Degradado</b><small id="sumGrad">—</small></span><i class="fa-solid fa-chevron-right"></i></button>
+                <button type="button" class="qr-row" data-modal="opt-dots" data-title="Estilo de puntos" role="listitem"><span class="qr-row-ico"><i class="fa-solid fa-shapes"></i></span><span class="qr-row-tx"><b>Puntos</b><small id="sumDots">—</small></span><i class="fa-solid fa-chevron-right"></i></button>
+                <button type="button" class="qr-row" data-modal="opt-corners" data-title="Esquinas" role="listitem"><span class="qr-row-ico"><i class="fa-solid fa-vector-square"></i></span><span class="qr-row-tx"><b>Esquinas</b><small id="sumCorners">—</small></span><i class="fa-solid fa-chevron-right"></i></button>
+                <button type="button" class="qr-row" data-modal="opt-logo" data-title="Logo al centro" role="listitem"><span class="qr-row-ico"><i class="fa-solid fa-image"></i></span><span class="qr-row-tx"><b>Logo</b><small id="sumLogo">—</small></span><i class="fa-solid fa-chevron-right"></i></button>
+                <button type="button" class="qr-row" data-modal="opt-frame" data-title="Marco y margen" role="listitem"><span class="qr-row-ico"><i class="fa-solid fa-expand"></i></span><span class="qr-row-tx"><b>Marco</b><small id="sumFrame">—</small></span><i class="fa-solid fa-chevron-right"></i></button>
               </div>
-              <div class="qr-sw" id="qrDotSw" aria-label="Colores de puntos">
-                <button type="button" data-c="#8b5cf6" style="--sw:#8b5cf6" aria-label="Violeta"></button>
-                <button type="button" data-c="#111827" style="--sw:#111827" aria-label="Negro"></button>
-                <button type="button" data-c="#1d4ed8" style="--sw:#1d4ed8" aria-label="Azul"></button>
-                <button type="button" data-c="#0284c7" style="--sw:#0284c7" aria-label="Celeste"></button>
-                <button type="button" data-c="#dc2626" style="--sw:#dc2626" aria-label="Rojo"></button>
-                <button type="button" data-c="#db2777" style="--sw:#db2777" aria-label="Fucsia"></button>
-                <button type="button" data-c="#15803d" style="--sw:#15803d" aria-label="Verde"></button>
-                <button type="button" data-c="#ea580c" style="--sw:#ea580c" aria-label="Naranja"></button>
-              </div>
-              <div class="qr-field"><label>Fondos que sí se escanean</label>
-                <div class="qr-sw qr-sw-bg" id="qrBgSw" aria-label="Colores de fondo">
-                  <button type="button" data-c="#ffffff" style="--sw:#ffffff" aria-label="Blanco"></button>
-                  <button type="button" data-c="#fff7ed" style="--sw:#fff7ed" aria-label="Crema"></button>
-                  <button type="button" data-c="#ede9fe" style="--sw:#ede9fe" aria-label="Lila claro"></button>
-                  <button type="button" data-c="#eff6ff" style="--sw:#eff6ff" aria-label="Celeste claro"></button>
-                  <button type="button" data-c="#f0fdf4" style="--sw:#f0fdf4" aria-label="Menta"></button>
-                  <button type="button" data-c="#fdf2f8" style="--sw:#fdf2f8" aria-label="Rosa claro"></button>
+            </div>
+
+            <div id="qrOptStore" hidden aria-hidden="true">
+              <div class="qr-opt" id="opt-colors">
+                <div class="qr-grid2">
+                  <div class="qr-color"><input type="color" id="qrDot" value="#8b5cf6" /><span>Puntos</span></div>
+                  <div class="qr-color"><input type="color" id="qrBg" value="#ffffff" /><span>Fondo</span></div>
+                </div>
+                <div class="qr-sw" id="qrDotSw" aria-label="Colores de puntos">
+                  <button type="button" data-c="#8b5cf6" style="--sw:#8b5cf6" aria-label="Violeta"></button>
+                  <button type="button" data-c="#111827" style="--sw:#111827" aria-label="Negro"></button>
+                  <button type="button" data-c="#1d4ed8" style="--sw:#1d4ed8" aria-label="Azul"></button>
+                  <button type="button" data-c="#0284c7" style="--sw:#0284c7" aria-label="Celeste"></button>
+                  <button type="button" data-c="#dc2626" style="--sw:#dc2626" aria-label="Rojo"></button>
+                  <button type="button" data-c="#db2777" style="--sw:#db2777" aria-label="Fucsia"></button>
+                  <button type="button" data-c="#15803d" style="--sw:#15803d" aria-label="Verde"></button>
+                  <button type="button" data-c="#ea580c" style="--sw:#ea580c" aria-label="Naranja"></button>
+                </div>
+                <div class="qr-field"><label>Fondos que sí se escanean</label>
+                  <div class="qr-sw qr-sw-bg" id="qrBgSw" aria-label="Colores de fondo">
+                    <button type="button" data-c="#ffffff" style="--sw:#ffffff" aria-label="Blanco"></button>
+                    <button type="button" data-c="#fff7ed" style="--sw:#fff7ed" aria-label="Crema"></button>
+                    <button type="button" data-c="#ede9fe" style="--sw:#ede9fe" aria-label="Lila claro"></button>
+                    <button type="button" data-c="#eff6ff" style="--sw:#eff6ff" aria-label="Celeste claro"></button>
+                    <button type="button" data-c="#f0fdf4" style="--sw:#f0fdf4" aria-label="Menta"></button>
+                    <button type="button" data-c="#fdf2f8" style="--sw:#fdf2f8" aria-label="Rosa claro"></button>
+                  </div>
                 </div>
               </div>
-              <label class="qr-check"><input type="checkbox" id="qrGradient" checked /> Degradado con <input type="color" id="qrGrad" value="#f5a524" aria-label="Segundo color del degradado" /></label>
-              <div class="qr-seg qr-seg-2" id="qrGradType" role="group" aria-label="Tipo de degradado">
-                <button type="button" data-g="linear" class="on">Lineal</button>
-                <button type="button" data-g="radial">Radial</button>
+              <div class="qr-opt" id="opt-gradient">
+                <label class="qr-check"><input type="checkbox" id="qrGradient" checked /> Degradado con <input type="color" id="qrGrad" value="#f5a524" aria-label="Segundo color del degradado" /></label>
+                <div class="qr-seg qr-seg-2" id="qrGradType" role="group" aria-label="Tipo de degradado">
+                  <button type="button" data-g="linear" class="on">Lineal</button>
+                  <button type="button" data-g="radial">Radial</button>
+                </div>
               </div>
-              <div class="qr-field"><label>Estilo de puntos</label>
+              <div class="qr-opt" id="opt-dots">
                 <div class="qr-opts qr-opts-6" id="qrDots">
                   <button type="button" data-v="square">■ Recto</button>
                   <button type="button" data-v="dots">● Puntos</button>
@@ -191,7 +213,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                   <button type="button" data-v="classy-rounded">⬔ Curvo</button>
                 </div>
               </div>
-              <div class="qr-row2">
+              <div class="qr-opt" id="opt-corners">
                 <div class="qr-field"><label>Esquinas</label>
                   <div class="qr-opts cols3" id="qrCorners">
                     <button type="button" data-v="square">Rectas</button>
@@ -206,21 +228,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                   </div>
                 </div>
               </div>
-              <div class="qr-field"><label>Marco del preview</label>
-                <div class="qr-opts cols3" id="qrFrame">
-                  <button type="button" data-v="card" class="on">Tarjeta</button>
-                  <button type="button" data-v="plain">Sin marco</button>
-                  <button type="button" data-v="dark">Oscuro</button>
-                </div>
-              </div>
-              <div class="qr-field"><label>Logo al centro</label>
+              <div class="qr-opt" id="opt-logo">
                 <div class="qr-logo-row">
                   <label for="qrLogo"><i class="fa-solid fa-image"></i> Subir logo<input type="file" id="qrLogo" accept="image/*" hidden /></label>
                   <button type="button" id="qrNoLogo">Quitar</button>
                 </div>
+                <p class="qr-tip"><i class="fa-solid fa-circle-info"></i> Con logo usa corrección Q o H en el paso 1.</p>
               </div>
-              <div class="qr-field"><label for="qrMargin">Margen de seguridad <b id="qrMarginVal">12</b></label>
-                <div class="qr-range"><input type="range" id="qrMargin" min="0" max="40" value="12" /></div>
+              <div class="qr-opt" id="opt-frame">
+                <div class="qr-field"><label>Marco del preview</label>
+                  <div class="qr-opts cols3" id="qrFrame">
+                    <button type="button" data-v="card" class="on">Tarjeta</button>
+                    <button type="button" data-v="plain">Sin marco</button>
+                    <button type="button" data-v="dark">Oscuro</button>
+                  </div>
+                </div>
+                <div class="qr-field"><label for="qrMargin">Margen de seguridad <b id="qrMarginVal">12</b></label>
+                  <div class="qr-range"><input type="range" id="qrMargin" min="0" max="40" value="12" /></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qr-modal" id="qrModal" hidden>
+              <div class="qr-modal-bg" id="qrModalBg"></div>
+              <div class="qr-modal-box" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+                <div class="qr-modal-head"><b id="qrModalTitle">Editar</b><button id="qrModalX" type="button" aria-label="Cerrar">✕</button></div>
+                <div class="qr-modal-body" id="qrModalBody"></div>
+                <div class="qr-modal-foot"><button class="btn btn-primary" id="qrModalDone" type="button">Listo</button></div>
               </div>
             </div>
 
@@ -262,10 +296,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <Fragment slot="after-footer">
     <script is:inline>
       // Progresivo: revela el generador aunque el JS principal aún no cargue.
-      document.getElementById('qrStart')?.addEventListener('click', () => {
-        const app = document.getElementById('qrApp');
-        if (app) { app.hidden = false; app.classList.add('on'); }
-      }, { once: true });
+      const reveal = () => {
+        const app = document.getElementById("qrApp");
+        if (app) { app.hidden = false; app.classList.add("on"); }
+      };
+      document.getElementById("qrStart")?.addEventListener("click", reveal, { once: true });
+      document.getElementById("qrSample")?.addEventListener("click", reveal, { once: true });
     </script>
   </Fragment>
 </BaseLayout>
