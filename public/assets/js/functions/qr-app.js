@@ -208,7 +208,12 @@
         const inst = new QRCodeStyling({ ...fullOptions(state.size), type: ext === "svg" ? "svg" : "canvas" });
         await inst.download({ name: fileName(), extension: ext });
         setStatus(`Descargado en ${state.size}px.`);
-      } catch (e) { setStatus("No se pudo descargar."); }
+      } catch (e) {
+        try {
+          await qr.download({ name: fileName(), extension: ext });
+          setStatus("Descargado (calidad estándar).");
+        } catch (e2) { setStatus("No se pudo descargar: " + (e2?.message || e2)); }
+      }
     }
     $("#qrDownload")?.addEventListener("click", () => exportQr($("#qrFormat")?.value || "png"));
     $$("#qrFmtSeg button").forEach(b => b.addEventListener("click", () => {
@@ -344,9 +349,15 @@
         ctx.font = "500 42px Outfit, system-ui, sans-serif";
         ctx.fillText(sub, W / 2, 190 + lines.slice(0, 2).length * 84 + 10);
       }
-      // QR en alta (instancia temporal a 1024, no el preview de 300)
-      const hi = new QRCodeStyling({ ...fullOptions(1024), type: "canvas" });
-      const blob = await hi.getRawData("png");
+      // QR en alta: instancia temporal a 1024; si falla, se reutiliza el preview
+      let blob = null, hiRes = true;
+      try {
+        const hi = new QRCodeStyling({ ...fullOptions(1024), type: "canvas" });
+        blob = await hi.getRawData("png");
+      } catch (e) {
+        try { blob = await qr.getRawData("png"); hiRes = false; }
+        catch (e2) { throw new Error("motor QR no disponible (" + (e2?.message || e2) + ")"); }
+      }
       const bmp = await blobToBitmap(blob);
       const q = 660, qx = (W - q) / 2, qy = 430;
       ctx.save();
@@ -377,8 +388,8 @@
       a.download = fileName() + "-tarjeta.png";
       a.href = cv.toDataURL("image/png");
       document.body.appendChild(a); a.click(); a.remove();
-      setStatus("Tarjeta descargada en alta calidad.");
-    } catch (e) { setStatus("No se pudo armar la tarjeta."); }
+      setStatus(hiRes ? "Tarjeta descargada en alta calidad." : "Tarjeta descargada (calidad estándar).");
+    } catch (e) { setStatus("No se pudo armar la tarjeta: " + (e?.message || e)); }
   }
   function renderDemo() {
     const slot = $("#qrDemoMini");
