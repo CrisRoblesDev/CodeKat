@@ -254,6 +254,35 @@
     });
   }
 
+  /* PNG del QR en alta: temporal 1024 -> SVG rasterizado -> preview.
+     Triple intento para que la tarjeta siempre pueda armarse. */
+  async function qrPngBlob(px) {
+    try {
+      const hi = new QRCodeStyling({ ...fullOptions(px), type: "canvas" });
+      return await hi.getRawData("png");
+    } catch (e1) {
+      try {
+        const sv = new QRCodeStyling({ ...fullOptions(px), type: "svg" });
+        const svgBlob = await sv.getRawData("svg");
+        const url = URL.createObjectURL(svgBlob);
+        try {
+          const img = new Image();
+          img.decoding = "sync";
+          await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("SVG no rasterizo")); img.src = url; });
+          const cv = document.createElement("canvas");
+          cv.width = px; cv.height = px;
+          const cx = cv.getContext("2d");
+          cx.fillStyle = state.bgColor; cx.fillRect(0, 0, px, px);
+          cx.drawImage(img, 0, 0, px, px);
+          const out = await new Promise((res, rej) => cv.toBlob(b => (b ? res(b) : rej(new Error("toBlob vacio"))), "image/png"));
+          return out;
+        } finally { URL.revokeObjectURL(url); }
+      } catch (e2) {
+        return qr.getRawData("png");
+      }
+    }
+  }
+
   /* Tarjeta para compartir 1080x1350: textos + redes fuera del QR */
   function rr(ctx, x, y, w, h, r) {
     ctx.beginPath();
@@ -349,15 +378,8 @@
         ctx.font = "500 42px Outfit, system-ui, sans-serif";
         ctx.fillText(sub, W / 2, 190 + lines.slice(0, 2).length * 84 + 10);
       }
-      // QR en alta: instancia temporal a 1024; si falla, se reutiliza el preview
-      let blob = null, hiRes = true;
-      try {
-        const hi = new QRCodeStyling({ ...fullOptions(1024), type: "canvas" });
-        blob = await hi.getRawData("png");
-      } catch (e) {
-        try { blob = await qr.getRawData("png"); hiRes = false; }
-        catch (e2) { throw new Error("motor QR no disponible (" + (e2?.message || e2) + ")"); }
-      }
+      // QR en alta con triple respaldo (nunca reutiliza el preview chico)
+      const blob = await qrPngBlob(1024);
       const bmp = await blobToBitmap(blob);
       const q = 660, qx = (W - q) / 2, qy = 430;
       ctx.save();
@@ -388,7 +410,7 @@
       a.download = fileName() + "-tarjeta.png";
       a.href = cv.toDataURL("image/png");
       document.body.appendChild(a); a.click(); a.remove();
-      setStatus(hiRes ? "Tarjeta descargada en alta calidad." : "Tarjeta descargada (calidad estándar).");
+      setStatus("Tarjeta descargada en alta calidad.");
     } catch (e) { setStatus("No se pudo armar la tarjeta: " + (e?.message || e)); }
   }
   function renderDemo() {
