@@ -182,7 +182,7 @@ void main(){gl_Position=position;}`;
     gl.useProgram(prog);
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.uniform2f(uRes, cv.width, cv.height);
-    gl.uniform1f(uTime, now * 1e-3 * 0.8);
+    gl.uniform1f(uTime, now * 1e-3 * 0.56);
     gl.uniform2f(uMove, moves[0], moves[1]);
     gl.uniform2f(uTouch, first[0] || 0, first[1] || 0);
     gl.uniform1i(uCount, pointers.size);

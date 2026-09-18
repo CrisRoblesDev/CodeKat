@@ -77,6 +77,21 @@
     .hero-ctas .btn{transition:transform .3s ease,box-shadow .3s ease;}
     .hero-ctas .btn:hover{transform:scale(1.05);}
     .hero-ctas .btn-primary:hover{box-shadow:0 12px 40px rgba(139,92,246,.45);}
-    html[data-theme="light"] #heroShader{opacity:.4;}
+    html[data-theme="light"] #heroShader{opacity:.28;}
     html[data-theme="light"] .hero-title,html[data-theme="light"] .hero-subtitle{text-shadow:none;}
+    /* ── Fundido final: el hero se disuelve en el fondo, sin corte ── */
+    .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:clamp(140px,24vw,260px);
+      z-index:0;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,var(--bg) 92%);}
+    /* ── Contraste: pastilla legible sobre el fantasma ── */
+    .hero-steps-title{display:inline-block;position:relative;z-index:2;color:var(--purple);
+      align-self:center;background:var(--glass-bg-strong);border:1px solid var(--glass-border);
+      padding:.45rem 1.1rem;border-radius:999px;backdrop-filter:blur(10px);}
+    /* ── Contraste en tema claro ── */
+    html[data-theme="light"] .hx-kat{-webkit-text-stroke:1.5px rgba(26,26,46,.7);}
+    html[data-theme="light"] .hero-title .hl-line1{background:linear-gradient(90deg,#7C3AED,#9333EA,#A21CAF);
+      -webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;}
+    html[data-theme="light"] .hero-title .hl-line2{background:linear-gradient(90deg,#D97706,#EA580C,#B45309);
+      -webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;}
+    html[data-theme="light"] .hero-badge{color:#6D28D9;background:rgba(255,255,255,.72);border-color:rgba(139,92,246,.45);}
+    html[data-theme="light"] .hero-subtitle{color:#4A4763;}
 
