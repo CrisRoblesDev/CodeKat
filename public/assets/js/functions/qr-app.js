@@ -294,16 +294,11 @@
     ctx.closePath();
   }
   async function blobToBitmap(blob) {
-    if (typeof createImageBitmap === "function") return createImageBitmap(blob);
     const url = URL.createObjectURL(blob);
     try {
       const img = new Image();
-      img.decoding = "sync";
-      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
-      const cv = document.createElement("canvas");
-      cv.width = img.naturalWidth; cv.height = img.naturalHeight;
-      cv.getContext("2d").drawImage(img, 0, 0);
-      return cv;
+      await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("imagen no cargo")); img.src = url; });
+      return img;
     } finally { URL.revokeObjectURL(url); }
   }
   const SOCIALS = { ig: "IG", tt: "TT", wa: "WA", fb: "FB", x: "X", web: "WB" };
@@ -330,8 +325,13 @@
   }
   async function downloadCard() {
     if (!ensureQr()) return;
-    setStatus("Armando tu tarjeta…");
     try {
+      setStatus("Tarjeta 1/4: generando QR…");
+      // QR en alta con triple respaldo (nunca reutiliza el preview chico)
+      const blob = await qrPngBlob(1024);
+      setStatus("Tarjeta 2/4: procesando imagen…");
+      const bmp = await blobToBitmap(blob);
+      setStatus("Tarjeta 3/4: dibujando…");
       const W = 1080, H = 1350;
       const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
       const ctx = cv.getContext("2d");
@@ -378,9 +378,7 @@
         ctx.font = "500 42px Outfit, system-ui, sans-serif";
         ctx.fillText(sub, W / 2, 190 + lines.slice(0, 2).length * 84 + 10);
       }
-      // QR en alta con triple respaldo (nunca reutiliza el preview chico)
-      const blob = await qrPngBlob(1024);
-      const bmp = await blobToBitmap(blob);
+      // QR en el panel blanco
       const q = 660, qx = (W - q) / 2, qy = 430;
       ctx.save();
       rr(ctx, qx - 28, qy - 28, q + 56, q + 56, 48);
@@ -406,6 +404,7 @@
       ctx.fillStyle = pal.dim;
       ctx.font = "500 32px Outfit, system-ui, sans-serif";
       ctx.fillText("Escanea con tu cámara · Hecho con CodeKat", W / 2, H - 56);
+      setStatus("Tarjeta 4/4: descargando…");
       // Blob + objectURL (los dataURL gigantes fallan en móvil)
       const outBlob = await new Promise((res) => {
         try { cv.toBlob((b) => res(b), "image/png"); }
