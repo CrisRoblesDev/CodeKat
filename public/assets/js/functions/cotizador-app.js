@@ -23,7 +23,13 @@
       {key:'lateral', name:'Lateral'},
       {key:'doble', name:'Dos tonos'},
       {key:'cinta', name:'Cinta'},
-      {key:'marco', name:'Marco'}
+      {key:'marco', name:'Marco'},
+      {key:'banda', name:'Banda superior'},
+      {key:'oscuro', name:'Oscuro'},
+      {key:'factura', name:'Factura'},
+      {key:'suave', name:'Degradé suave'},
+      {key:'tarjeta', name:'Tarjeta'},
+      {key:'linea', name:'Línea acento'}
     ];
     var PALETTES=[
       {key:'violet', name:'Violeta', primary:'#8B5CF6', secondary:'#C4B5FD', accent:'#7C3AED'},
@@ -37,14 +43,24 @@
       {key:'gold', name:'Dorado', primary:'#B45309', secondary:'#FCD34D', accent:'#92400E'},
       {key:'wine', name:'Vino', primary:'#9F1239', secondary:'#FDA4AF', accent:'#881337'},
       {key:'pink', name:'Rosa', primary:'#DB2777', secondary:'#F9A8D4', accent:'#BE185D'},
-      {key:'teal', name:'Teal', primary:'#0D9488', secondary:'#5EEAD4', accent:'#0F766E'}
+      {key:'teal', name:'Teal', primary:'#0D9488', secondary:'#5EEAD4', accent:'#0F766E'},
+      {key:'terracota', name:'Terracota', primary:'#C2410C', secondary:'#FDBA74', accent:'#7C2D12'},
+      {key:'oliva', name:'Oliva', primary:'#4D7C0F', secondary:'#BEF264', accent:'#365314'},
+      {key:'cielo', name:'Cielo', primary:'#0284C7', secondary:'#BAE6FD', accent:'#075985'},
+      {key:'carbon', name:'Carbón', primary:'#1F2937', secondary:'#9CA3AF', accent:'#F59E0B'}
+    ];
+    var TEXTURES=[
+      {key:'lisa', name:'Lisa', icon:'fa-minus'},
+      {key:'puntos', name:'Puntos', icon:'fa-braille'},
+      {key:'lineas', name:'Líneas', icon:'fa-bars'},
+      {key:'rejilla', name:'Rejilla', icon:'fa-border-all'}
     ];
 
     var state={
       title:'Cotización',
       number:'COT-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*900)+100),
       date:new Date().toISOString().slice(0,10),
-      validDays:15, currency:'$', notes:'', logo:null, design:'moderno',
+      validDays:15,       currency:'$', notes:'', logo:null, design:'moderno', texture:'lisa',
       colors:{primary:'#8B5CF6',secondary:'#C4B5FD',accent:'#7C3AED'},
       sender:{name:'',tax:'',email:'',phone:'',web:''},
       client:{name:'',company:'',email:'',phone:''},
@@ -300,7 +316,13 @@
         lateral:{topStyle:'background:#fff;color:#1a1a2e;border-left:6px solid '+p+';',logo:'background:'+p+';color:#fff;',title:'#1a1a2e',sub:'#888',meta:'#888'},
         doble:{topStyle:'background:linear-gradient(90deg,'+p+' 0%,'+p+' 28%,#fff 28%);',logo:'background:rgba(255,255,255,.25);color:#fff;',title:'#1a1a2e',sub:'#888',meta:'#888'},
         cinta:{topStyle:'background:#fff;color:#1a1a2e;border-bottom:5px double '+p+';',logo:'background:'+p+'1A;color:'+p+';',title:'#1a1a2e',sub:'#888',meta:'#888'},
-        marco:{topStyle:'background:#fff;color:#1a1a2e;border:2px solid '+p+';',logo:'background:'+p+';color:#fff;',title:'#1a1a2e',sub:'#888',meta:'#888'}
+        marco:{topStyle:'background:#fff;color:#1a1a2e;border:2px solid '+p+';',logo:'background:'+p+';color:#fff;',title:'#1a1a2e',sub:'#888',meta:'#888'},
+        banda:{topStyle:'background:#fff;color:#1a1a2e;border-top:10px solid '+p+';border-bottom:1px solid #eee;',logo:'background:'+p+'1A;color:'+p+';',title:'#1a1a2e',sub:p,meta:'#888'},
+        oscuro:{topStyle:'background:#14161F;color:#fff;border-bottom:3px solid '+a+';',logo:'background:'+p+';color:#fff;',title:'#fff',sub:s,meta:s},
+        factura:{topStyle:'background:#f5f5f7;color:#1a1a2e;border-left:8px solid '+p+';',logo:'background:'+p+';color:#fff;',title:'#1a1a2e',sub:'#555',meta:'#555'},
+        suave:{topStyle:'background:linear-gradient(135deg,'+s+' 0%,#ffffff 70%);color:#1a1a2e;',logo:'background:'+p+';color:#fff;',title:'#1a1a2e',sub:'#555',meta:'#555'},
+        tarjeta:{topStyle:'background:#fff;color:#1a1a2e;border-bottom:1px solid #eee;',logo:'background:linear-gradient(135deg,'+p+','+a+');color:#fff;',title:'#1a1a2e',sub:'#888',meta:'#888'},
+        linea:{topStyle:'background:#fff;color:#1a1a2e;border-bottom:3px solid '+p+';box-shadow:0 3px 0 '+a+';',logo:'background:'+p+'1A;color:'+p+';',title:p,sub:'#888',meta:'#888'}
       };
       return map[key]||map.moderno;
     }
@@ -349,6 +371,18 @@
       });
     }
 
+    function renderTextures(){
+      var r=el('textureRow');if(!r)return;r.innerHTML='';
+      var t=document.createElement('span');t.className='texture-label';t.textContent='Textura del documento:';r.appendChild(t);
+      TEXTURES.forEach(function(tx){
+        var b=document.createElement('button');
+        b.className='palette-btn'+(tx.key===state.texture?' selected':'');
+        b.innerHTML='<i class="fa-solid '+tx.icon+'"></i>'+tx.name;
+        b.addEventListener('click',function(){state.texture=tx.key;renderTextures();renderPreview();});
+        r.appendChild(b);
+      });
+    }
+
     function buildHeader(){
       var c=state.colors,s=state.sender;
       var cfg=getHeaderCfg(state.design,c);
@@ -370,7 +404,7 @@
           '<td class="r">'+it.qty+'</td><td class="r">'+fmt(it.price)+'</td><td class="r" style="font-weight:600;">'+fmt(it.qty*it.price)+'</td></tr>';
       }).join('')||'<tr><td colspan="4" style="text-align:center;color:#999;">Sin ítems</td></tr>';
       var html=buildHeader()+
-        '<div class="qd-body" style="padding-top:1.25rem;">'+
+        '<div class="qd-body tex-'+state.texture+'" style="padding-top:1.25rem;">'+
           '<div class="qd-parties">'+
             '<div class="qd-party"><h4>Emitido por</h4><div class="p-name">'+(esc(s.name)||'—')+'</div>'+
               (s.tax?'<div class="p-line">ID: '+esc(s.tax)+'</div>':'')+
@@ -450,48 +484,80 @@
       var c=state.colors;var t=totals();var s=state.sender;var cl=state.client;
       function hex(h){h=h.replace('#','');return[parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
       var pr=hex(c.primary),ac=hex(c.accent);
-      doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,595,110,'F');
-      doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,104,595,6,'F');
-      doc.setTextColor(255,255,255);doc.setFontSize(20);doc.setFont(undefined,'bold');
-      doc.text(state.title,40,50);
-      doc.setFontSize(10);doc.setFont(undefined,'normal');doc.text(s.name||'',40,70);
+      /* El encabezado respeta el diseño elegido en el paso Diseño */
+      var DARK=['elegante','oscuro'];
+      var LIGHT=['minimal','corporativo','lateral','cinta','marco','banda','factura','suave','tarjeta','linea'];
+      var mode=DARK.indexOf(state.design)>=0?'dark':(LIGHT.indexOf(state.design)>=0?'light':'gradient');
+      var PW=595,PH=842,M=40,CW=PW-M*2;
+      if(mode==='dark'){doc.setFillColor(20,22,31);doc.rect(0,0,PW,120,'F');doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,114,PW,6,'F');}
+      else if(mode==='light'){doc.setFillColor(255,255,255);doc.rect(0,0,PW,120,'F');doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,PW,10,'F');doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,110,PW,4,'F');}
+      else{doc.setFillColor(pr[0],pr[1],pr[2]);doc.rect(0,0,PW,110,'F');doc.setFillColor(ac[0],ac[1],ac[2]);doc.rect(0,104,PW,6,'F');}
+      var headTx=mode==='light'?[26,26,46]:[255,255,255];
+      var headSub=mode==='light'?[120,120,130]:[232,232,238];
+      var metaX=state.logo?462:555;
+      doc.setTextColor(headTx[0],headTx[1],headTx[2]);doc.setFontSize(20);doc.setFont(undefined,'bold');
+      doc.text(doc.splitTextToSize(state.title,300)[0],M,50);
+      doc.setFontSize(10);doc.setFont(undefined,'normal');
+      doc.setTextColor(headSub[0],headSub[1],headSub[2]);
+      doc.text(doc.splitTextToSize(s.name||'',300)[0]||'',M,70);
       doc.setFontSize(9);
-      doc.text('N° '+state.number,555,40,{align:'right'});
-      doc.text('Fecha: '+dateFmt(state.date),555,55,{align:'right'});
-      doc.text('Válida por '+state.validDays+' días',555,70,{align:'right'});
-      if(state.logo){try{doc.addImage(state.logo,'PNG',480,18,75,75);}catch(e){}}
+      doc.text('N° '+state.number,metaX,40,{align:'right'});
+      doc.text('Fecha: '+dateFmt(state.date),metaX,55,{align:'right'});
+      doc.text('Válida por '+state.validDays+' días',metaX,70,{align:'right'});
+      if(state.logo){try{doc.addImage(state.logo,'PNG',482,22,62,62);}catch(e){}}
+      /* Bloques emisor / cliente con corte de texto */
       doc.setTextColor(60,60,60);doc.setFontSize(10);doc.setFont(undefined,'bold');
-      doc.text('EMITIDO POR',40,140);doc.text('CLIENTE',320,140);
-      doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);
-      var sy=158,cy=158;
-      doc.text(s.name||'—',40,sy);sy+=16;
-      if(s.tax){doc.text('ID: '+s.tax,40,sy);sy+=16;}
-      if(s.email){doc.text(s.email,40,sy);sy+=16;}
-      if(s.phone){doc.text(s.phone,40,sy);sy+=16;}
-      if(s.web){doc.text(s.web,40,sy);sy+=16;}
-      doc.text(cl.name||'—',320,cy);cy+=16;
-      if(cl.company){doc.text(cl.company,320,cy);cy+=16;}
-      if(cl.email){doc.text(cl.email,320,cy);cy+=16;}
-      if(cl.phone){doc.text(cl.phone,320,cy);cy+=16;}
-      var body=state.items.map(function(it){return[it.name+(it.description?'\n'+it.description:''),it.qty,fmt(it.price),fmt(it.qty*it.price)];});
+      doc.text('EMITIDO POR',M,140);doc.text('CLIENTE',320,140);
+      doc.setFont(undefined,'normal');doc.setTextColor(80,80,80);doc.setFontSize(9.5);
+      function block(x,y,lines){
+        for(var i=0;i<lines.length;i++){
+          if(!lines[i])continue;
+          var parts=doc.splitTextToSize(String(lines[i]),235);
+          for(var j=0;j<parts.length;j++){doc.text(parts[j],x,y);y+=14;}
+        }
+        return y;
+      }
+      var sy=block(M,158,[s.name||'—',s.tax?('ID: '+s.tax):'',s.email||'',s.phone||'',s.web||'']);
+      var cy=block(320,158,[cl.name||'—',cl.company||'',cl.email||'',cl.phone||'']);
+      var body=state.items.map(function(it){return[it.name+(it.description?'\n'+it.description:''),String(it.qty),fmt(it.price),fmt(it.qty*it.price)];});
+      if(!body.length){body=[['Sin ítems — agregue conceptos en el paso Ítems','','','']];}
       doc.autoTable({
         startY:Math.max(sy,cy)+15,
         head:[['Concepto','Cant.','Precio unit.','Total']],body:body,
         theme:'striped',headStyles:{fillColor:pr,fontSize:9},
-        styles:{fontSize:9,cellPadding:6},
-        columnStyles:{1:{halign:'right'},2:{halign:'right'},3:{halign:'right'}},
-        margin:{left:40,right:40}
+        styles:{fontSize:9,cellPadding:6,overflow:'linebreak'},
+        columnStyles:{0:{cellWidth:295},1:{halign:'right',cellWidth:60},2:{halign:'right',cellWidth:80},3:{halign:'right',cellWidth:80}},
+        margin:{left:M,right:M}
       });
+      /* Totales en caja estructurada, con salto de página si no caben */
+      function needPage(h){if(y+h>PH-60){doc.addPage();y=50;}return y;}
       var y=doc.lastAutoTable.finalY+25;
-      doc.setFontSize(10);doc.setTextColor(80,80,80);
-      doc.text('Subtotal:',420,y);doc.text(fmt(t.sub),555,y,{align:'right'});
-      doc.text('Descuento ('+state.discount+'%):',420,y+16);doc.text('-'+fmt(t.disc),555,y+16,{align:'right'});
-      doc.text('Impuesto ('+state.tax+'%):',420,y+32);doc.text(fmt(t.tax),555,y+32,{align:'right'});
-      doc.setFontSize(13);doc.setFont(undefined,'bold');doc.setTextColor(ac[0],ac[1],ac[2]);
-      doc.text('TOTAL:',420,y+55);doc.text(fmt(t.total),555,y+55,{align:'right'});
-      if(state.notes){doc.setFontSize(9);doc.setFont(undefined,'normal');doc.setTextColor(120,120,120);doc.text('Notas: '+state.notes,40,y+75,{maxWidth:515});}
-      doc.setFontSize(8);doc.setTextColor(140,140,140);
-      doc.text((s.name||'Cotización')+' · '+(s.email||'')+' '+(s.phone||''),40,820);
+      y=needPage(120);
+      doc.setFillColor(245,245,247);doc.roundedRect(300,y-12,255,108,6,6,'F');
+      doc.setFontSize(10);doc.setTextColor(80,80,80);doc.setFont(undefined,'normal');
+      doc.text('Subtotal:',315,y);doc.text(fmt(t.sub),540,y,{align:'right'});
+      doc.text('Descuento ('+state.discount+'%):',315,y+18);doc.text('-'+fmt(t.disc),540,y+18,{align:'right'});
+      doc.text('Impuesto ('+state.tax+'%):',315,y+36);doc.text(fmt(t.tax),540,y+36,{align:'right'});
+      doc.setDrawColor(ac[0],ac[1],ac[2]);doc.setLineWidth(1.5);doc.line(315,y+46,540,y+46);
+      doc.setFontSize(14);doc.setFont(undefined,'bold');doc.setTextColor(ac[0],ac[1],ac[2]);
+      doc.text('TOTAL:',315,y+68);doc.text(fmt(t.total),540,y+68,{align:'right'});
+      y+=96;
+      if(state.notes){
+        var noteLines=doc.splitTextToSize('Notas / condiciones: '+state.notes,CW);
+        y=needPage(noteLines.length*12+24);
+        doc.setFontSize(9);doc.setFont(undefined,'bold');doc.setTextColor(90,90,100);
+        doc.text('Notas / condiciones',M,y);y+=14;
+        doc.setFont(undefined,'normal');doc.setTextColor(110,110,120);
+        doc.text(noteLines,M,y);y+=noteLines.length*12+10;
+      }
+      /* Pie con numeración en todas las páginas */
+      var pages=doc.getNumberOfPages();
+      for(var pg=1;pg<=pages;pg++){
+        doc.setPage(pg);
+        doc.setFontSize(8);doc.setTextColor(150,150,160);doc.setFont(undefined,'normal');
+        doc.text((s.name||'Cotización')+' · '+(s.email||'')+' '+(s.phone||''),M,PH-30);
+        doc.text('Página '+pg+' de '+pages,PW-M,PH-30,{align:'right'});
+      }
       doc.save(getFileName('pdf'));showToast('PDF descargado');
     });
 
@@ -552,9 +618,20 @@
     themeBtns.forEach(function(b){b.addEventListener('click',function(){setTheme(b.getAttribute('data-theme-set'));});});
     if(themeMini)themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});
 
+    var previewMode='escritorio';
+    Array.prototype.forEach.call(document.querySelectorAll('#previewMode button'),function(b){
+      b.addEventListener('click',function(){
+        previewMode=b.getAttribute('data-v');
+        Array.prototype.forEach.call(document.querySelectorAll('#previewMode button'),function(x){
+          var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-selected',on?'true':'false');
+        });
+        var w=el('previewWrap');
+        if(w){w.classList.toggle('narrow',previewMode==='movil');w.classList.toggle('wide',previewMode!=='movil');}
+      });
+    });
     el('quoteNumber').value=state.number;
     el('quoteDate').value=state.date;
-    buildNav();renderPalettes();renderDesignThumbs();drawLogo();
+    buildNav();renderPalettes();renderTextures();renderDesignThumbs();drawLogo();
     renderItems();renderTotals();renderPreview();updateFooter();positionWizardFooter();
     setTimeout(moveIndicator,50);
     window.addEventListener('load',function(){moveIndicator();positionWizardFooter();});

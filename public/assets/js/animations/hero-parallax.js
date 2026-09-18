@@ -24,14 +24,12 @@
           if(Math.abs(d)>0.004){el._op=el._op+d*0.12;more=true;}
           else{el._op=el._tgt;}
           el.style.opacity=el._op.toFixed(2);
-          el.style.filter=el._op>0.97?'':'blur('+((1-el._op)*3).toFixed(1)+'px)';
         }
         var gd=ghostTgt-ghostOp;
         if(Math.abs(gd)>0.004){ghostOp=ghostOp+gd*0.06;more=true;}
         else{ghostOp=ghostTgt;}
         if(ghost){
           ghost.style.opacity=ghostOp.toFixed(2);
-          ghost.style.filter=ghostOp>0.97?'':'blur('+((1-ghostOp)*2).toFixed(1)+'px)';
         }
         if(more){hxRaf=requestAnimationFrame(hxSettle);}
       }
@@ -53,7 +51,7 @@
           if(ghost){ghost.style.transform='';}
           if(code){code.style.transform='';code.style.opacity='';}
           if(kat){kat.style.transform='';kat.style.opacity='';}
-          for(var z=0;z<hxEls.length;z++){hxEls[z]._op=1;hxEls[z]._tgt=1;hxEls[z].style.opacity='';hxEls[z].style.filter='';}
+          for(var z=0;z<hxEls.length;z++){hxEls[z]._op=1;hxEls[z]._tgt=1;hxEls[z].style.opacity='';}
           if(!hxRaf){hxRaf=requestAnimationFrame(hxSettle);}
         }
         var vh=window.innerHeight;
@@ -67,7 +65,8 @@
           ghost.style.transform='translate3d(0,'+pin.toFixed(1)+'px,0)';
           gr=ghost.getBoundingClientRect();
         }
-        if(gr){
+        // Detección de solape (getBoundingClientRect por elemento) solo en desktop: en móvil es la mayor fuente de jank
+        if(gr && window.innerWidth>=768){
           for(var k=0;k<hxEls.length;k++){
             var er=hxEls[k].getBoundingClientRect();
             if(er.bottom>maxB){maxB=er.bottom;}

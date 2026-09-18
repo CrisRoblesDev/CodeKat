@@ -116,6 +116,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="design-grid" id="designGrid"></div>
         <div class="palette-row" id="paletteRow"></div>
+        <div class="texture-row" id="textureRow"></div>
         <div class="color-row">
           <div class="color-field"><label>Primario</label><input type="color" id="colorPrimary" value="#8B5CF6" /></div>
           <div class="color-field"><label>Secundario</label><input type="color" id="colorSecondary" value="#C4B5FD" /></div>
@@ -130,7 +131,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <span class="cot-card-ico"><i class="fa-solid fa-eye"></i></span>
           <div><h2>Vista previa</h2><p>Así se verá tu cotización</p></div>
         </div>
-        <div class="quote-doc" id="quoteDoc"></div>
+        <div class="preview-mode-row">
+          <div class="pv-toggle" id="previewMode" role="tablist" aria-label="Modo de vista previa">
+            <button type="button" data-v="movil" role="tab" aria-selected="false"><i class="fa-solid fa-mobile-screen"></i> Móvil</button>
+            <button type="button" data-v="escritorio" class="on" role="tab" aria-selected="true"><i class="fa-solid fa-desktop"></i> Escritorio</button>
+          </div>
+        </div>
+        <div class="quote-preview-wrap wide" id="previewWrap">
+          <div class="quote-doc" id="quoteDoc"></div>
+        </div>
       </div>
     </section>
 

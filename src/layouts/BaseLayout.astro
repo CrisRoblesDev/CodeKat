@@ -193,6 +193,6 @@ const orgLd = {
 
   <slot name="after-footer" />
 
-  {scripts.map((src) => <script is:inline src={src}></script>)}
+  {scripts.map((src) => <script is:inline src={src} defer></script>)}
 </body>
 </html>

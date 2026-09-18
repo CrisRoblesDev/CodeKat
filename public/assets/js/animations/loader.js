@@ -1,16 +1,18 @@
 /* CodeKat · assets/js/animations/loader.js — extraído de index.html */
-    // page loader 3.5s
+    // page loader rápido: muestra máx ~700ms y nunca bloquea el scroll más de lo necesario
     (function(){
       var pl=document.getElementById('pageLoader');
-      if(pl){
-        var min=3400;
-        var start=Date.now();
-        window.addEventListener('load',function(){
-          var elapsed=Date.now()-start;
-          var wait=Math.max(0,min-elapsed);
-          setTimeout(function(){pl.classList.add('hidden');pl.setAttribute('aria-hidden','true');document.body.style.overflow='';}, wait);
-        });
-        document.body.style.overflow='hidden';
-        setTimeout(function(){if(pl && !pl.classList.contains('hidden')){pl.classList.add('hidden');pl.setAttribute('aria-hidden','true');document.body.style.overflow='';}}, min+800);
+      if(!pl){return;}
+      var min=700;
+      var start=Date.now();
+      var done=false;
+      function hide(){
+        if(done){return;}done=true;
+        pl.classList.add('hidden');pl.setAttribute('aria-hidden','true');
+        document.body.style.overflow='';
       }
+      document.body.style.overflow='hidden';
+      if(document.readyState==='complete'){setTimeout(hide,Math.max(0,min-(Date.now()-start)));}
+      else{window.addEventListener('load',function(){setTimeout(hide,Math.max(0,min-(Date.now()-start)));});}
+      setTimeout(hide,min+900);
     })();
