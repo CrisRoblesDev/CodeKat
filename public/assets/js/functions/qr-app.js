@@ -366,7 +366,6 @@
         s += `<rect x="${((W - wpx) / 2).toFixed(0)}" y="${y - 58}" width="${wpx.toFixed(0)}" height="84" rx="42" fill="${pal.pill}"/>`;
         s += `<text x="${W / 2}" y="${y}" text-anchor="middle" dominant-baseline="central" font-family="${FONT}" font-weight="600" font-size="40" fill="${pal.ink}">${escXml(label)}</text>`;
       });
-      s += `<text x="${W / 2}" y="${H - 56}" text-anchor="middle" font-family="${FONT}" font-weight="500" font-size="32" fill="${pal.dim}">${escXml("Escanea con tu cámara · Hecho con CodeKat")}</text>`;
       const card = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
       return card;
     } catch (e) { setStatus("No se pudo armar la tarjeta: " + (e?.message || e)); return null; }
