@@ -45,6 +45,14 @@
     @keyframes arrowBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
     .step-arrow-down i{animation:arrowBounce 2.25s ease-in-out infinite;}
 
+    /* ── Nebulosa estática: el diseño se ve completo siempre, con o sin WebGL ── */
+    .hero-nebula{position:absolute;inset:0;z-index:0;pointer-events:none;
+      background:
+        radial-gradient(420px 320px at 12% 8%,rgba(139,92,246,.38),transparent 70%),
+        radial-gradient(520px 380px at 88% 22%,rgba(124,58,237,.32),transparent 70%),
+        radial-gradient(720px 520px at 50% 45%,rgba(76,29,149,.38),transparent 70%),
+        radial-gradient(300px 200px at 70% 62%,rgba(245,165,36,.13),transparent 70%),
+        linear-gradient(180deg,#171029 0%,#0A0A0F 62%);}
     /* ── Shader en primera pantalla: se disuelve abajo, sin cortes ── */
     .hx-first{overflow:hidden;}
     #heroShader{position:absolute;inset:0;z-index:0;pointer-events:none;background:#0A0A0F;
