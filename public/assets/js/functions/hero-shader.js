@@ -131,17 +131,20 @@ void main(){gl_Position=position;}`;
   let lastCoords = [0, 0];
   const host = hero || cv.parentElement;
 
+  function pxScale() {
+    return Math.min(1, Math.max(1, 0.5 * (window.devicePixelRatio || 1)));
+  }
+
   function toGL(x, y) {
-    const r = cv.getBoundingClientRect();
-    const dpr = Math.max(1, 0.5 * (window.devicePixelRatio || 1));
-    return [x * dpr, cv.height - y * dpr];
+    const s = pxScale();
+    return [x * s, cv.height - y * s];
   }
 
   function sizeCanvas() {
     const r = (hero || cv.parentElement).getBoundingClientRect();
     if (!r.width || !r.height) return false;
-    const dpr = Math.max(1, 0.5 * (window.devicePixelRatio || 1));
-    const w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+    const s = pxScale();
+    const w = Math.round(r.width * s), h = Math.round(r.height * s);
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     gl.viewport(0, 0, cv.width, cv.height);
     return true;
@@ -179,7 +182,7 @@ void main(){gl_Position=position;}`;
     gl.useProgram(prog);
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.uniform2f(uRes, cv.width, cv.height);
-    gl.uniform1f(uTime, now * 1e-3);
+    gl.uniform1f(uTime, now * 1e-3 * 0.8);
     gl.uniform2f(uMove, moves[0], moves[1]);
     gl.uniform2f(uTouch, first[0] || 0, first[1] || 0);
     gl.uniform1i(uCount, pointers.size);

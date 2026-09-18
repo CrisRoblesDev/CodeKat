@@ -27,7 +27,7 @@
         var old=cards[cur];
         old.classList.remove('active');
         old.classList.add('out-'+cur);
-        setTimeout(function(){old.classList.remove('out-0','out-1','out-2');},480);
+        setTimeout(function(){old.classList.remove('out-0','out-1','out-2');},600);
         cur=n;
         var nw=cards[cur];
         nw.classList.remove('in');void nw.offsetWidth;nw.classList.add('active','in');
