@@ -73,9 +73,9 @@ void main(void) {
 		uv+=.1*cos(i*vec2(.1+.01*i, .8)+i*i+T*.5+.1*uv.x);
 		vec2 p=uv;
 		float d=length(p);
-		col+=.00125/d*(cos(sin(i)*vec3(1.4,.9,2.6))+1.);
+		col+=.0007/d*(cos(sin(i)*vec3(1.4,.9,2.6))+1.);
 		float b=noise(i+p+bg*1.731);
-		col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
+		col+=.0011*b/length(max(p,vec2(b*p.x*.02,p.y)));
 		col=mix(col,vec3(bg*.20,bg*.10,bg*.42),d);
 	}
 	O=vec4(col,1);
@@ -178,6 +178,7 @@ void main(){gl_Position=position;}`;
   }
 
   let raf = 0, running = false, t0 = 0, lastT = 0, emaDt = 16, qLevel = 0;
+  let lastVW = 0, lastVH = 0, tick = 0;
   function render(now) {
     const coords = pointers.size > 0 ? Array.from(pointers.values()).flat() : [0, 0];
     const first = pointers.size > 0 ? pointers.values().next().value : lastCoords;
@@ -199,6 +200,14 @@ void main(){gl_Position=position;}`;
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
   function frame(now) {
+    // La barra del navegador cambia el viewport sin disparar resize:
+    // se revisa el tamaño cada ~32 frames para no dejar bandas negras.
+    if ((tick++ & 31) === 0) {
+      if (window.innerWidth !== lastVW || window.innerHeight !== lastVH) {
+        lastVW = window.innerWidth; lastVH = window.innerHeight;
+        sizeCanvas();
+      }
+    }
     // Calidad adaptativa: si el GPU no da abasto, baja la resolución (máx 2 niveles)
     if (lastT) {
       emaDt = emaDt * 0.95 + (now - lastT) * 0.05;
@@ -226,6 +235,9 @@ void main(){gl_Position=position;}`;
   }
 
   window.addEventListener("resize", () => { if (running) sizeCanvas(); else start(); }, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", () => { if (running) sizeCanvas(); }, { passive: true });
+  }
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stop();
     else start();
