@@ -237,6 +237,7 @@
       updateMini();
     }));
     $("#qrCardDownload")?.addEventListener("click", downloadCard);
+    $("#qrCardSVG")?.addEventListener("click", downloadCardSVG);
     $("#qrPng")?.addEventListener("click", () => exportQr("png"));
     const copyText = async () => {
       try { await navigator.clipboard.writeText(payload()); setStatus("Contenido copiado."); }
@@ -291,27 +292,29 @@
     m.style.setProperty("--mk1", state.cardStyle === "custom" ? state.cardBg1 : state.dotColor);
     m.style.setProperty("--mk2", state.cardStyle === "custom" ? state.cardBg2 : (state.gradient ? state.gradColor : state.dotColor));
   }
-  async function downloadCard() {
-    if (!ensureQr()) return;
+  /* Tarjeta 1080x1350: construye el SVG (pasos 1-2) y lo entrega en PNG o SVG */
+  async function buildCardSvg() {
+    if (!ensureQr()) return null;
     try {
-      setStatus("Tarjeta 1/3: generando QR…");
-      const PX = 1024;
-      const sv = new QRCodeStyling({ ...fullOptions(PX), type: "svg" });
-      const raw = await sv.getRawData("svg");
-      let inner, vbW = PX, vbH = PX;
-      if (raw instanceof Blob) {
-        const t = await raw.text();
-        inner = t.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
-        const vb = t.match(/viewBox="([\d.\-+\s]+)"/);
-        if (vb) { const p = vb[1].trim().split(/\s+/).map(Number); vbW = p[2] || PX; vbH = p[3] || PX; }
-      } else {
-        const str = new XMLSerializer().serializeToString(raw);
-        inner = str.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
-        vbW = Number(raw.getAttribute("width")) || PX;
-        vbH = Number(raw.getAttribute("height")) || PX;
-      }
-      if (!inner || !inner.trim()) throw new Error("QR vacío");
-      setStatus("Tarjeta 2/3: armando diseño…");
+    setStatus("Tarjeta 1/2: generando QR…");
+    const PX = 1024;
+    const sv = new QRCodeStyling({ ...fullOptions(PX), type: "svg" });
+    const raw = await sv.getRawData("svg");
+    if (!raw) throw new Error("motor devolvió vacío (paso 1)");
+    let inner, vbW = PX, vbH = PX;
+    if (raw instanceof Blob) {
+      const t = await raw.text();
+      inner = t.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
+      const vb = t.match(/viewBox="([\d.\-+\s]+)"/);
+      if (vb) { const p = vb[1].trim().split(/\s+/).map(Number); vbW = p[2] || PX; vbH = p[3] || PX; }
+    } else if (raw instanceof Element) {
+      const str = new XMLSerializer().serializeToString(raw);
+      inner = str.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
+      vbW = Number(raw.getAttribute("width")) || PX;
+      vbH = Number(raw.getAttribute("height")) || PX;
+    } else throw new Error("formato QR inesperado (paso 1)");
+    if (!inner || !inner.trim()) throw new Error("QR vacío (paso 1)");
+    setStatus("Tarjeta 2/2: armando diseño…");
       const style = $("#qrCardStyle")?.value || "marca";
       const title = ($("#qrCardTitle")?.value || "").trim().slice(0, 60) || "Mi QR";
       const sub = ($("#qrCardSub")?.value || "").trim().slice(0, 90);
@@ -364,25 +367,38 @@
       });
       s += `<text x="${W / 2}" y="${H - 56}" text-anchor="middle" font-family="${FONT}" font-weight="500" font-size="32" fill="${pal.dim}">${escXml("Escanea con tu cámara · Hecho con CodeKat")}</text>`;
       const card = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
-      setStatus("Tarjeta 3/3: descargando…");
+      return card;
+    } catch (e) { setStatus("No se pudo armar la tarjeta: " + (e?.message || e)); return null; }
+  }
+  async function downloadCardSVG() {
+    if (!ensureQr()) return;
+    const card = await buildCardSvg();
+    if (!card) return;
+    downloadBlob(new Blob([card], { type: "image/svg+xml;charset=utf-8" }), fileName() + "-tarjeta.svg");
+    setStatus("Tarjeta SVG descargada.");
+  }
+  async function downloadCard() {
+    if (!ensureQr()) return;
+    const card = await buildCardSvg();
+    if (!card) return;
+    setStatus("Tarjeta 3/3: descargando PNG…");
+    try {
+      const blob = new Blob([card], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
       try {
-        const blob = new Blob([card], { type: "image/svg+xml;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        try {
-          const img = new Image();
-          await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("raster")); img.src = url; });
-          const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
-          cv.getContext("2d").drawImage(img, 0, 0, W, H);
-          const out = await new Promise((res) => { try { cv.toBlob((b) => res(b), "image/png"); } catch (e) { res(null); } });
-          if (!out) throw new Error("bloqueo");
-          downloadBlob(out, fileName() + "-tarjeta.png");
-          setStatus("Tarjeta descargada en alta calidad.");
-        } finally { URL.revokeObjectURL(url); }
-      } catch (e) {
-        downloadBlob(new Blob([card], { type: "image/svg+xml;charset=utf-8" }), fileName() + "-tarjeta.svg");
-        setStatus("PNG no disponible: descargué la tarjeta en SVG.");
-      }
-    } catch (e) { setStatus("No se pudo armar la tarjeta: " + (e?.message || e)); }
+        const img = new Image();
+        await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("raster PNG")); img.src = url; });
+        const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1350;
+        cv.getContext("2d").drawImage(img, 0, 0, 1080, 1350);
+        const out = await new Promise((res) => { try { cv.toBlob((b) => res(b), "image/png"); } catch (e) { res(null); } });
+        if (!out) throw new Error("bloqueo PNG");
+        downloadBlob(out, fileName() + "-tarjeta.png");
+        setStatus("Tarjeta descargada en alta calidad.");
+      } finally { URL.revokeObjectURL(url); }
+    } catch (e) {
+      downloadBlob(new Blob([card], { type: "image/svg+xml;charset=utf-8" }), fileName() + "-tarjeta.svg");
+      setStatus("PNG no disponible (" + (e?.message || e) + "): descargué la tarjeta en SVG.");
+    }
   }
   function renderDemo() {
     const slot = $("#qrDemoMini");
