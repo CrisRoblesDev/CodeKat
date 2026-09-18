@@ -254,52 +254,20 @@
     });
   }
 
-  /* PNG del QR en alta: temporal 1024 -> SVG rasterizado -> preview.
-     Triple intento para que la tarjeta siempre pueda armarse. */
-  async function qrPngBlob(px) {
-    try {
-      const hi = new QRCodeStyling({ ...fullOptions(px), type: "canvas" });
-      return await hi.getRawData("png");
-    } catch (e1) {
-      try {
-        const sv = new QRCodeStyling({ ...fullOptions(px), type: "svg" });
-        const svgBlob = await sv.getRawData("svg");
-        const url = URL.createObjectURL(svgBlob);
-        try {
-          const img = new Image();
-          img.decoding = "sync";
-          await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("SVG no rasterizo")); img.src = url; });
-          const cv = document.createElement("canvas");
-          cv.width = px; cv.height = px;
-          const cx = cv.getContext("2d");
-          cx.fillStyle = state.bgColor; cx.fillRect(0, 0, px, px);
-          cx.drawImage(img, 0, 0, px, px);
-          const out = await new Promise((res, rej) => cv.toBlob(b => (b ? res(b) : rej(new Error("toBlob vacio"))), "image/png"));
-          return out;
-        } finally { URL.revokeObjectURL(url); }
-      } catch (e2) {
-        return qr.getRawData("png");
-      }
-    }
-  }
-
-  /* Tarjeta para compartir 1080x1350: textos + redes fuera del QR */
-  function rr(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-    ctx.closePath();
-  }
-  async function blobToBitmap(blob) {
+  /* Tarjeta 1080x1350 como SVG puro: mismo motor y misma descarga que el QR.
+     Sin canvas manual ni bitmaps intermedios. */
+  const escXml = (v) => String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  function downloadBlob(blob, name) {
     const url = URL.createObjectURL(blob);
-    try {
-      const img = new Image();
-      await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("imagen no cargo")); img.src = url; });
-      return img;
-    } finally { URL.revokeObjectURL(url); }
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
+  }
+  function measureCtx(font) {
+    const cx = document.createElement("canvas").getContext("2d");
+    cx.font = font;
+    return cx;
   }
   const SOCIALS = { ig: "IG", tt: "TT", wa: "WA", fb: "FB", x: "X", web: "WB" };
   const escHtml = (v) => String(v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -326,15 +294,24 @@
   async function downloadCard() {
     if (!ensureQr()) return;
     try {
-      setStatus("Tarjeta 1/4: generando QR…");
-      // QR en alta con triple respaldo (nunca reutiliza el preview chico)
-      const blob = await qrPngBlob(1024);
-      setStatus("Tarjeta 2/4: procesando imagen…");
-      const bmp = await blobToBitmap(blob);
-      setStatus("Tarjeta 3/4: dibujando…");
-      const W = 1080, H = 1350;
-      const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
-      const ctx = cv.getContext("2d");
+      setStatus("Tarjeta 1/3: generando QR…");
+      const PX = 1024;
+      const sv = new QRCodeStyling({ ...fullOptions(PX), type: "svg" });
+      const raw = await sv.getRawData("svg");
+      let inner, vbW = PX, vbH = PX;
+      if (raw instanceof Blob) {
+        const t = await raw.text();
+        inner = t.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
+        const vb = t.match(/viewBox="([\d.\-+\s]+)"/);
+        if (vb) { const p = vb[1].trim().split(/\s+/).map(Number); vbW = p[2] || PX; vbH = p[3] || PX; }
+      } else {
+        const str = new XMLSerializer().serializeToString(raw);
+        inner = str.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
+        vbW = Number(raw.getAttribute("width")) || PX;
+        vbH = Number(raw.getAttribute("height")) || PX;
+      }
+      if (!inner || !inner.trim()) throw new Error("QR vacío");
+      setStatus("Tarjeta 2/3: armando diseño…");
       const style = $("#qrCardStyle")?.value || "marca";
       const title = ($("#qrCardTitle")?.value || "").trim().slice(0, 60) || "Mi QR";
       const sub = ($("#qrCardSub")?.value || "").trim().slice(0, 90);
@@ -355,69 +332,56 @@
       const cb1 = $("#qrCardBg1")?.value || state.cardBg1, cb2 = $("#qrCardBg2")?.value || state.cardBg2;
       palettes.custom = { bg1: cb1, bg2: cb2, ink: lum(cb1) > 0.55 ? "#1a1a2e" : "#ffffff", dim: lum(cb1) > 0.55 ? "#5c5875" : "rgba(255,255,255,.85)", pill: lum(cb1) > 0.55 ? "rgba(20,20,40,.08)" : "rgba(255,255,255,.18)" };
       const pal = palettes[style] || palettes.marca;
-      const bg = ctx.createLinearGradient(0, 0, W, H);
-      bg.addColorStop(0, pal.bg1); bg.addColorStop(1, pal.bg2);
-      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-      ctx.textAlign = "center";
-      // Título
-      ctx.fillStyle = pal.ink;
-      ctx.font = "800 72px Outfit, system-ui, sans-serif";
+      const W = 1080, H = 1350;
+      const mc = measureCtx("800 72px Outfit, Arial, sans-serif");
       const words = title.split(" ");
       const lines = [];
       let cur = "";
       for (const w of words) {
         const t = cur ? cur + " " + w : w;
-        if (ctx.measureText(t).width > W - 160 && cur) { lines.push(cur); cur = w; }
+        if (mc.measureText(t).width > W - 160 && cur) { lines.push(cur); cur = w; }
         else cur = t;
         if (lines.length === 2) break;
       }
       if (cur) lines.push(cur);
-      lines.slice(0, 2).forEach((ln, i) => ctx.fillText(ln, W / 2, 190 + i * 84));
-      if (sub) {
-        ctx.fillStyle = pal.dim;
-        ctx.font = "500 42px Outfit, system-ui, sans-serif";
-        ctx.fillText(sub, W / 2, 190 + lines.slice(0, 2).length * 84 + 10);
-      }
-      // QR en el panel blanco
+      const shown = lines.slice(0, 2);
+      const subY = 190 + shown.length * 84 + 10;
       const q = 660, qx = (W - q) / 2, qy = 430;
-      ctx.save();
-      rr(ctx, qx - 28, qy - 28, q + 56, q + 56, 48);
-      ctx.fillStyle = "#ffffff";
-      ctx.shadowColor = "rgba(0,0,0,.30)"; ctx.shadowBlur = 60; ctx.shadowOffsetY = 18;
-      ctx.fill();
-      ctx.restore();
-      const iw = bmp.width || q, ih = bmp.height || q;
-      ctx.drawImage(bmp, qx, qy, q, q * (ih / iw));
-      // Redes
-      ctx.font = "600 40px Outfit, system-ui, sans-serif";
+      const mc2 = measureCtx("600 40px Outfit, Arial, sans-serif");
+      const FONT = "Outfit, Arial, sans-serif";
+      let s = `<defs><linearGradient id="cbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${pal.bg1}"/><stop offset="1" stop-color="${pal.bg2}"/></linearGradient></defs>`;
+      s += `<rect width="${W}" height="${H}" fill="url(#cbg)"/>`;
+      shown.forEach((ln, i) => { s += `<text x="${W / 2}" y="${190 + i * 84}" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="72" fill="${pal.ink}">${escXml(ln)}</text>`; });
+      if (sub) s += `<text x="${W / 2}" y="${subY}" text-anchor="middle" font-family="${FONT}" font-weight="500" font-size="42" fill="${pal.dim}">${escXml(sub)}</text>`;
+      s += `<rect x="${qx - 28}" y="${qy - 28}" width="${q + 56}" height="${q + 56}" rx="48" fill="#ffffff"/>`;
+      s += `<svg x="${qx}" y="${qy}" width="${q}" height="${q}" viewBox="0 0 ${vbW} ${vbH}">${inner}</svg>`;
       nets.slice(0, 2).forEach((n, i) => {
         const y = qy + q + 120 + i * 96;
         const label = `${SOCIALS[n.net] || "IG"}  ${n.handle}`;
-        const wpx = Math.min(W - 160, ctx.measureText(label).width + 120);
-        rr(ctx, (W - wpx) / 2, y - 58, wpx, 84, 42);
-        ctx.fillStyle = pal.pill; ctx.fill();
-        ctx.fillStyle = pal.ink;
-        ctx.textAlign = "center";
-        ctx.fillText(label, W / 2, y);
+        const wpx = Math.min(W - 160, mc2.measureText(label).width + 120);
+        s += `<rect x="${((W - wpx) / 2).toFixed(0)}" y="${y - 58}" width="${wpx.toFixed(0)}" height="84" rx="42" fill="${pal.pill}"/>`;
+        s += `<text x="${W / 2}" y="${y}" text-anchor="middle" dominant-baseline="central" font-family="${FONT}" font-weight="600" font-size="40" fill="${pal.ink}">${escXml(label)}</text>`;
       });
-      // Pie
-      ctx.fillStyle = pal.dim;
-      ctx.font = "500 32px Outfit, system-ui, sans-serif";
-      ctx.fillText("Escanea con tu cámara · Hecho con CodeKat", W / 2, H - 56);
-      setStatus("Tarjeta 4/4: descargando…");
-      // Blob + objectURL (los dataURL gigantes fallan en móvil)
-      const outBlob = await new Promise((res) => {
-        try { cv.toBlob((b) => res(b), "image/png"); }
-        catch (e) { res(null); }
-      });
-      if (!outBlob) throw new Error("navegador bloqueó la imagen (prueba sin logo)");
-      const url = URL.createObjectURL(outBlob);
-      const a = document.createElement("a");
-      a.download = fileName() + "-tarjeta.png";
-      a.href = url;
-      document.body.appendChild(a); a.click();
-      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
-      setStatus("Tarjeta descargada en alta calidad.");
+      s += `<text x="${W / 2}" y="${H - 56}" text-anchor="middle" font-family="${FONT}" font-weight="500" font-size="32" fill="${pal.dim}">${escXml("Escanea con tu cámara · Hecho con CodeKat")}</text>`;
+      const card = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+      setStatus("Tarjeta 3/3: descargando…");
+      try {
+        const blob = new Blob([card], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        try {
+          const img = new Image();
+          await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("raster")); img.src = url; });
+          const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+          cv.getContext("2d").drawImage(img, 0, 0, W, H);
+          const out = await new Promise((res) => { try { cv.toBlob((b) => res(b), "image/png"); } catch (e) { res(null); } });
+          if (!out) throw new Error("bloqueo");
+          downloadBlob(out, fileName() + "-tarjeta.png");
+          setStatus("Tarjeta descargada en alta calidad.");
+        } finally { URL.revokeObjectURL(url); }
+      } catch (e) {
+        downloadBlob(new Blob([card], { type: "image/svg+xml;charset=utf-8" }), fileName() + "-tarjeta.svg");
+        setStatus("PNG no disponible: descargué la tarjeta en SVG.");
+      }
     } catch (e) { setStatus("No se pudo armar la tarjeta: " + (e?.message || e)); }
   }
   function renderDemo() {
