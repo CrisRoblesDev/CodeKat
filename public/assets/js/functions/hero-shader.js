@@ -5,10 +5,8 @@
 (() => {
   const cv = document.getElementById("heroShader");
   if (!cv) return;
-  // WebGL solo en desktop con puntero fino: en móvil la nebulosa CSS
-  // ya da el ambiente sin gastar GPU ni arriesgar artefactos.
-  const finePointer = window.matchMedia && window.matchMedia("(min-width: 960px) and (pointer: fine)").matches;
-  if (!finePointer) { cv.remove(); return; }
+  // WebGL en todos los dispositivos (como antes): la nebulosa CSS queda
+  // debajo como red de seguridad y la calidad adaptativa cuida el GPU.
   const hero = document.getElementById("inicio");
   const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
