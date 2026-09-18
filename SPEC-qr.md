@@ -68,9 +68,11 @@ CodeKat/
 ## Success Criteria
 
 - [ ] `/qr/` existe, prerender, con landing + CTA que abre el generador sin navegar.
-- [ ] 3 pasos: contenido (URL/texto/WiFi) / diseño (9+ controles) / descargar (PNG/SVG/copiar).
-- [ ] ≥8 personalizaciones: color, degradado on/off, 2º color, estilo puntos (4), estilo esquinas (3),
-      logo upload, marco, tamaño, corrección de errores.
+- [ ] 3 pasos: contenido (URL/texto/WiFi) / diseño (temas, 14+ controles) / descargar (PNG/SVG/JPG + tarjeta).
+- [ ] Personalización: 6 temas, 6 estilos puntos, 3 esquinas + centro, degradado lineal/radial,
+      8 colores puntos + 6 fondos de 1 toque, logo, marco, margen real, tamaño 512–2048.
+- [ ] Descargas en alta calidad: instancia temporal al tamaño elegido (no 300px del preview);
+      tarjeta 1080×1350 con título, subtítulo y hasta 2 redes.
 - [ ] En 360×740 no hay scroll de body; paneles conmutan con animación ≤400ms.
 - [ ] `npm run build` verde.
 

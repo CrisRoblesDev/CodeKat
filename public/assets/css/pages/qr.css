@@ -105,6 +105,16 @@
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
 .qr-presets button i { width: 22px; height: 22px; border-radius: 50%; display: block; }
 .qr-presets button.on { border-color: #F5A524; background: rgba(245,165,36,.14); }
+.qr-sw { display: grid; grid-template-columns: repeat(8,1fr); gap: 6px; margin-top: 8px; }
+.qr-sw button { aspect-ratio: 1; min-height: 34px; border-radius: 50%; cursor: pointer;
+  background: var(--sw,#fff); border: 2px solid rgba(255,255,255,.25); }
+.qr-sw button.on { border-color: #F5A524; box-shadow: 0 0 0 2px rgba(245,165,36,.4); }
+.qr-sw-bg { grid-template-columns: repeat(6,1fr); }
+.qr-sw-bg button { border-radius: 10px; border: 1px solid rgba(167,139,250,.3); }
+.qr-cardbox { background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.25);
+  border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.qr-cardbox h3 { font-size: .92rem; margin: 0; }
+.qr-cardbox p { font-size: .76rem; color: var(--text-muted, #A8A5B8); margin: 0; }
 .qr-field label { display: block; font-size: .74rem; font-weight: 700; margin-bottom: 5px; color: var(--text-muted, #A8A5B8); }
 .qr-field input[type=text], .qr-field input[type=url], .qr-field textarea, .qr-field select {
   width: 100%; min-height: 48px; border-radius: 12px; padding: 10px 12px; font-size: .92rem;

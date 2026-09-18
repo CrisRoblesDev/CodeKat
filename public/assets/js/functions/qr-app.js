@@ -53,15 +53,12 @@
     return true;
   }
 
-  function apply() {
-    if (!ensureQr()) return;
+  function fullOptions(px) {
     const dotsType = { square: "square", dots: "dots", rounded: "rounded", "extra-rounded": "extra-rounded", "classy": "classy", "classy-rounded": "classy-rounded" }[state.dots] || "rounded";
     const cornerSq = { square: "square", dot: "dot", "extra-rounded": "extra-rounded" }[state.corners] || "extra-rounded";
     const cornerDt = { dot: "dot", square: "square" }[state.cornersDot] || "dot";
-    try {
-      qr.update({
-      data: payload(),
-      margin: state.margin,
+    return {
+      width: px, height: px, data: payload(), margin: state.margin,
       image: state.logo || undefined,
       dotsOptions: {
         type: dotsType,
@@ -73,7 +70,13 @@
       backgroundOptions: { color: state.bgColor },
       imageOptions: { crossOrigin: "anonymous", margin: 6, imageSize: 0.42 },
       qrOptions: { errorCorrectionLevel: state.ecc },
-      });
+    };
+  }
+
+  function apply() {
+    if (!ensureQr()) return;
+    try {
+      qr.update(fullOptions(300));
     } catch (e) {
       setStatus("No se pudo actualizar el QR.");
       return;
@@ -162,6 +165,13 @@
     }));
     const color = (id, key) => $("#" + id)?.addEventListener("input", (e) => { state[key] = e.target.value; schedule(); });
     color("qrDot", "dotColor"); color("qrBg", "bgColor"); color("qrGrad", "gradColor");
+    const swatch = (sel, key, inputId) => $$("#" + sel + " button").forEach(b => b.addEventListener("click", () => {
+      state[key] = b.dataset.c;
+      const el = $("#" + inputId); if (el) el.value = b.dataset.c;
+      $$("#" + sel + " button").forEach(x => x.classList.toggle("on", x === b));
+      schedule();
+    }));
+    swatch("qrDotSw", "dotColor", "qrDot"); swatch("qrBgSw", "bgColor", "qrBg");
     $("#qrGradient")?.addEventListener("change", (e) => { state.gradient = e.target.checked; schedule(); });
     const opts = (sel, key) => $$("#" + sel + " button").forEach(b => b.addEventListener("click", () => {
       state[key] = b.dataset.v; $$("#" + sel + " button").forEach(x => x.classList.toggle("on", x === b)); schedule();
@@ -182,17 +192,32 @@
     });
     $("#qrNoLogo")?.addEventListener("click", () => { state.logo = null; const i = $("#qrLogo"); if (i) i.value = ""; schedule(); });
 
-    /* descargas */
-    $("#qrDownload")?.addEventListener("click", () => {
+    /* descargas (siempre al tamaño elegido, instancia temporal de exportación) */
+    const fileName = () => {
+      const el = $("#qrFileName");
+      const v = (el ? el.value : "").replace(/[^\w\-áéíóúñü ]+/gi, "").trim().replace(/\s+/g, "-");
+      return v || "qr-kat";
+    };
+    async function exportQr(ext) {
       if (!ensureQr()) return;
-      const ext = $("#qrFormat")?.value || "png";
-      qr.download({ name: "qr-kat", extension: ext }).catch(() => setStatus("No se pudo descargar."));
-    });
+      setStatus("Generando archivo en alta calidad…");
+      try {
+        const inst = new QRCodeStyling({ ...fullOptions(state.size), type: ext === "svg" ? "svg" : "canvas" });
+        await inst.download({ name: fileName(), extension: ext });
+        setStatus(`Descargado en ${state.size}px.`);
+      } catch (e) { setStatus("No se pudo descargar."); }
+    }
+    $("#qrDownload")?.addEventListener("click", () => exportQr($("#qrFormat")?.value || "png"));
     $$("#qrFmtSeg button").forEach(b => b.addEventListener("click", () => {
       $$("#qrFmtSeg button").forEach(x => x.classList.toggle("on", x === b));
       $("#qrFormat").value = b.dataset.fmt;
     }));
-    $("#qrPng")?.addEventListener("click", () => { if (ensureQr()) qr.download({ name: "qr-kat", extension: "png" }).catch(() => setStatus("No se pudo descargar.")); });
+    $$("#qrCardSeg button").forEach(b => b.addEventListener("click", () => {
+      $$("#qrCardSeg button").forEach(x => x.classList.toggle("on", x === b));
+      $("#qrCardStyle").value = b.dataset.card;
+    }));
+    $("#qrCardDownload")?.addEventListener("click", downloadCard);
+    $("#qrPng")?.addEventListener("click", () => exportQr("png"));
     const copyText = async () => {
       try { await navigator.clipboard.writeText(payload()); setStatus("Contenido copiado."); }
       catch { setStatus("No se pudo copiar."); }
@@ -209,7 +234,108 @@
     });
   }
 
-  /* QR real de muestra en la landing (el SVG queda como respaldo sin conexión) */
+  /* Tarjeta para compartir 1080x1350: textos + redes fuera del QR */
+  function rr(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  async function blobToBitmap(blob) {
+    if (typeof createImageBitmap === "function") return createImageBitmap(blob);
+    const url = URL.createObjectURL(blob);
+    try {
+      const img = new Image();
+      img.decoding = "sync";
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+      const cv = document.createElement("canvas");
+      cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+      cv.getContext("2d").drawImage(img, 0, 0);
+      return cv;
+    } finally { URL.revokeObjectURL(url); }
+  }
+  const SOCIALS = { ig: "IG", tt: "TT", wa: "WA", fb: "FB", x: "X", web: "WB" };
+  async function downloadCard() {
+    if (!ensureQr()) return;
+    setStatus("Armando tu tarjeta…");
+    try {
+      const W = 1080, H = 1350;
+      const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+      const ctx = cv.getContext("2d");
+      const style = $("#qrCardStyle")?.value || "marca";
+      const title = ($("#qrCardTitle")?.value || "").trim().slice(0, 60) || "Mi QR";
+      const sub = ($("#qrCardSub")?.value || "").trim().slice(0, 90);
+      const nets = [1, 2].map(i => ({
+        net: $("#qrNet" + i)?.value || "ig",
+        handle: ($("#qrHandle" + i)?.value || "").trim().slice(0, 40),
+      })).filter(n => n.handle);
+      const palettes = {
+        claro: { bg1: "#ffffff", bg2: "#efe9ff", ink: "#1a1a2e", dim: "#5c5875", pill: "rgba(139,92,246,.12)" },
+        oscuro: { bg1: "#12121a", bg2: "#241d3d", ink: "#ffffff", dim: "#b9b3d4", pill: "rgba(255,255,255,.10)" },
+        marca: { bg1: state.dotColor, bg2: state.gradient ? state.gradColor : state.dotColor, ink: "#ffffff", dim: "rgba(255,255,255,.85)", pill: "rgba(255,255,255,.18)" },
+      };
+      const pal = palettes[style] || palettes.marca;
+      const bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, pal.bg1); bg.addColorStop(1, pal.bg2);
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+      ctx.textAlign = "center";
+      // Título
+      ctx.fillStyle = pal.ink;
+      ctx.font = "800 72px Outfit, system-ui, sans-serif";
+      const words = title.split(" ");
+      const lines = [];
+      let cur = "";
+      for (const w of words) {
+        const t = cur ? cur + " " + w : w;
+        if (ctx.measureText(t).width > W - 160 && cur) { lines.push(cur); cur = w; }
+        else cur = t;
+        if (lines.length === 2) break;
+      }
+      if (cur) lines.push(cur);
+      lines.slice(0, 2).forEach((ln, i) => ctx.fillText(ln, W / 2, 190 + i * 84));
+      if (sub) {
+        ctx.fillStyle = pal.dim;
+        ctx.font = "500 42px Outfit, system-ui, sans-serif";
+        ctx.fillText(sub, W / 2, 190 + lines.slice(0, 2).length * 84 + 10);
+      }
+      // QR en panel blanco
+      const blob = await qr.getRawData("png");
+      const bmp = await blobToBitmap(blob);
+      const q = 660, qx = (W - q) / 2, qy = 430;
+      ctx.save();
+      rr(ctx, qx - 28, qy - 28, q + 56, q + 56, 48);
+      ctx.fillStyle = "#ffffff";
+      ctx.shadowColor = "rgba(0,0,0,.30)"; ctx.shadowBlur = 60; ctx.shadowOffsetY = 18;
+      ctx.fill();
+      ctx.restore();
+      const iw = bmp.width || q, ih = bmp.height || q;
+      ctx.drawImage(bmp, qx, qy, q, q * (ih / iw));
+      // Redes
+      ctx.font = "600 40px Outfit, system-ui, sans-serif";
+      nets.slice(0, 2).forEach((n, i) => {
+        const y = qy + q + 120 + i * 96;
+        const label = `${SOCIALS[n.net] || "IG"}  ${n.handle}`;
+        const wpx = Math.min(W - 160, ctx.measureText(label).width + 120);
+        rr(ctx, (W - wpx) / 2, y - 58, wpx, 84, 42);
+        ctx.fillStyle = pal.pill; ctx.fill();
+        ctx.fillStyle = pal.ink;
+        ctx.textAlign = "center";
+        ctx.fillText(label, W / 2, y);
+      });
+      // Pie
+      ctx.fillStyle = pal.dim;
+      ctx.font = "500 32px Outfit, system-ui, sans-serif";
+      ctx.fillText("Escanea con tu cámara · Hecho con CodeKat", W / 2, H - 56);
+      const a = document.createElement("a");
+      a.download = fileName() + "-tarjeta.png";
+      a.href = cv.toDataURL("image/png");
+      document.body.appendChild(a); a.click(); a.remove();
+      setStatus("Tarjeta descargada en alta calidad.");
+    } catch (e) { setStatus("No se pudo armar la tarjeta."); }
+  }
   function renderDemo() {
     const slot = $("#qrDemoMini");
     if (!slot || typeof QRCodeStyling === "undefined") return;

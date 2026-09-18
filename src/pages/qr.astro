@@ -124,6 +124,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <div class="qr-color"><input type="color" id="qrDot" value="#8b5cf6" /><span>Puntos</span></div>
                 <div class="qr-color"><input type="color" id="qrBg" value="#ffffff" /><span>Fondo</span></div>
               </div>
+              <div class="qr-sw" id="qrDotSw" aria-label="Colores de puntos">
+                <button type="button" data-c="#8b5cf6" style="--sw:#8b5cf6" aria-label="Violeta"></button>
+                <button type="button" data-c="#111827" style="--sw:#111827" aria-label="Negro"></button>
+                <button type="button" data-c="#1d4ed8" style="--sw:#1d4ed8" aria-label="Azul"></button>
+                <button type="button" data-c="#0284c7" style="--sw:#0284c7" aria-label="Celeste"></button>
+                <button type="button" data-c="#dc2626" style="--sw:#dc2626" aria-label="Rojo"></button>
+                <button type="button" data-c="#db2777" style="--sw:#db2777" aria-label="Fucsia"></button>
+                <button type="button" data-c="#15803d" style="--sw:#15803d" aria-label="Verde"></button>
+                <button type="button" data-c="#ea580c" style="--sw:#ea580c" aria-label="Naranja"></button>
+              </div>
+              <div class="qr-field"><label>Fondos que sí se escanean</label>
+                <div class="qr-sw qr-sw-bg" id="qrBgSw" aria-label="Colores de fondo">
+                  <button type="button" data-c="#ffffff" style="--sw:#ffffff" aria-label="Blanco"></button>
+                  <button type="button" data-c="#fff7ed" style="--sw:#fff7ed" aria-label="Crema"></button>
+                  <button type="button" data-c="#ede9fe" style="--sw:#ede9fe" aria-label="Lila claro"></button>
+                  <button type="button" data-c="#eff6ff" style="--sw:#eff6ff" aria-label="Celeste claro"></button>
+                  <button type="button" data-c="#f0fdf4" style="--sw:#f0fdf4" aria-label="Menta"></button>
+                  <button type="button" data-c="#fdf2f8" style="--sw:#fdf2f8" aria-label="Rosa claro"></button>
+                </div>
+              </div>
               <label class="qr-check"><input type="checkbox" id="qrGradient" checked /> Degradado con <input type="color" id="qrGrad" value="#f5a524" aria-label="Segundo color del degradado" /></label>
               <div class="qr-seg qr-seg-2" id="qrGradType" role="group" aria-label="Tipo de degradado">
                 <button type="button" data-g="linear" class="on">Lineal</button>
@@ -182,10 +202,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <button type="button" data-fmt="svg">SVG</button>
                 <button type="button" data-fmt="jpeg">JPG</button>
               </div>
-              <button class="btn btn-primary grad-anim qr-dl-big" id="qrDownload" type="button"><i class="fa-solid fa-download"></i> Descargar QR</button>
+              <div class="qr-field"><label for="qrFileName">Nombre del archivo</label><input type="text" id="qrFileName" value="qr-kat" placeholder="Ej: mi-negocio-menu" /></div>
+              <button class="btn btn-primary grad-anim qr-dl-big" id="qrDownload" type="button"><i class="fa-solid fa-download"></i> Descargar QR en alta calidad</button>
               <div class="qr-dl-grid">
                 <button type="button" id="qrCopyImg">Copiar imagen</button>
                 <button type="button" id="qrCopyText">Copiar texto</button>
+              </div>
+              <div class="qr-cardbox">
+                <h3><i class="fa-solid fa-id-card"></i> Tarjeta para compartir</h3>
+                <p>Tu QR en una tarjeta 1080×1350 con título y redes, lista para Instagram y WhatsApp.</p>
+                <div class="qr-field"><label for="qrCardTitle">Título de la tarjeta</label><input type="text" id="qrCardTitle" placeholder="Ej: Café Aurora — Menú" /></div>
+                <div class="qr-field"><label for="qrCardSub">Subtítulo (opcional)</label><input type="text" id="qrCardSub" placeholder="Ej: Escanea y síguenos" /></div>
+                <div class="qr-row2">
+                  <div class="qr-field"><label for="qrNet1">Red 1</label><select id="qrNet1"><option value="ig">Instagram</option><option value="tt">TikTok</option><option value="wa">WhatsApp</option><option value="fb">Facebook</option><option value="x">X</option><option value="web">Web</option></select></div>
+                  <div class="qr-field"><label for="qrHandle1">Usuario 1</label><input type="text" id="qrHandle1" placeholder="@tu_cuenta" /></div>
+                </div>
+                <div class="qr-row2">
+                  <div class="qr-field"><label for="qrNet2">Red 2</label><select id="qrNet2"><option value="tt">TikTok</option><option value="ig">Instagram</option><option value="wa">WhatsApp</option><option value="fb">Facebook</option><option value="x">X</option><option value="web">Web</option></select></div>
+                  <div class="qr-field"><label for="qrHandle2">Usuario 2</label><input type="text" id="qrHandle2" placeholder="@tu_cuenta" /></div>
+                </div>
+                <input type="hidden" id="qrCardStyle" value="marca" />
+                <div class="qr-seg" id="qrCardSeg">
+                  <button type="button" data-card="claro">Clara</button>
+                  <button type="button" data-card="oscuro">Oscura</button>
+                  <button type="button" data-card="marca" class="on">Mi marca</button>
+                </div>
+                <button class="btn btn-glass qr-dl-big" id="qrCardDownload" type="button"><i class="fa-solid fa-image"></i> Descargar tarjeta PNG</button>
               </div>
               <p class="qr-tip"><i class="fa-solid fa-circle-info"></i> Tip: usa fondo claro y puntos oscuros para que cualquier cámara lo lea al instante.</p>
             </div>
