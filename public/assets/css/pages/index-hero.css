@@ -45,3 +45,20 @@
     @keyframes arrowBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
     .step-arrow-down i{animation:arrowBounce 1.8s ease-in-out infinite;}
 
+    /* ── Shader aurora CodeKat (estilo animated-shader-hero) ── */
+    #heroShader{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+    .hero-grid,.hero-conic{z-index:0;opacity:.5;}
+    .hx-behind,.hx-first,.hero-steps{position:relative;z-index:1;}
+    .hero-title,.hero-subtitle{text-shadow:0 2px 26px rgba(0,0,0,.6);}
+    .hero-badge{display:inline-flex;align-items:center;gap:.45rem;font-size:.72rem;font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;color:var(--purple-light);
+      background:rgba(139,92,246,.12);border:1px solid rgba(167,139,250,.35);
+      padding:.45rem 1rem;border-radius:999px;margin-bottom:1.1rem;
+      box-shadow:0 0 24px rgba(139,92,246,.25);backdrop-filter:blur(8px);}
+    .hero-stats{display:flex;gap:1.1rem;justify-content:center;margin-top:1.6rem;flex-wrap:wrap;}
+    .hero-stats span{font-size:.74rem;color:var(--text-muted);}
+    .hero-stats b{color:var(--white);font-size:.92rem;margin-right:.3rem;
+      background:linear-gradient(90deg,#C4B5FD,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    html[data-theme="light"] #heroShader{opacity:.45;}
+    html[data-theme="light"] .hero-title,html[data-theme="light"] .hero-subtitle{text-shadow:none;}
+

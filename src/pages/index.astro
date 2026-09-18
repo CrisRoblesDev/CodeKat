@@ -39,6 +39,7 @@ const websiteLd = {
     "/assets/js/functions/theme.js",
     "/assets/js/functions/menu.js",
     "/assets/js/functions/widgets.js",
+    "/assets/js/functions/hero-shader.js",
     "/assets/js/animations/hero-parallax.js",
     "/assets/js/animations/stepper.js",
     "/assets/js/animations/loader.js",
@@ -72,6 +73,7 @@ const websiteLd = {
   </Fragment>
 
   <section class="hero" id="inicio" aria-label="Inicio">
+    <canvas id="heroShader" aria-hidden="true"></canvas>
     <div class="hero-grid" aria-hidden="true"></div>
     <div class="hero-conic" aria-hidden="true"></div>
     <div class="hx-behind" aria-hidden="true">
@@ -82,11 +84,17 @@ const websiteLd = {
       <div class="hx-first">
         <div class="hx-ghost" id="hxGhost" aria-hidden="true"><span class="hx-code" id="hxCode">CODE</span><span class="hx-kat" id="hxKat">KAT</span></div>
         <div class="hero-intro reveal" id="heroIntro">
+          <span class="hero-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Desarrollo web · Chile</span>
           <h1 class="hero-title">Tu próxima página web <em class="grad-text">comienza aquí</em>.</h1>
           <p class="hero-subtitle">Diseñamos páginas web modernas, rápidas y enfocadas en convertir visitantes en clientes. Presencia profesional, claridad y resultados para tu negocio.</p>
           <div class="hero-ctas">
             <a href="https://wa.me/56933465843" class="btn btn-primary grad-anim" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp</a>
             <a href="#faq" class="btn btn-glass">Resuelve tus dudas <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+          <div class="hero-stats" aria-label="Datos destacados">
+            <span><b>48–72h</b> prototipo</span>
+            <span><b>100%</b> responsive</span>
+            <span><b>SEO</b> incluido</span>
           </div>
           <div class="hero-contact-row">
             <a href="tel:+56933465843" class="hero-contact-pill"><span class="hero-contact-pill-icon"><i class="fa-solid fa-phone"></i></span><span class="hero-contact-pill-text">Llámanos cuando quieras</span><i class="fa-solid fa-arrow-right hero-contact-pill-arrow"></i></a>
