@@ -68,6 +68,7 @@
     state.view = v;
     const l = $("#qrLanding"), a = $("#qrApp");
     if (v === "app") {
+      a.hidden = false;
       l.classList.remove("on"); l.classList.add("off-left");
       a.classList.add("on"); ensureQr(); apply();
     } else {
@@ -126,7 +127,12 @@
     const opts = (sel, key) => $$("#" + sel + " button").forEach(b => b.addEventListener("click", () => {
       state[key] = b.dataset.v; $$("#" + sel + " button").forEach(x => x.classList.toggle("on", x === b)); schedule();
     }));
-    opts("qrDots", "dots"); opts("qrCorners", "corners"); opts("qrFrame", "frame");
+    opts("qrDots", "dots"); opts("qrCorners", "corners");
+    $$("#qrFrame button").forEach(b => b.addEventListener("click", () => {
+      state.frame = b.dataset.v;
+      $$("#qrFrame button").forEach(x => x.classList.toggle("on", x === b));
+      preview.dataset.frame = state.frame;
+    }));
     $("#qrSize")?.addEventListener("input", (e) => { state.size = +e.target.value; $("#qrSizeVal").textContent = e.target.value + "px"; });
     $("#qrMargin")?.addEventListener("input", (e) => { state.margin = +e.target.value; $("#qrMarginVal").textContent = e.target.value; schedule(); });
     $("#qrLogo")?.addEventListener("change", (e) => {
@@ -147,12 +153,15 @@
       $$("#qrFmtSeg button").forEach(x => x.classList.toggle("on", x === b));
       $("#qrFormat").value = b.dataset.fmt;
     }));
-    $("#qrPng")?.addEventListener("click", () => ensureQr() && qr.download({ name: "qr-kat", extension: "png" }).catch(() => {}));
-    $("#qrCopy")?.addEventListener("click", async () => {
+    $("#qrPng")?.addEventListener("click", () => { if (ensureQr()) qr.download({ name: "qr-kat", extension: "png" }).catch(() => setStatus("No se pudo descargar.")); });
+    const copyText = async () => {
       try { await navigator.clipboard.writeText(payload()); setStatus("Contenido copiado."); }
       catch { setStatus("No se pudo copiar."); }
-    });
+    };
+    $("#qrCopy")?.addEventListener("click", copyText);
+    $("#qrCopyText")?.addEventListener("click", copyText);
     $("#qrCopyImg")?.addEventListener("click", async () => {
+      if (!ensureQr()) return;
       try {
         const blob = await qr.getRawData("png");
         await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);

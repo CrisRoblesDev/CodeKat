@@ -153,7 +153,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               <button class="btn btn-primary grad-anim qr-dl-big" id="qrDownload" type="button"><i class="fa-solid fa-download"></i> Descargar QR</button>
               <div class="qr-dl-grid">
                 <button type="button" id="qrCopyImg">Copiar imagen</button>
-                <button type="button" id="qrCopy">Copiar texto</button>
+                <button type="button" id="qrCopyText">Copiar texto</button>
               </div>
               <p class="qr-tip"><i class="fa-solid fa-circle-info"></i> Tip: usa fondo claro y puntos oscuros para que cualquier cámara lo lea al instante.</p>
             </div>
@@ -168,12 +168,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </section>
     </div>
   </div>
+  <Fragment slot="after-footer">
+    <script is:inline>
+      // Progresivo: revela el generador aunque el JS principal aún no cargue.
+      document.getElementById('qrStart')?.addEventListener('click', () => {
+        const app = document.getElementById('qrApp');
+        if (app) { app.hidden = false; app.classList.add('on'); }
+      }, { once: true });
+    </script>
+  </Fragment>
 </BaseLayout>
-
-<script is:inline>
-  // Mostrar app al pulsar CTA (progresivo, por si el JS principal tarda)
-  document.getElementById('qrStart')?.addEventListener('click', () => {
-    const app = document.getElementById('qrApp');
-    if (app) app.hidden = false;
-  }, { once: true });
-</script>

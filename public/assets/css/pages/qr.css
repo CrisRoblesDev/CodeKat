@@ -5,6 +5,9 @@
 .qr-page .back-to-top,
 .qr-page .hero-scroll-hint { display: none !important; }
 
+/* El display:flex de .qr-wifi pisa al [hidden] del navegador: blindaje global de la página */
+.qr-shell [hidden] { display: none !important; }
+
 .qr-page { overflow: hidden; }
 .qr-page main { padding-bottom: 0; }
 
@@ -63,6 +66,8 @@
   display: flex; align-items: center; justify-content: center; overflow: hidden; }
 #qrPreview canvas, #qrPreview svg, #qrPreview img { width: 100% !important; height: 100% !important; }
 #qrPreview.pop { animation: qr-pop 200ms cubic-bezier(.2,.7,.2,1); }
+#qrPreview[data-frame="plain"] { border-radius: 6px; box-shadow: none; }
+#qrPreview[data-frame="dark"] { box-shadow: 0 0 0 6px #101018, 0 10px 30px rgba(0,0,0,.6); }
 @keyframes qr-pop { 0% { transform: scale(.94);} 100% { transform: scale(1);} }
 .qr-stage-meta { flex: 1; min-width: 0; }
 .qr-stage-meta small { color: var(--text-muted, #A8A5B8); font-size: .72rem; display: block; }
