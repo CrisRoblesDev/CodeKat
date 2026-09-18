@@ -406,10 +406,18 @@
       ctx.fillStyle = pal.dim;
       ctx.font = "500 32px Outfit, system-ui, sans-serif";
       ctx.fillText("Escanea con tu cámara · Hecho con CodeKat", W / 2, H - 56);
+      // Blob + objectURL (los dataURL gigantes fallan en móvil)
+      const outBlob = await new Promise((res) => {
+        try { cv.toBlob((b) => res(b), "image/png"); }
+        catch (e) { res(null); }
+      });
+      if (!outBlob) throw new Error("navegador bloqueó la imagen (prueba sin logo)");
+      const url = URL.createObjectURL(outBlob);
       const a = document.createElement("a");
       a.download = fileName() + "-tarjeta.png";
-      a.href = cv.toDataURL("image/png");
-      document.body.appendChild(a); a.click(); a.remove();
+      a.href = url;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
       setStatus("Tarjeta descargada en alta calidad.");
     } catch (e) { setStatus("No se pudo armar la tarjeta: " + (e?.message || e)); }
   }
