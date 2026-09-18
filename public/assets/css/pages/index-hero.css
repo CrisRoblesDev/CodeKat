@@ -1,7 +1,7 @@
 /* CodeKat · assets/css/pages/index-hero.css — extraído de index.html */
     .hero{padding-top:0;padding-bottom:var(--space-3xl);position:relative;overflow:hidden;}
     .hero-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,#000 15%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at center,#000 15%,transparent 75%);opacity:.5;}
-    .hero-conic{position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(167,139,250,.25),transparent 60%);animation:spin 30s linear infinite;filter:blur(30px);z-index:0;}
+    .hero-conic{position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(167,139,250,.25),transparent 60%);animation:spin 24s linear infinite;filter:blur(30px);z-index:0;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .hero-intro{max-width:660px;position:relative;z-index:1;margin-left:auto;margin-right:auto;text-align:center;}
     /* ── Fondo decorativo detrás de las letras + parallax ── */
@@ -13,7 +13,7 @@
     .hx-code,.hx-kat{display:inline-block;color:transparent;will-change:transform,opacity;}
     .hx-code{-webkit-text-stroke:1.5px rgba(167,139,250,.45);}
     .hx-kat{-webkit-text-stroke:1.5px rgba(255,255,255,.8);}
-    .hx-ring{position:absolute;top:2.2rem;left:0;right:0;margin-left:auto;margin-right:auto;width:min(560px,94vw);aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(167,139,250,.20),transparent 55%);animation:spin 32.5s linear infinite;filter:blur(26px);will-change:transform;}
+    .hx-ring{position:absolute;top:2.2rem;left:0;right:0;margin-left:auto;margin-right:auto;width:min(560px,94vw);aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(167,139,250,.20),transparent 55%);animation:spin 26s linear infinite;filter:blur(26px);will-change:transform;}
     .hero-title{font-size:clamp(2.2rem,7vw,4.2rem);line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.25rem;color:var(--white);text-wrap:balance;}
     .hero-subtitle{font-size:clamp(1rem,2.6vw,1.15rem);color:var(--text-muted);max-width:560px;margin-left:auto;margin-right:auto;margin-bottom:2rem;}
     .hero-ctas{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;justify-content:center;}
@@ -26,7 +26,7 @@
     .hero-scroll-hint{display:none;}
     @media(min-width:960px){
       .hero-scroll-hint{display:flex;position:absolute;bottom:1.25rem;left:50%;transform:translateX(-50%);flex-direction:column;align-items:center;gap:.35rem;color:var(--text-dim);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7;z-index:1;}
-      .hero-scroll-hint i{color:var(--purple);animation:hintBounce 2.25s ease-in-out infinite;}
+      .hero-scroll-hint i{color:var(--purple);animation:hintBounce 1.8s ease-in-out infinite;}
     }
     @keyframes hintBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
 
@@ -43,40 +43,10 @@
     .step-arrow{display:none;color:var(--purple);font-size:1.4rem;align-self:center;justify-self:center;opacity:.7;}
     .step-arrow-down{display:flex;justify-content:center;color:var(--purple);font-size:1.2rem;opacity:.6;}
     @keyframes arrowBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
-    .step-arrow-down i{animation:arrowBounce 2.25s ease-in-out infinite;}
+    .step-arrow-down i{animation:arrowBounce 1.8s ease-in-out infinite;}
 
-    /* ── Nebulosa estática: el diseño se ve completo siempre, con o sin WebGL ── */
-    .hero-nebula{position:absolute;inset:0;z-index:0;pointer-events:none;
-      background:
-        radial-gradient(420px 320px at 12% 8%,rgba(139,92,246,.38),transparent 70%),
-        radial-gradient(520px 380px at 88% 22%,rgba(124,58,237,.32),transparent 70%),
-        radial-gradient(720px 520px at 50% 45%,rgba(76,29,149,.38),transparent 70%),
-        radial-gradient(300px 200px at 70% 62%,rgba(245,165,36,.13),transparent 70%),
-        linear-gradient(180deg,#171029 0%,#0A0A0F 62%);
-      background-size:auto,auto,auto,auto,100% 100%;}
-    @media (max-width:959px){
-      /* En móvil la nebulosa respira sola con movimiento CSS liviano */
-      .hero-nebula{animation:nebulaDrift 26s ease-in-out infinite alternate;}
-      @keyframes nebulaDrift{
-        from{background-position:0 0,0 0,0 0,0 0,0 0;}
-        to{background-position:60px 30px,-50px 40px,30px -30px,-40px 20px,0 0;}
-      }
-    }
-    @media (prefers-reduced-motion:reduce){
-      .hero-nebula{animation:none;}
-    }
-    /* ── Shader en primera pantalla: se disuelve abajo, sin cortes ── */
-    .hx-first{overflow:hidden;}
-    #heroShader{position:absolute;inset:0;z-index:0;pointer-events:none;background:#0A0A0F;
-      -webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent 99%);
-      mask-image:linear-gradient(to bottom,#000 62%,transparent 99%);}
-    body{background-image:none;background:linear-gradient(180deg,#141020 0%,#0A0A0F 34%,#0A0A0F 100%);}
-    html,body{overflow-x:clip;}
-    /* En móvil se apagan capas ambiente redundantes (el shader ya da el ambiente) */
-    .bg-aurora{display:none;}
-    @media (max-width:959px){
-      .hero-conic{display:none;}
-    }
+    /* ── Shader aurora CodeKat (estilo animated-shader-hero) ── */
+    #heroShader{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
     .hero-grid,.hero-conic{z-index:0;opacity:.5;}
     .hx-behind,.hx-first,.hero-steps{position:relative;z-index:1;}
     .hero-title,.hero-subtitle{text-shadow:0 2px 26px rgba(0,0,0,.6);}
@@ -84,12 +54,12 @@
     @keyframes fade-in-down{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
     @keyframes fade-in-up{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
     @keyframes gradient-shift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-    .animate-fade-in-down{animation:fade-in-down 1s ease-out forwards;}
-    .animate-fade-in-up{animation:fade-in-up 1s ease-out forwards;opacity:0;}
-    .animation-delay-200{animation-delay:.25s;}
-    .animation-delay-400{animation-delay:.5s;}
-    .animation-delay-600{animation-delay:.75s;}
-    .animation-delay-800{animation-delay:1s;}
+    .animate-fade-in-down{animation:fade-in-down .8s ease-out forwards;}
+    .animate-fade-in-up{animation:fade-in-up .8s ease-out forwards;opacity:0;}
+    .animation-delay-200{animation-delay:.2s;}
+    .animation-delay-400{animation-delay:.4s;}
+    .animation-delay-600{animation-delay:.6s;}
+    .animation-delay-800{animation-delay:.8s;}
     .hero-badge-wrap{margin-bottom:1.6rem;}
     .hero-badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:600;
       color:var(--purple-light);background:rgba(139,92,246,.10);
@@ -98,29 +68,15 @@
     .hero-title .hl-line1,.hero-title .hl-line2{display:block;}
     .hero-title .hl-line1{background:linear-gradient(90deg,#C4B5FD,#A78BFA,#E879F9);
       -webkit-background-clip:text;background-clip:text;color:transparent;
-      background-size:200% 200%;animation:fade-in-up 1s ease-out forwards,gradient-shift 5s ease infinite;opacity:0;}
+      background-size:200% 200%;animation:fade-in-up .8s ease-out forwards,gradient-shift 4s ease infinite;opacity:0;}
     .hero-title .hl-line2{background:linear-gradient(90deg,#FCD34D,#FB923C,#F5A524);
       -webkit-background-clip:text;background-clip:text;color:transparent;
-      background-size:200% 200%;animation:fade-in-up 1s ease-out forwards,gradient-shift 5s ease infinite;opacity:0;}
-    .hero-title .animation-delay-200{animation-delay:.25s,.25s;}
-    .hero-title .animation-delay-400{animation-delay:.5s,.5s;}
+      background-size:200% 200%;animation:fade-in-up .8s ease-out forwards,gradient-shift 4s ease infinite;opacity:0;}
+    .hero-title .animation-delay-200{animation-delay:.2s,.2s;}
+    .hero-title .animation-delay-400{animation-delay:.4s,.4s;}
     .hero-ctas .btn{transition:transform .3s ease,box-shadow .3s ease;}
     .hero-ctas .btn:hover{transform:scale(1.05);}
     .hero-ctas .btn-primary:hover{box-shadow:0 12px 40px rgba(139,92,246,.45);}
-    html[data-theme="light"] #heroShader{display:none;}
-    html[data-theme="light"] body{background:#F7F5FB;}
-    html[data-theme="light"] .hx-first{background:none;}
+    html[data-theme="light"] #heroShader{opacity:.4;}
     html[data-theme="light"] .hero-title,html[data-theme="light"] .hero-subtitle{text-shadow:none;}
-    /* ── Contraste: pastilla legible sobre el fantasma ── */
-    .hero-steps-title{display:inline-block;position:relative;z-index:2;color:var(--purple);
-      align-self:center;background:var(--glass-bg-strong);border:1px solid var(--glass-border);
-      padding:.45rem 1.1rem;border-radius:999px;backdrop-filter:blur(10px);}
-    /* ── Contraste en tema claro ── */
-    html[data-theme="light"] .hx-kat{-webkit-text-stroke:1.5px rgba(26,26,46,.7);}
-    html[data-theme="light"] .hero-title .hl-line1{background:linear-gradient(90deg,#7C3AED,#9333EA,#A21CAF);
-      -webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;}
-    html[data-theme="light"] .hero-title .hl-line2{background:linear-gradient(90deg,#D97706,#EA580C,#B45309);
-      -webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;}
-    html[data-theme="light"] .hero-badge{color:#6D28D9;background:rgba(255,255,255,.72);border-color:rgba(139,92,246,.45);}
-    html[data-theme="light"] .hero-subtitle{color:#4A4763;}
 

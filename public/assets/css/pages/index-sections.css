@@ -6,16 +6,16 @@
     .clients-marquee{overflow-x:auto;cursor:grab;padding:1rem 0;scrollbar-width:none;-ms-overflow-style:none;display:flex;}
     .clients-marquee::-webkit-scrollbar{display:none;}
     .clients-marquee.dragging{cursor:grabbing;}
-    .clients-track{display:flex;gap:1rem;width:max-content;animation:clientsMarquee 35s linear infinite;}
+    .clients-track{display:flex;gap:1rem;width:max-content;animation:clientsMarquee 28s linear infinite;}
     .clients-marquee:hover .clients-track{animation-play-state:paused;}
     @keyframes clientsMarquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
     .client-card{flex:0 0 340px;display:flex;align-items:center;gap:.85rem;padding:.65rem .85rem .65rem .65rem;background:var(--glass-bg-strong);border:1px solid var(--glass-border);border-radius:999px;position:relative;overflow:hidden;transition:transform var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);}
     .client-card::before{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(135deg,transparent,rgba(167,139,250,.12),transparent);opacity:0;transition:opacity var(--t-fast) var(--ease);}
     .client-card:hover::before{opacity:1;}
     .client-card::after{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(ellipse at 30% 50%,var(--card-accent, rgba(167,139,250,.15)),transparent 70%);opacity:.6;pointer-events:none;}
-    .client-card .shine{position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent);transform:skewX(-20deg);animation:cardShine 5s ease infinite;}
+    .client-card .shine{position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent);transform:skewX(-20deg);animation:cardShine 4s ease infinite;}
     @keyframes cardShine{0%{left:-60%;}50%,100%{left:130%;}}
-    .client-card .card-glow{position:absolute;inset:-2px;border-radius:999px;background:var(--card-accent, var(--purple-glow));filter:blur(12px);opacity:0;transition:opacity var(--t-fast) var(--ease);z-index:-1;animation:glowPulse 3.75s ease infinite;}
+    .client-card .card-glow{position:absolute;inset:-2px;border-radius:999px;background:var(--card-accent, var(--purple-glow));filter:blur(12px);opacity:0;transition:opacity var(--t-fast) var(--ease);z-index:-1;animation:glowPulse 3s ease infinite;}
     @keyframes glowPulse{0%,100%{opacity:0;}50%{opacity:.25;}}
     .client-card:nth-child(3n+1){--card-accent:rgba(167,139,250,.25);}
     .client-card:nth-child(3n+2){--card-accent:rgba(37,211,102,.18);}
@@ -32,7 +32,7 @@
     .is-paused .bg-aurora::before,.is-paused .aurora,.is-paused .clients-track,.is-paused .marquee-track{animation-play-state:paused !important;}
     .modal-loader{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,10,15,.6);backdrop-filter:blur(4px);z-index:5;opacity:0;pointer-events:none;transition:opacity var(--t-fast) var(--ease);}
     .modal-loader.visible{opacity:1;pointer-events:auto;}
-    .modal-loader-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;}
+    .modal-loader-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;}
 
     .tpl-section{position:relative;overflow:hidden;}
     .tpl-carousel{position:relative;margin-top:var(--space-xl);}

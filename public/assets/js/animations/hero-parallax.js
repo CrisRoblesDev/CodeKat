@@ -21,12 +21,12 @@
         for(var s=0;s<hxEls.length;s++){
           var el=hxEls[s];
           var d=el._tgt-el._op;
-          if(Math.abs(d)>0.004){el._op=el._op+d*0.096;more=true;}
+          if(Math.abs(d)>0.004){el._op=el._op+d*0.12;more=true;}
           else{el._op=el._tgt;}
           el.style.opacity=el._op.toFixed(2);
         }
         var gd=ghostTgt-ghostOp;
-        if(Math.abs(gd)>0.004){ghostOp=ghostOp+gd*0.048;more=true;}
+        if(Math.abs(gd)>0.004){ghostOp=ghostOp+gd*0.06;more=true;}
         else{ghostOp=ghostTgt;}
         if(ghost){
           ghost.style.opacity=ghostOp.toFixed(2);
