@@ -136,24 +136,18 @@ void main(){gl_Position=position;}`;
   }
 
   function toGL(x, y) {
-    const s = pxScale();
+    const s = pxScale() * ([1, 0.75, 0.6][qLevel] || 0.6);
     return [x * s, cv.height - y * s];
   }
 
-  // Fondo fijo a toda la página: el canvas cubre el viewport (no la sección),
-  // así el diseño es continuo y no existe ningún corte entre secciones.
-  function vpSize() {
-    const vv = window.visualViewport;
-    return {
-      w: Math.round((vv && vv.width) || window.innerWidth || 0),
-      h: Math.round((vv && vv.height) || window.innerHeight || 0),
-    };
-  }
+  // El canvas vive en la primera pantalla (.hx-first): se mide a su caja
+  // y se disuelve con máscara CSS. Pausado fuera de pantalla.
   function sizeCanvas() {
+    const r = cv.parentElement.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
     const qf = [1, 0.75, 0.6][qLevel] || 0.6;
-    const vp = vpSize();
-    const w = Math.round(vp.w * pxScale() * qf);
-    const h = Math.round(vp.h * pxScale() * qf);
+    const w = Math.round(r.width * pxScale() * qf);
+    const h = Math.round(r.height * pxScale() * qf);
     if (!w || !h) return false;
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     gl.viewport(0, 0, cv.width, cv.height);
@@ -161,12 +155,20 @@ void main(){gl_Position=position;}`;
   }
 
   if (host) {
+    const mapPt = (cx, cy) => {
+      const r = cv.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      return toGL(cx - r.left, cy - r.top);
+    };
     window.addEventListener("pointermove", (e) => {
-      mouse.tx = e.clientX / window.innerWidth;
-      mouse.ty = 1 - e.clientY / window.innerHeight;
+      const r = cv.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      mouse.tx = (e.clientX - r.left) / r.width;
+      mouse.ty = 1 - (e.clientY - r.top) / r.height;
     }, { passive: true });
     window.addEventListener("pointerdown", (e) => {
-      pointers.set(e.pointerId, toGL(e.clientX, e.clientY));
+      const p = mapPt(e.clientX, e.clientY);
+      if (p) pointers.set(e.pointerId, p);
     });
     const release = (e) => {
       if (pointers.size === 1) {
@@ -179,8 +181,10 @@ void main(){gl_Position=position;}`;
     window.addEventListener("pointercancel", release);
     window.addEventListener("pointermove", (e) => {
       if (!pointers.size) return;
+      const p = mapPt(e.clientX, e.clientY);
+      if (!p) return;
       lastCoords = [e.clientX, e.clientY];
-      pointers.set(e.pointerId, toGL(e.clientX, e.clientY));
+      pointers.set(e.pointerId, p);
       moves = [moves[0] + (e.movementX || 0), moves[1] + (e.movementY || 0)];
     }, { passive: true });
   }
@@ -211,16 +215,17 @@ void main(){gl_Position=position;}`;
     // La barra del navegador cambia el viewport sin disparar resize:
     // se revisa el tamaño cada ~32 frames para no dejar bandas negras.
     if ((tick++ & 31) === 0) {
-      const vp = vpSize();
-      if (vp.w !== lastVW || vp.h !== lastVH) {
-        lastVW = vp.w; lastVH = vp.h;
+      const r = cv.parentElement.getBoundingClientRect();
+      const w = Math.round(r.width), h = Math.round(r.height);
+      if ((w && w !== lastVW) || (h && h !== lastVH)) {
+        lastVW = w; lastVH = h;
         sizeCanvas();
       }
     }
     // Calidad adaptativa: si el GPU no da abasto, baja la resolución (máx 2 niveles)
     if (lastT) {
       emaDt = emaDt * 0.95 + (now - lastT) * 0.05;
-      if (emaDt > 42 && qLevel < 2) {
+      if (emaDt > 34 && qLevel < 2) {
         qLevel++;
         emaDt = 16;
         sizeCanvas();
@@ -244,8 +249,11 @@ void main(){gl_Position=position;}`;
   }
 
   window.addEventListener("resize", () => { if (running) sizeCanvas(); else start(); }, { passive: true });
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", () => { if (running) sizeCanvas(); }, { passive: true });
+  const first = cv.parentElement;
+  if (first && "IntersectionObserver" in window) {
+    new IntersectionObserver((es) => {
+      if (es[0].isIntersecting) start(); else stop();
+    }, { threshold: 0.02 }).observe(first);
   }
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stop();

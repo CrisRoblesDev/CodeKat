@@ -45,9 +45,18 @@
     @keyframes arrowBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
     .step-arrow-down i{animation:arrowBounce 2.25s ease-in-out infinite;}
 
-    /* ── Shader fijo a toda la página: fondo continuo, sin cortes ── */
-    #heroShader{position:fixed;inset:0;z-index:-2;pointer-events:none;background:#0A0A0F;}
+    /* ── Shader en primera pantalla: se disuelve abajo, sin cortes ── */
+    .hx-first{overflow:hidden;}
+    #heroShader{position:absolute;inset:0;z-index:0;pointer-events:none;background:#0A0A0F;
+      -webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent 99%);
+      mask-image:linear-gradient(to bottom,#000 62%,transparent 99%);}
     body{background-image:none;background:linear-gradient(180deg,#141020 0%,#0A0A0F 34%,#0A0A0F 100%);}
+    html,body{overflow-x:clip;}
+    /* En móvil se apagan capas ambiente redundantes (el shader ya da el ambiente) */
+    .bg-aurora{display:none;}
+    @media (max-width:959px){
+      .hero-conic{display:none;}
+    }
     .hero-grid,.hero-conic{z-index:0;opacity:.5;}
     .hx-behind,.hx-first,.hero-steps{position:relative;z-index:1;}
     .hero-title,.hero-subtitle{text-shadow:0 2px 26px rgba(0,0,0,.6);}
