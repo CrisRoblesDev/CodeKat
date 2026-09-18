@@ -46,7 +46,8 @@
   background: rgba(139,92,246,.1); border: 1px solid rgba(139,92,246,.22); }
 .qr-demo { width: 118px; height: 118px; border-radius: 20px; background: #fff; padding: 8px;
   box-shadow: 0 10px 30px rgba(139,92,246,.35); animation: qr-float 3.2s ease-in-out infinite; }
-.qr-demo svg { width: 100%; height: 100%; display: block; }
+.qr-demo svg, .qr-demo #qrDemoMini svg, .qr-demo #qrDemoMini canvas { width: 100%; height: 100%; display: block; }
+#qrDemoMini:empty { display: none; }
 @keyframes qr-float { 0%,100% { transform: translateY(0) rotate(-1.5deg);} 50% { transform: translateY(-7px) rotate(1.5deg);} }
 .qr-cta { min-height: 52px; font-size: 1.02rem; padding: 0 26px; }
 .qr-note { font-size: .74rem; color: var(--text-dim, #6E6A85); margin: 0; }
@@ -97,6 +98,13 @@
 .qr-seg button { min-height: 44px; border-radius: 12px; font-size: .8rem; font-weight: 700;
   background: rgba(255,255,255,.05); border: 1px solid rgba(167,139,250,.2); cursor: pointer; }
 .qr-seg button.on { background: rgba(139,92,246,.2); border-color: #8B5CF6; color: #fff; }
+.qr-seg-2 { grid-template-columns: repeat(2,1fr); }
+.qr-presets { display: grid; grid-template-columns: repeat(6,1fr); gap: 6px; }
+.qr-presets button { min-height: 52px; border-radius: 12px; font-size: .64rem; font-weight: 700;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(167,139,250,.2); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.qr-presets button i { width: 22px; height: 22px; border-radius: 50%; display: block; }
+.qr-presets button.on { border-color: #F5A524; background: rgba(245,165,36,.14); }
 .qr-field label { display: block; font-size: .74rem; font-weight: 700; margin-bottom: 5px; color: var(--text-muted, #A8A5B8); }
 .qr-field input[type=text], .qr-field input[type=url], .qr-field textarea, .qr-field select {
   width: 100%; min-height: 48px; border-radius: 12px; padding: 10px 12px; font-size: .92rem;
@@ -118,6 +126,7 @@
   background: rgba(255,255,255,.05); border: 1px solid rgba(167,139,250,.2); cursor: pointer; }
 .qr-opts button.on { border-color: #F5A524; background: rgba(245,165,36,.14); color: #FFD080; }
 .qr-opts.cols3 { grid-template-columns: repeat(3,1fr); }
+.qr-opts-6 { grid-template-columns: repeat(3,1fr); }
 .qr-range { display: flex; align-items: center; gap: 10px; min-height: 48px; font-size: .8rem; }
 .qr-range input { flex: 1; accent-color: #8B5CF6; }
 .qr-logo-row { display: flex; gap: 6px; }

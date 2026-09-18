@@ -18,6 +18,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   ]}
   scripts={[
     "https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js",
+    "/assets/js/functions/theme.js",
+    "/assets/js/functions/menu.js",
     "/assets/js/functions/qr-app.js",
   ]}
   bodyData={{ class: "qr-page" }}
@@ -44,15 +46,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="qr-shell">
       <!-- VISTA 0 · LANDING -->
       <section class="qr-view qr-landing on" id="qrLanding" aria-label="Presentación">
-        <span class="qr-badge">Nuevo · Gratis · Sin registro</span>
-        <h2>Crea un QR <em>imposible de ignorar</em></h2>
-        <p>Con tus colores, tus formas y tu logo. En 3 toques y desde tu celular.</p>
+        <span class="qr-badge"><i class="fa-solid fa-bolt"></i> Nuevo · Gratis · Sin registro</span>
+        <h2>QR con tu marca, <em>listo en segundos</em></h2>
+        <p>Tus colores, tus formas, tu logo. Se escanea con cualquier cámara.</p>
         <div class="qr-demo" aria-hidden="true">
-          <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="14" fill="#fff"/><g fill="#8B5CF6"><rect x="12" y="12" width="26" height="26" rx="7"/><rect x="62" y="12" width="26" height="26" rx="7"/><rect x="12" y="62" width="26" height="26" rx="7"/><rect x="18" y="18" width="14" height="14" rx="4" fill="#fff"/><rect x="68" y="18" width="14" height="14" rx="4" fill="#fff"/><rect x="18" y="68" width="14" height="14" rx="4" fill="#fff"/><circle cx="68" cy="68" r="4"/><circle cx="78" cy="68" r="4"/><circle cx="68" cy="78" r="4"/><rect x="46" y="14" width="8" height="8" rx="2"/><rect x="46" y="46" width="8" height="8" rx="4"/><rect x="14" y="46" width="8" height="8" rx="4"/><circle cx="82" cy="46" r="4" fill="#F5A524"/><rect x="46" y="78" width="8" height="8" rx="2" fill="#F5A524"/></g></svg>
+          <div id="qrDemoMini"></div>
+          <svg id="qrDemoFallback" viewBox="0 0 100 100"><rect width="100" height="100" rx="14" fill="#fff"></rect><g fill="#8B5CF6"><rect x="12" y="12" width="26" height="26" rx="7"></rect><rect x="62" y="12" width="26" height="26" rx="7"></rect><rect x="12" y="62" width="26" height="26" rx="7"></rect><rect x="18" y="18" width="14" height="14" rx="4" fill="#fff"></rect><rect x="68" y="18" width="14" height="14" rx="4" fill="#fff"></rect><rect x="18" y="68" width="14" height="14" rx="4" fill="#fff"></rect><circle cx="68" cy="68" r="4"></circle><circle cx="78" cy="68" r="4"></circle><circle cx="68" cy="78" r="4"></circle><rect x="46" y="14" width="8" height="8" rx="2"></rect><rect x="46" y="46" width="8" height="8" rx="4"></rect><rect x="14" y="46" width="8" height="8" rx="4"></rect><circle cx="82" cy="46" r="4" fill="#F5A524"></circle><rect x="46" y="78" width="8" height="8" rx="2" fill="#F5A524"></circle></g></svg>
         </div>
-        <div class="qr-perks"><span>4 estilos de puntos</span><span>Logo al centro</span><span>PNG + SVG</span></div>
-        <button class="btn btn-primary grad-anim qr-cta" id="qrStart" type="button"><i class="fa-solid fa-qrcode"></i> Crear mi QR</button>
-        <p class="qr-note">Sin cuenta · Sin marca de agua · Funciona en tu celular</p>
+        <div class="qr-perks"><span><i class="fa-solid fa-shapes"></i> 6 estilos</span><span><i class="fa-solid fa-image"></i> Con tu logo</span><span><i class="fa-solid fa-file-arrow-down"></i> PNG + SVG</span></div>
+        <button class="btn btn-primary grad-anim qr-cta" id="qrStart" type="button"><i class="fa-solid fa-qrcode"></i> Crear mi QR gratis</button>
+        <p class="qr-note">Sin cuenta · Sin marca de agua · Hecho en Chile</p>
       </section>
 
       <!-- VISTA 1 · GENERADOR -->
@@ -107,24 +110,48 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </div>
 
             <div class="qr-panel" data-panel="1" role="tabpanel" aria-label="Diseño">
+              <div class="qr-field"><label>Temas rápidos (1 toque)</label>
+                <div class="qr-presets" id="qrPresets">
+                  <button type="button" data-p="codekat" class="on" aria-label="Tema CodeKat"><i style="background:linear-gradient(135deg,#8B5CF6,#F5A524)"></i>Kat</button>
+                  <button type="button" data-p="ocean" aria-label="Tema océano"><i style="background:linear-gradient(135deg,#0EA5E9,#6366F1)"></i>Mar</button>
+                  <button type="button" data-p="sunset" aria-label="Tema atardecer"><i style="background:linear-gradient(135deg,#F43F5E,#F59E0B)"></i>Sol</button>
+                  <button type="button" data-p="selva" aria-label="Tema selva"><i style="background:linear-gradient(135deg,#16A34A,#84CC16)"></i>Selva</button>
+                  <button type="button" data-p="mono" aria-label="Tema monocromo"><i style="background:linear-gradient(135deg,#111111,#6B7280)"></i>Mono</button>
+                  <button type="button" data-p="vino" aria-label="Tema vino"><i style="background:linear-gradient(135deg,#7C2D12,#DB2777)"></i>Vino</button>
+                </div>
+              </div>
               <div class="qr-grid2">
                 <div class="qr-color"><input type="color" id="qrDot" value="#8b5cf6" /><span>Puntos</span></div>
                 <div class="qr-color"><input type="color" id="qrBg" value="#ffffff" /><span>Fondo</span></div>
               </div>
               <label class="qr-check"><input type="checkbox" id="qrGradient" checked /> Degradado con <input type="color" id="qrGrad" value="#f5a524" aria-label="Segundo color del degradado" /></label>
+              <div class="qr-seg qr-seg-2" id="qrGradType" role="group" aria-label="Tipo de degradado">
+                <button type="button" data-g="linear" class="on">Lineal</button>
+                <button type="button" data-g="radial">Radial</button>
+              </div>
               <div class="qr-field"><label>Estilo de puntos</label>
-                <div class="qr-opts" id="qrDots">
+                <div class="qr-opts qr-opts-6" id="qrDots">
                   <button type="button" data-v="square">■ Recto</button>
                   <button type="button" data-v="dots">● Puntos</button>
                   <button type="button" data-v="rounded" class="on">◧ Suave</button>
                   <button type="button" data-v="extra-rounded">⬢ Redondo</button>
+                  <button type="button" data-v="classy">⬣ Elegante</button>
+                  <button type="button" data-v="classy-rounded">⬔ Curvo</button>
                 </div>
               </div>
-              <div class="qr-field"><label>Esquinas</label>
-                <div class="qr-opts cols3" id="qrCorners">
-                  <button type="button" data-v="square">Rectas</button>
-                  <button type="button" data-v="rounded">Suaves</button>
-                  <button type="button" data-v="extra-rounded" class="on">Redondas</button>
+              <div class="qr-row2">
+                <div class="qr-field"><label>Esquinas</label>
+                  <div class="qr-opts cols3" id="qrCorners">
+                    <button type="button" data-v="square">Rectas</button>
+                    <button type="button" data-v="dot">Punto</button>
+                    <button type="button" data-v="extra-rounded" class="on">Redondas</button>
+                  </div>
+                </div>
+                <div class="qr-field"><label>Centro esquinas</label>
+                  <div class="qr-opts cols3" id="qrCornerDots">
+                    <button type="button" data-v="dot" class="on">Punto</button>
+                    <button type="button" data-v="square">Cuadro</button>
+                  </div>
                 </div>
               </div>
               <div class="qr-field"><label>Marco del preview</label>
@@ -140,7 +167,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                   <button type="button" id="qrNoLogo">Quitar</button>
                 </div>
               </div>
-              <div class="qr-field"><label for="qrMargin">Margen <b id="qrMarginVal">12</b></label>
+              <div class="qr-field"><label for="qrMargin">Margen de seguridad <b id="qrMarginVal">12</b></label>
                 <div class="qr-range"><input type="range" id="qrMargin" min="0" max="40" value="12" /></div>
               </div>
             </div>

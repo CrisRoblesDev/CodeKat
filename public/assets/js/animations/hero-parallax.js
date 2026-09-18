@@ -65,19 +65,16 @@
           ghost.style.transform='translate3d(0,'+pin.toFixed(1)+'px,0)';
           gr=ghost.getBoundingClientRect();
         }
-        // Detección de solape: en desktop atenúa los textos que pisan al fantasma;
-        // en móvil solo se mide (sin fundidos) para no generar jank, pero el split sí ocurre.
-        var isDesktop=window.innerWidth>=768;
+        // Detección de solape: los textos/botones que pisa el fantasma se atenúan
+        // y el split CODE/KAT ocurre en cualquier viewport (desktop y móvil).
         if(gr){
           for(var k=0;k<hxEls.length;k++){
             var er=hxEls[k].getBoundingClientRect();
             if(er.bottom>maxB){maxB=er.bottom;}
-            if(isDesktop){
-              var hit=(sc>40&&ghostOp>0.5&&er.top<gr.bottom+6&&er.bottom>gr.top-6&&er.left<gr.right&&er.right>gr.left);
-              hxEls[k]._tgt=hit?0.04:1;
-            }
+            var hit=(sc>40&&ghostOp>0.5&&er.top<gr.bottom+6&&er.bottom>gr.top-6&&er.left<gr.right&&er.right>gr.left);
+            hxEls[k]._tgt=hit?0.04:1;
           }
-          if(isDesktop&&!hxRaf){hxRaf=requestAnimationFrame(hxSettle);}
+          if(!hxRaf){hxRaf=requestAnimationFrame(hxSettle);}
         }
         // split en el mismo punto: pasado el último botón, quieto y en horizontal
         var q=0;

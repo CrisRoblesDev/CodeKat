@@ -8,9 +8,18 @@
     type: "url", text: "https://codekat.store",
     ssid: "", wifiPass: "", wifiEnc: "WPA",
     ecc: "M", dotColor: "#8b5cf6", bgColor: "#ffffff",
-    gradient: true, gradColor: "#f5a524",
-    dots: "rounded", corners: "extra-rounded",
+    gradient: true, gradType: "linear", gradColor: "#f5a524",
+    dots: "rounded", corners: "extra-rounded", cornersDot: "dot",
     logo: null, frame: "card", size: 1024, margin: 12,
+  };
+
+  const PRESETS = {
+    codekat: { dotColor: "#8b5cf6", bgColor: "#ffffff", gradient: true, gradType: "linear", gradColor: "#f5a524", dots: "rounded", corners: "extra-rounded", cornersDot: "dot" },
+    ocean:   { dotColor: "#0ea5e9", bgColor: "#ffffff", gradient: true, gradType: "linear", gradColor: "#6366f1", dots: "extra-rounded", corners: "extra-rounded", cornersDot: "dot" },
+    sunset:  { dotColor: "#f43f5e", bgColor: "#ffffff", gradient: true, gradType: "radial", gradColor: "#f59e0b", dots: "dots", corners: "dot", cornersDot: "dot" },
+    selva:   { dotColor: "#16a34a", bgColor: "#ffffff", gradient: true, gradType: "linear", gradColor: "#84cc16", dots: "classy-rounded", corners: "extra-rounded", cornersDot: "square" },
+    mono:    { dotColor: "#111111", bgColor: "#ffffff", gradient: false, gradType: "linear", gradColor: "#6b7280", dots: "square", corners: "square", cornersDot: "square" },
+    vino:    { dotColor: "#7c2d12", bgColor: "#ffffff", gradient: true, gradType: "linear", gradColor: "#db2777", dots: "classy", corners: "extra-rounded", cornersDot: "dot" },
   };
 
   let qr = null, timer = null;
@@ -46,19 +55,21 @@
 
   function apply() {
     if (!ensureQr()) return;
-    const dotsType = { square: "square", dots: "dots", rounded: "rounded", "extra-rounded": "extra-rounded" }[state.dots] || "rounded";
-    const cornerSq = { square: "square", rounded: "rounded", "extra-rounded": "extra-rounded" }[state.corners] || "extra-rounded";
+    const dotsType = { square: "square", dots: "dots", rounded: "rounded", "extra-rounded": "extra-rounded", "classy": "classy", "classy-rounded": "classy-rounded" }[state.dots] || "rounded";
+    const cornerSq = { square: "square", dot: "dot", "extra-rounded": "extra-rounded" }[state.corners] || "extra-rounded";
+    const cornerDt = { dot: "dot", square: "square" }[state.cornersDot] || "dot";
     try {
       qr.update({
       data: payload(),
+      margin: state.margin,
       image: state.logo || undefined,
       dotsOptions: {
         type: dotsType,
         color: state.dotColor,
-        ...(state.gradient ? { gradient: { type: "linear", rotation: 45, colorStops: [{ offset: 0, color: state.dotColor }, { offset: 1, color: state.gradColor }] } } : {}),
+        ...(state.gradient ? { gradient: { type: state.gradType, rotation: 45, colorStops: [{ offset: 0, color: state.dotColor }, { offset: 1, color: state.gradColor }] } } : {}),
       },
       cornersSquareOptions: { type: cornerSq, color: state.dotColor },
-      cornersDotOptions: { type: "dot", color: state.dotColor },
+      cornersDotOptions: { type: cornerDt, color: state.dotColor },
       backgroundOptions: { color: state.bgColor },
       imageOptions: { crossOrigin: "anonymous", margin: 6, imageSize: 0.42 },
       qrOptions: { errorCorrectionLevel: state.ecc },
@@ -131,13 +142,31 @@
     });
 
     /* diseño */
+    const markOn = (sel, attr, val) => $$("#" + sel + " button").forEach(x => x.classList.toggle("on", x.dataset[attr] === val));
+    const syncUI = () => {
+      const set = (id, v) => { const el = $("#" + id); if (el) el.value = v; };
+      set("qrDot", state.dotColor); set("qrBg", state.bgColor); set("qrGrad", state.gradColor);
+      const g = $("#qrGradient"); if (g) g.checked = state.gradient;
+      markOn("qrDots", "v", state.dots); markOn("qrCorners", "v", state.corners);
+      markOn("qrCornerDots", "v", state.cornersDot); markOn("qrGradType", "g", state.gradType);
+    };
+    $$("#qrPresets button").forEach(b => b.addEventListener("click", () => {
+      Object.assign(state, PRESETS[b.dataset.p] || PRESETS.codekat);
+      $$("#qrPresets button").forEach(x => x.classList.toggle("on", x === b));
+      syncUI(); schedule(); setStatus("Tema aplicado.");
+    }));
+    $$("#qrGradType button").forEach(b => b.addEventListener("click", () => {
+      state.gradType = b.dataset.g;
+      $$("#qrGradType button").forEach(x => x.classList.toggle("on", x === b));
+      schedule();
+    }));
     const color = (id, key) => $("#" + id)?.addEventListener("input", (e) => { state[key] = e.target.value; schedule(); });
     color("qrDot", "dotColor"); color("qrBg", "bgColor"); color("qrGrad", "gradColor");
     $("#qrGradient")?.addEventListener("change", (e) => { state.gradient = e.target.checked; schedule(); });
     const opts = (sel, key) => $$("#" + sel + " button").forEach(b => b.addEventListener("click", () => {
       state[key] = b.dataset.v; $$("#" + sel + " button").forEach(x => x.classList.toggle("on", x === b)); schedule();
     }));
-    opts("qrDots", "dots"); opts("qrCorners", "corners");
+    opts("qrDots", "dots"); opts("qrCorners", "corners"); opts("qrCornerDots", "cornersDot");
     $$("#qrFrame button").forEach(b => b.addEventListener("click", () => {
       state.frame = b.dataset.v;
       $$("#qrFrame button").forEach(x => x.classList.toggle("on", x === b));
@@ -180,5 +209,25 @@
     });
   }
 
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", () => { bind(); goStep(0); }) : (bind(), goStep(0));
+  /* QR real de muestra en la landing (el SVG queda como respaldo sin conexión) */
+  function renderDemo() {
+    const slot = $("#qrDemoMini");
+    if (!slot || typeof QRCodeStyling === "undefined") return;
+    try {
+      const demo = new QRCodeStyling({
+        width: 220, height: 220, type: "svg", margin: 4,
+        data: "https://codekat.store/qr/",
+        dotsOptions: { type: "extra-rounded", color: "#8b5cf6", gradient: { type: "linear", rotation: 45, colorStops: [{ offset: 0, color: "#8b5cf6" }, { offset: 1, color: "#f5a524" }] } },
+        cornersSquareOptions: { type: "extra-rounded", color: "#8b5cf6" },
+        cornersDotOptions: { type: "dot", color: "#f5a524" },
+        backgroundOptions: { color: "#ffffff" },
+        qrOptions: { errorCorrectionLevel: "M" },
+      });
+      demo.append(slot);
+      const fb = $("#qrDemoFallback");
+      if (fb) fb.style.display = "none";
+    } catch (e) { /* queda el SVG de respaldo */ }
+  }
+
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", () => { bind(); goStep(0); renderDemo(); }) : (bind(), goStep(0), renderDemo());
 })();
