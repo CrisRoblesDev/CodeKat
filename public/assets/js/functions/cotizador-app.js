@@ -56,6 +56,23 @@
       {key:'rejilla', name:'Rejilla', icon:'fa-border-all'}
     ];
 
+    /* ═══════════════════════════════════════════════
+       DEBOUNCE & requestIdleCallback — Performance
+       ═══════════════════════════════════════════════ */
+    function debounce(fn,delay){var t=null;return function(){var a=arguments,c=this;clearTimeout(t);t=setTimeout(function(){fn.apply(c,a);},delay);};}
+    function rafOrIdle(fn){if(typeof requestIdleCallback==='function'){requestIdleCallback(fn,{timeout:2000});}else{requestAnimationFrame(fn);}}
+
+    var renderPreviewPending=false;
+    function scheduleRenderPreview(){
+      if(renderPreviewPending)return;
+      renderPreviewPending=true;
+      rafOrIdle(function(){renderPreview();renderPreviewPending=false;});
+    }
+    function renderPreviewNow(){renderPreviewPending=false;renderPreview();}
+    /* ═══════════════════════════════════════════════
+       FIN PERFORMANCE
+       ═══════════════════════════════════════════════ */
+
     var state={
       title:'Cotización',
       number:'COT-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*900)+100),
@@ -79,12 +96,12 @@
     function showToast(msg){var t=el('toast');el('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(showToast._t);showToast._t=setTimeout(function(){t.classList.remove('show');},2200);}
     function findItem(id){for(var i=0;i<state.items.length;i++){if(state.items[i].id==id)return state.items[i];}return null;}
     function dateFmt(d){try{return new Date(d+'T00:00:00').toLocaleDateString('es-CL');}catch(e){return d;}}
-    function getFileName(ext){
-      var name=(el('fileName')?el('fileName').value.trim():'')||state.number;
-      name=name.replace(/[\\/:*?"<>|]/g,'').trim();
-      if(!name)name=state.number;
-      return name+'.'+ext;
-    }
+     function getFileName(ext){
+       var name=(el('fileName')?el('fileName').value.trim():'')||state.number;
+       name=name.replace(/[\\/:*?"<>|]/g,'').trim();
+       if(!name)name=state.number;
+       return name+'-'+state.design+'.'+ext;
+     }
 
     /* WIZARD NAV */
     var currentStep=0,navBtns=[];
@@ -114,7 +131,7 @@
       moveIndicator();
       try{navBtns[n].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}catch(e){}
       updateFooter();
-      if(STEPS[n].key==='preview'){renderPreview();}
+      if(STEPS[n].key==='preview'){renderPreviewNow();}
       if(STEPS[n].key==='descarga'){renderTotals();}
       if(STEPS[n].key==='diseno'){renderDesignThumbs();}
       window.scrollTo({top:0,behavior:'smooth'});
@@ -435,41 +452,43 @@
       document.body.appendChild(a);a.click();document.body.removeChild(a);
       URL.revokeObjectURL(url);return true;
     }
-    function buildText(){
-      var t=totals();var s=state.sender;var cl=state.client;var L=[];
-      L.push('======================================');
-      L.push('  '+state.title.toUpperCase());L.push('  '+(s.name||''));
-      L.push('======================================');
-      L.push('N° '+state.number+'   Fecha: '+dateFmt(state.date)+'   Válida por '+state.validDays+' días');
-      L.push('');L.push('EMITIDO POR');L.push('Nombre: '+(s.name||'—'));
-      if(s.tax)L.push('ID: '+s.tax);if(s.email)L.push('Correo: '+s.email);
-      if(s.phone)L.push('Teléfono: '+s.phone);if(s.web)L.push('Web/Dirección: '+s.web);
-      L.push('');L.push('CLIENTE');L.push('Nombre: '+(cl.name||'—'));
-      if(cl.company)L.push('Empresa: '+cl.company);if(cl.email)L.push('Correo: '+cl.email);
-      if(cl.phone)L.push('Teléfono: '+cl.phone);
-      L.push('');L.push('DETALLE');
-      state.items.forEach(function(it){L.push('• '+it.name+(it.description?' ('+it.description+')':'')+' x'+it.qty+' @ '+fmt(it.price)+' = '+fmt(it.qty*it.price));});
-      L.push('');L.push('Subtotal: '+fmt(t.sub));
-      L.push('Descuento ('+state.discount+'%): -'+fmt(t.disc));
-      L.push('Impuesto ('+state.tax+'%): '+fmt(t.tax));
-      L.push('TOTAL: '+fmt(t.total));
-      if(state.notes){L.push('');L.push('NOTAS: '+state.notes);}
-      return L.join('\n');
-    }
-    function buildCSV(){
-      var t=totals();var s=state.sender;var cl=state.client;var rows=[];
-      rows.push(['Cotización',state.number]);rows.push(['Título',state.title]);rows.push(['Fecha',dateFmt(state.date)]);rows.push(['Válida por',state.validDays+' días']);rows.push([]);
-      rows.push(['Emisor',s.name||'']);rows.push(['Emisor ID',s.tax||'']);rows.push(['Emisor correo',s.email||'']);rows.push(['Emisor teléfono',s.phone||'']);rows.push([]);
-      rows.push(['Cliente',cl.name||'']);rows.push(['Cliente empresa',cl.company||'']);rows.push(['Cliente correo',cl.email||'']);rows.push(['Cliente teléfono',cl.phone||'']);rows.push([]);
-      rows.push(['Concepto','Descripción','Cantidad','Precio unitario','Total']);
-      state.items.forEach(function(it){rows.push([it.name,it.description,it.qty,it.price,it.qty*it.price]);});
-      rows.push([]);
-      rows.push(['Subtotal','','','',t.sub]);rows.push(['Descuento '+state.discount+'%','','','',-t.disc]);rows.push(['Impuesto '+state.tax+'%','','','',t.tax]);rows.push(['TOTAL','','','',t.total]);
-      return '\uFEFF'+rows.map(function(r){return r.map(function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
-    }
-    el('btnTXT').addEventListener('click',function(){if(download(getFileName('txt'),buildText(),'text/plain;charset=utf-8'))showToast('TXT descargado');});
-    el('btnExcel').addEventListener('click',function(){if(download(getFileName('csv'),buildCSV(),'text/csv;charset=utf-8'))showToast('Excel (CSV) descargado');});
-    el('btnPrint').addEventListener('click',function(){renderPreview();window.print();});
+     function buildText(){
+       var t=totals();var s=state.sender;var cl=state.client;var L=[];
+       L.push('======================================');
+       L.push('  '+state.title.toUpperCase()+' — '+state.design.toUpperCase());L.push('  '+(s.name||''));
+       L.push('======================================');
+       L.push('N° '+state.number+'   Fecha: '+dateFmt(state.date)+'   Válida por '+state.validDays+' días');
+       L.push('Diseño: '+state.design+' | Colores: primario '+state.colors.primary+' | secundario '+state.colors.secondary+' | acento '+state.colors.accent);
+       L.push('Textura: '+state.texture);
+       L.push('');L.push('EMITIDO POR');L.push('Nombre: '+(s.name||'—'));
+       if(s.tax)L.push('ID: '+s.tax);if(s.email)L.push('Correo: '+s.email);
+       if(s.phone)L.push('Teléfono: '+s.phone);if(s.web)L.push('Web/Dirección: '+s.web);
+       L.push('');L.push('CLIENTE');L.push('Nombre: '+(cl.name||'—'));
+       if(cl.company)L.push('Empresa: '+cl.company);if(cl.email)L.push('Correo: '+cl.email);
+       if(cl.phone)L.push('Teléfono: '+cl.phone);
+       L.push('');L.push('DETALLE');
+       state.items.forEach(function(it){L.push('• '+it.name+(it.description?' ('+it.description+')':'')+' x'+it.qty+' @ '+fmt(it.price)+' = '+fmt(it.qty*it.price));});
+       L.push('');L.push('Subtotal: '+fmt(t.sub));
+       L.push('Descuento ('+state.discount+'%): -'+fmt(t.disc));
+       L.push('Impuesto ('+state.tax+'%): '+fmt(t.tax));
+       L.push('TOTAL: '+fmt(t.total));
+       if(state.notes){L.push('');L.push('NOTAS: '+state.notes);}
+       return L.join('\n');
+     }
+     function buildCSV(){
+       var t=totals();var s=state.sender;var cl=state.client;var rows=[];
+       rows.push(['Cotización',state.number]);rows.push(['Título',state.title]);rows.push(['Fecha',dateFmt(state.date)]);rows.push(['Válida por',state.validDays+' días']);rows.push(['Diseño',state.design]);rows.push(['Color primario',state.colors.primary]);rows.push(['Color secundario',state.colors.secondary]);rows.push(['Color acento',state.colors.accent]);rows.push(['Textura',state.texture]);rows.push([]);
+       rows.push(['Emisor',s.name||'']);rows.push(['Emisor ID',s.tax||'']);rows.push(['Emisor correo',s.email||'']);rows.push(['Emisor teléfono',s.phone||'']);rows.push([]);
+       rows.push(['Cliente',cl.name||'']);rows.push(['Cliente empresa',cl.company||'']);rows.push(['Cliente correo',cl.email||'']);rows.push(['Cliente teléfono',cl.phone||'']);rows.push([]);
+       rows.push(['Concepto','Descripción','Cantidad','Precio unitario','Total']);
+       state.items.forEach(function(it){rows.push([it.name,it.description,it.qty,it.price,it.qty*it.price]);});
+       rows.push([]);
+       rows.push(['Subtotal','','','',t.sub]);rows.push(['Descuento '+state.discount+'%','','','',-t.disc]);rows.push(['Impuesto '+state.tax+'%','','','',t.tax]);rows.push(['TOTAL','','','',t.total]);
+       return '\uFEFF'+rows.map(function(r){return r.map(function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
+     }
+     el('btnTXT').addEventListener('click',function(){if(download(getFileName('txt'),buildText(),'text/plain;charset=utf-8'))showToast('TXT descargado con diseño');});
+     el('btnExcel').addEventListener('click',function(){if(download(getFileName('csv'),buildCSV(),'text/csv;charset=utf-8'))showToast('Excel (CSV) descargado con diseño');});
+     el('btnPrint').addEventListener('click',function(){renderPreviewNow();window.print();});
     el('btnEmail').addEventListener('click',function(){
       var to=state.client.email||state.sender.email||'';
       var subject=encodeURIComponent(state.title+' '+state.number+' — '+(state.sender.name||''));
@@ -573,45 +592,50 @@
         doc.setFont(undefined,'normal');doc.setTextColor(110,110,120);
         doc.text(noteLines,M,y);y+=noteLines.length*12+10;
       }
-      /* Pie con numeración en todas las páginas */
-      var pages=doc.getNumberOfPages();
-      for(var pg=1;pg<=pages;pg++){
-        doc.setPage(pg);
-        doc.setFontSize(8);doc.setTextColor(150,150,160);doc.setFont(undefined,'normal');
-        doc.text((s.name||'Cotización')+' · '+(s.email||'')+' '+(s.phone||''),M,PH-30);
-        doc.text('Página '+pg+' de '+pages,PW-M,PH-30,{align:'right'});
-      }
-      doc.save(getFileName('pdf'));showToast('PDF descargado');
+       /* Agregar línea de diseño al encabezado */
+       doc.setFontSize(8);doc.setTextColor(120,120,130);doc.setFont(undefined,'normal');
+       doc.text('Diseño: '+state.design.toUpperCase(),M,PH-55,{align:'left'});
+       doc.text('Colores: '+c.primary+' / '+c.secondary+' / '+c.accent,M,PH-45,{align:'left'});
+       doc.text('Textura: '+state.texture,M,PH-35,{align:'left'});
+       /* Pie con numeración en todas las páginas */
+       var pages=doc.getNumberOfPages();
+       for(var pg=1;pg<=pages;pg++){
+         doc.setPage(pg);
+         doc.setFontSize(8);doc.setTextColor(150,150,160);doc.setFont(undefined,'normal');
+         doc.text((s.name||'Cotización')+' · '+(s.email||'')+' '+(s.phone||''),M,PH-30);
+         doc.text('Página '+pg+' de '+pages,PW-M,PH-30,{align:'right'});
+       }
+       doc.save(getFileName('pdf'));showToast('PDF descargado — diseño: '+state.design);
     });
 
     ['senderName','senderTax','senderEmail','senderPhone','senderWeb'].forEach(function(id){
       var k=id.replace('sender','').toLowerCase();
-      el(id).addEventListener('input',function(e){state.sender[k]=e.target.value;renderPreview();});
+      el(id).addEventListener('input',function(e){state.sender[k]=e.target.value;scheduleRenderPreview();});
     });
     ['clientName','clientCompany','clientEmail','clientPhone'].forEach(function(id){
       var k=id.replace('client','').toLowerCase();
-      el(id).addEventListener('input',function(e){state.client[k]=e.target.value;renderPreview();});
+      el(id).addEventListener('input',function(e){state.client[k]=e.target.value;scheduleRenderPreview();});
     });
-    el('quoteTitle').addEventListener('input',function(e){state.title=e.target.value;renderPreview();});
-    el('quoteNumber').addEventListener('input',function(e){state.number=e.target.value;renderPreview();});
-    el('quoteDate').addEventListener('input',function(e){state.date=e.target.value;renderPreview();});
-    el('validDays').addEventListener('input',function(e){state.validDays=parseInt(e.target.value)||0;renderPreview();});
-    el('currency').addEventListener('change',function(e){state.currency=e.target.value;renderItems();renderTotals();renderPreview();});
-    el('quoteNotes').addEventListener('input',function(e){state.notes=e.target.value;renderPreview();});
-    el('discountInput').addEventListener('input',function(e){state.discount=Math.max(0,Math.min(100,parseFloat(e.target.value)||0));renderTotals();renderPreview();});
-    el('taxInput').addEventListener('input',function(e){state.tax=Math.max(0,Math.min(100,parseFloat(e.target.value)||0));renderTotals();renderPreview();});
+    el('quoteTitle').addEventListener('input',function(e){state.title=e.target.value;scheduleRenderPreview();});
+    el('quoteNumber').addEventListener('input',function(e){state.number=e.target.value;scheduleRenderPreview();});
+    el('quoteDate').addEventListener('input',function(e){state.date=e.target.value;scheduleRenderPreview();});
+    el('validDays').addEventListener('input',function(e){state.validDays=parseInt(e.target.value)||0;scheduleRenderPreview();});
+    el('currency').addEventListener('change',function(e){state.currency=e.target.value;renderItems();renderTotals();scheduleRenderPreview();});
+    el('quoteNotes').addEventListener('input',function(e){state.notes=e.target.value;scheduleRenderPreview();});
+    el('discountInput').addEventListener('input',function(e){state.discount=Math.max(0,Math.min(100,parseFloat(e.target.value)||0));renderTotals();scheduleRenderPreview();});
+    el('taxInput').addEventListener('input',function(e){state.tax=Math.max(0,Math.min(100,parseFloat(e.target.value)||0));renderTotals();scheduleRenderPreview();});
     ['Primary','Secondary','Accent'].forEach(function(s){
-      el('color'+s).addEventListener('input',function(e){state.colors[s.toLowerCase()]=e.target.value;selectedPalette='';renderPalettes();renderDesignThumbs();renderPreview();});
+      el('color'+s).addEventListener('input',function(e){state.colors[s.toLowerCase()]=e.target.value;selectedPalette='';renderPalettes();renderDesignThumbs();scheduleRenderPreview();});
     });
     el('logoInput').addEventListener('change',function(e){
       var f=e.target.files[0];if(!f)return;
       var r=new FileReader();
-      r.onload=function(){state.logo=r.result;el('logoThumb').innerHTML='<img src="'+state.logo+'" alt="logo" />';renderPreview();showToast('Logo cargado');};
+      r.onload=function(){state.logo=r.result;el('logoThumb').innerHTML='<img src="'+state.logo+'" alt="logo" />';scheduleRenderPreview();showToast('Logo cargado');};
       r.readAsDataURL(f);
     });
     el('removeLogo').addEventListener('click',function(){
       state.logo=null;el('logoThumb').innerHTML='<i class="fa-regular fa-image"></i>';
-      el('logoInput').value='';renderPreview();showToast('Logo quitado');
+      el('logoInput').value='';scheduleRenderPreview();showToast('Logo quitado');
     });
 
     var burger=el('burger'),navMenu=el('navMenu'),menuBack=el('menuBack');
@@ -655,9 +679,21 @@
     el('quoteNumber').value=state.number;
     el('quoteDate').value=state.date;
     buildNav();renderPalettes();renderTextures();renderDesignThumbs();drawLogo();
-    renderItems();renderTotals();renderPreview();updateFooter();positionWizardFooter();
-    /* Pausa de auroras con pestaña oculta (ahorro GPU, evita parpadeo al volver) */
-    document.addEventListener('visibilitychange',function(){document.body.classList.toggle('cotizador-paused',document.hidden);});
-    setTimeout(moveIndicator,50);
-    window.addEventListener('load',function(){moveIndicator();positionWizardFooter();});
-  })();
+    renderItems();renderTotals();renderPreviewNow();updateFooter();positionWizardFooter();
+  /* Pausa de auroras con pestaña oculta (ahorro GPU, evita parpadeo al volver) */
+  document.addEventListener('visibilitychange',function(){
+    document.documentElement.classList.toggle('tabs-hidden',document.hidden);
+    document.body.classList.toggle('cotizador-paused',document.hidden);
+  });
+  /* Aplicar paused state inicial si la pestaña está oculta */
+  if(document.hidden)document.body.classList.add('cotizador-paused');
+  /* Loader: ocultar cuando todo esté listo */
+  window.addEventListener('load',function(){
+    setTimeout(function(){
+      var l=document.getElementById('pageLoader');
+      if(l)l.classList.add('hidden');
+    },300);
+  });
+  setTimeout(moveIndicator,50);
+  window.addEventListener('load',function(){moveIndicator();positionWizardFooter();});
+})();

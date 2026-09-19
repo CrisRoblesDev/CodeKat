@@ -10,12 +10,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   fontHref="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
   footerAccent="amber"
   bgVariant="aurora"
-  css={["/assets/css/pages/cotizador.css?v=1"]}
+  withLoader
+  css={["/assets/css/pages/cotizador.css?v=2"]}
   scripts={[
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
-    "/assets/js/functions/cotizador-app.js?v=1",
-    "/assets/js/functions/reveal.js?v=1",
+    "/assets/js/functions/cotizador-app.js?v=2",
+    "/assets/js/functions/reveal.js?v=2",
   ]}
 >
   <Fragment slot="pre-main">
@@ -242,5 +243,38 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
 
     <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+  </Fragment>
+  <Fragment slot="after-footer">
+    <script is:inline>
+      /* Prevención de FOUC: aplicar tema antes de renderizar */
+      (function(){
+        try{
+          var t=localStorage.getItem('codekat-theme')||'dark';
+          if(t==='light'){document.documentElement.setAttribute('data-theme','light');}
+          else{document.documentElement.removeAttribute('data-theme');}
+        }catch(e){}
+        /* Ocultar body hasta que JS esté listo */
+        document.body.classList.add('theme-loading');
+        requestAnimationFrame(function(){document.body.classList.remove('theme-loading');});
+      })();
+      /* Pausar animaciones cuando la pestaña está oculta */
+      document.addEventListener('visibilitychange',function(){
+        document.documentElement.classList.toggle('tabs-hidden',document.hidden);
+      });
+    </script>
+    <script is:inline>
+      /* Loader: ocultar cuando la app esté lista */
+      window.addEventListener('load',function(){
+        setTimeout(function(){
+          var l=document.getElementById('pageLoader');
+          if(l)l.classList.add('hidden');
+        },600);
+      });
+      /* Si JS falla, mostrar contenido igual */
+      setTimeout(function(){
+        var l=document.getElementById('pageLoader');
+        if(l&&!l.classList.contains('hidden'))l.classList.add('hidden');
+      },4000);
+    </script>
   </Fragment>
 </BaseLayout>

@@ -59,7 +59,54 @@ const orgLd = {
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style is:inline>
+      /* ═══════════════════════════════════════════════
+         CRITICAL CSS — Prevenir FOUC y parpadeo
+         ═══════════════════════════════════════════════ */
+      html{opacity:0;transition:opacity .2s ease;}
+      html.theme-ready{opacity:1;}
+      html.theme-switching{transition:none!important;}
+      html.theme-switching *,html.theme-switching *::before,html.theme-switching *::after{transition:none!important;}
+      body{opacity:0;transition:opacity .2s ease;}
+      body.theme-ready{opacity:1;}
+      #pageLoader{position:fixed;inset:0;z-index:9999;background:var(--bg,#08080D);display:grid;place-items:center;overflow:hidden;transition:opacity .6s var(--ease),visibility .6s var(--ease),filter .6s var(--ease);filter:blur(0) scale(1);}
+      #pageLoader.hidden{opacity:0;visibility:hidden;pointer-events:none;filter:blur(18px) scale(1.04);transform:scale(1.04);}
+      .pl-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1.4rem;}
+      .pl-ring{position:relative;width:110px;height:110px;display:grid;place-items:center;}
+      .pl-ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(245,165,36,.15);}
+      .pl-ring::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid transparent;border-top-color:var(--amb-soft,#D4880A);border-right-color:var(--amb-light,#FFD080);animation:spin 1.8s cubic-bezier(.4,0,.2,1) infinite;box-shadow:0 0 18px var(--amb-glow,rgba(245,165,36,.3));}
+      .pl-logo{width:72px;height:72px;border-radius:18px;object-fit:contain;background:var(--surface,#16161F);padding:8px;border:1px solid var(--glass-border,rgba(245,165,36,.2));animation:loaderPulse 1.4s ease-in-out infinite;}
+      @keyframes loaderPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+      .pl-brand{font-family:var(--font-display,'Geist',sans-serif);font-weight:700;font-size:1.6rem;color:#fff;letter-spacing:-.02em;}
+      .pl-brand span{color:var(--amb-light,#FFD080);}
+      .pl-sub{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted,#9A96A8);}
+      .pl-bar{width:160px;height:3px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;}
+      .pl-bar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--amb-soft,#D4880A),var(--amb-light,#FFD080));animation:plFill 3.2s ease-in-out forwards;box-shadow:0 0 10px var(--amb-glow,rgba(245,165,36,.3));}
+      @keyframes plFill{to{width:100%;}}
+      @keyframes spin{to{transform:rotate(360deg);}}
+      /* ═══════════════════════════════════════════════
+         FIN CRITICAL CSS
+         ═══════════════════════════════════════════════ */
+    </style>
+    <script is:inline>
+      (function(){
+        try{var t=localStorage.getItem('codekat-theme')||'dark';
+        if(t==='light'){document.documentElement.setAttribute('data-theme','light');}
+        else{document.documentElement.removeAttribute('data-theme');}}catch(e){}
+        requestAnimationFrame(function(){
+          document.documentElement.classList.add('theme-ready');
+          document.body.classList.add('theme-ready');
+        });
+        document.addEventListener('visibilitychange',function(){
+          document.documentElement.classList.toggle('tabs-hidden',document.hidden);
+        });
+      })();
+      window.addEventListener('load',function(){
+        setTimeout(function(){var l=document.getElementById('pageLoader');if(l)l.classList.add('hidden');},300);
+        setTimeout(function(){var l=document.getElementById('pageLoader');if(l&&!l.classList.contains('hidden'))l.classList.add('hidden');},4000);
+      });
+    </script>
   <title>{title}</title>
   {description && <meta name="description" content={description} />}
   <meta name="author" content="CodeKat" />
