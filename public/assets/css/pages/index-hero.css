@@ -77,6 +77,14 @@
     .hero-ctas .btn{transition:transform .3s ease,box-shadow .3s ease;}
     .hero-ctas .btn:hover{transform:scale(1.05);}
     .hero-ctas .btn-primary:hover{box-shadow:0 12px 40px rgba(139,92,246,.45);}
+    /* ── Ornamento divisorio: cierre del hero sin corte brusco ── */
+    .hero-divider{position:relative;z-index:1;display:flex;align-items:center;gap:14px;
+      justify-content:center;max-width:560px;margin:0 auto;padding:.5rem 1.5rem 1.75rem;}
+    .hero-divider span{height:1px;flex:1;}
+    .hero-divider span:first-child{background:linear-gradient(90deg,transparent,rgba(167,139,250,.55));}
+    .hero-divider span:last-child{background:linear-gradient(90deg,rgba(167,139,250,.55),transparent);}
+    .hero-divider i{width:9px;height:9px;transform:rotate(45deg);flex-shrink:0;
+      background:linear-gradient(135deg,#A78BFA,#F5A524);box-shadow:0 0 14px rgba(167,139,250,.85);}
     html[data-theme="light"] #heroShader{opacity:.4;}
     html[data-theme="light"] .hero-title,html[data-theme="light"] .hero-subtitle{text-shadow:none;}
 

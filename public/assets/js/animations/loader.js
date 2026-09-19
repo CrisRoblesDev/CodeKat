@@ -1,9 +1,9 @@
 /* CodeKat · assets/js/animations/loader.js — extraído de index.html */
-    // page loader rápido: muestra máx ~700ms y nunca bloquea el scroll más de lo necesario
+    // page loader: la barrita se completa en ~3s y ahí muestra la página
     (function(){
       var pl=document.getElementById('pageLoader');
       if(!pl){return;}
-      var min=700;
+      var min=3000;
       var start=Date.now();
       var done=false;
       function hide(){
