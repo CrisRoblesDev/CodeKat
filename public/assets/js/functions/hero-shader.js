@@ -133,17 +133,21 @@ void main(){gl_Position=position;}`;
   let lastCoords = [0, 0];
   const host = hero || cv.parentElement;
 
+  function pxScale() {
+    const qf = [1, 0.75, 0.6][qLevel] || 0.6;
+    return Math.min(1, Math.max(1, 0.5 * (window.devicePixelRatio || 1))) * qf;
+  }
   function toGL(x, y) {
     const r = cv.getBoundingClientRect();
-    const dpr = Math.max(1, 0.5 * (window.devicePixelRatio || 1));
-    return [x * dpr, cv.height - y * dpr];
+    const s = pxScale();
+    return [x * s, cv.height - y * s];
   }
 
   function sizeCanvas() {
     const r = (hero || cv.parentElement).getBoundingClientRect();
     if (!r.width || !r.height) return false;
-    const dpr = Math.max(1, 0.5 * (window.devicePixelRatio || 1));
-    const w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+    const s = pxScale();
+    const w = Math.round(r.width * s), h = Math.round(r.height * s);
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     gl.viewport(0, 0, cv.width, cv.height);
     return true;
@@ -172,7 +176,7 @@ void main(){gl_Position=position;}`;
     }, { passive: true });
   }
 
-  let raf = 0, running = false, visible = true, t0 = 0;
+  let raf = 0, running = false, visible = true, t0 = 0, lastT = 0, emaDt = 16, qLevel = 0;
   function render(now) {
     const coords = pointers.size > 0 ? Array.from(pointers.values()).flat() : [0, 0];
     const first = pointers.size > 0 ? pointers.values().next().value : lastCoords;
@@ -195,6 +199,15 @@ void main(){gl_Position=position;}`;
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
   function frame(now) {
+    if (lastT) {
+      emaDt = emaDt * 0.95 + (now - lastT) * 0.05;
+      if (emaDt > 34 && qLevel < 2) {
+        qLevel++;
+        emaDt = 16;
+        sizeCanvas();
+      }
+    }
+    lastT = now;
     render(now);
     if (running) raf = requestAnimationFrame(frame);
   }
