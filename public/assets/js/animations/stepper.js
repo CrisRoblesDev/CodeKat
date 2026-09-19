@@ -43,4 +43,13 @@
       if(nx){nx.addEventListener('click',function(){show(cur+1);});}
       // avance 100% manual: el usuario elige con pills o flechas
       // encuadre nativo por CSS (scroll-snap): fluido en móvil y desktop, sin pelear con el scroll
+      // loops de los mocks pausados fuera de vista (ahorro GPU)
+      try{
+        var st=document.getElementById('stStepper');
+        if(st&&'IntersectionObserver' in window){
+          new IntersectionObserver(function(es){
+            st.classList.toggle('loops-off',!es[0].isIntersecting);
+          },{threshold:0.02}).observe(st);
+        }
+      }catch(e){}
     })();

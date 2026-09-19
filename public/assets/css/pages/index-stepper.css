@@ -146,6 +146,8 @@
     .st-arrow:hover{border-color:var(--purple);color:var(--purple-light);}
     .st-count{text-align:center;color:var(--text-dim);font-size:.76rem;letter-spacing:.16em;margin-top:.2rem;}
     .st-count b{color:var(--purple-light);}
+    /* Perf: mocks congelados fuera de vista */
+    .loops-off .st-stage *{animation-play-state:paused;}
     .st-sep{display:none;}
     .st-pill.on::after{content:'';position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);width:28px;height:4px;border-radius:99px;background:linear-gradient(90deg,var(--purple-soft),var(--purple-light));box-shadow:0 0 12px var(--purple-glow);animation:stInd .45s var(--ease-spring);}
     @keyframes stInd{from{width:0;opacity:0;}to{width:28px;opacity:1;}}

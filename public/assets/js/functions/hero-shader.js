@@ -240,6 +240,7 @@ void main(){gl_Position=position;}`;
   if (hero && "IntersectionObserver" in window) {
     new IntersectionObserver((es) => {
       visible = es[0].isIntersecting;
+      hero.classList.toggle("hero-off", !visible);
       if (visible) start();
     }, { threshold: 0.02 }).observe(hero);
   }
