@@ -9,6 +9,8 @@
   const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Paleta CodeKat: rayos violeta/magenta/ámbar, fondo profundo violeta.
+  // En móvil se usa la variante lite (menos octavas e iteraciones: ~mitad de costo).
+  const LITE = window.innerWidth < 960;
   const FRAG = `#version 300 es
 /*********
 * made by Matthias Hurrle (@atzedent)
@@ -48,7 +50,7 @@ float noise(in vec2 p) {
 }
 float fbm(vec2 p) {
   float t=.0, a=1.; mat2 m=mat2(1.,-.5,.2,1.2);
-  for (int i=0; i<5; i++) {
+  for (int i=0; i<l_OCT; i++) {
     t+=a*noise(p);
     p*=2.*m;
     a*=.5;
@@ -70,7 +72,7 @@ void main(void) {
 	vec3 col=vec3(0);
 	float bg=clouds(vec2(st.x+T*.5,-st.y));
 	uv*=1.-.3*(sin(T*.2)*.5+.5);
-	for (float i=1.; i<12.; i++) {
+	for (float i=1.; i<__ITER__.; i++) {
 		uv+=.1*cos(i*vec2(.1+.01*i, .8)+i*i+u_fast*.5+.1*uv.x);
 		vec2 p=uv;
 		float d=length(p);
@@ -105,7 +107,8 @@ void main(){gl_Position=position;}`;
   let prog = null;
   try {
     const vs = compile(gl.VERTEX_SHADER, VERT);
-    const fs = compile(gl.FRAGMENT_SHADER, FRAG);
+    const fragSrc = FRAG.replace("l_OCT", LITE ? "3" : "5").replace("__ITER__", LITE ? "8" : "12");
+    const fs = compile(gl.FRAGMENT_SHADER, fragSrc);
     prog = gl.createProgram();
     gl.attachShader(prog, vs);
     gl.attachShader(prog, fs);
@@ -198,7 +201,17 @@ void main(){gl_Position=position;}`;
     gl.uniform2fv(uPtrs, flat);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
+  let lastAmbient = 0;
   function frame(now) {
+    // Fuera del hero: 1 frame cada 600ms (deriva sutil, costo ~0)
+    if (!visible) {
+      if (now - lastAmbient < 600) { if (running) raf = requestAnimationFrame(frame); return; }
+      lastAmbient = now;
+      lastT = 0;
+      render(now);
+      if (running) raf = requestAnimationFrame(frame);
+      return;
+    }
     if (lastT) {
       emaDt = emaDt * 0.95 + (now - lastT) * 0.05;
       if (emaDt > 34 && qLevel < 2) {
@@ -212,7 +225,7 @@ void main(){gl_Position=position;}`;
     if (running) raf = requestAnimationFrame(frame);
   }
   function start() {
-    if (running || !visible) return;
+    if (running) return;
     if (reduced) { if (sizeCanvas()) render(t0); return; }
     if (!sizeCanvas()) return;
     running = true;
@@ -227,7 +240,7 @@ void main(){gl_Position=position;}`;
   if (hero && "IntersectionObserver" in window) {
     new IntersectionObserver((es) => {
       visible = es[0].isIntersecting;
-      if (visible) start(); else stop();
+      if (visible) start();
     }, { threshold: 0.02 }).observe(hero);
   }
   window.addEventListener("resize", () => { if (running) sizeCanvas(); else start(); }, { passive: true });

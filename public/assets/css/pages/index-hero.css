@@ -89,4 +89,8 @@
       background:linear-gradient(135deg,#A78BFA,#F5A524);box-shadow:0 0 14px rgba(167,139,250,.85);}
     html[data-theme="light"] #heroShader{opacity:.4;}
     html[data-theme="light"] .hero-title,html[data-theme="light"] .hero-subtitle{text-shadow:none;}
+    /* En móvil el blur del navbar baja (repaint caro sobre WebGL en scroll) */
+    @media (max-width:959px){
+      .navbar{backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);}
+    }
 
