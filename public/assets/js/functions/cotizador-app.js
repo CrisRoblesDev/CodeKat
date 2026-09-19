@@ -656,6 +656,8 @@
     el('quoteDate').value=state.date;
     buildNav();renderPalettes();renderTextures();renderDesignThumbs();drawLogo();
     renderItems();renderTotals();renderPreview();updateFooter();positionWizardFooter();
+    /* Pausa de auroras con pestaña oculta (ahorro GPU, evita parpadeo al volver) */
+    document.addEventListener('visibilitychange',function(){document.body.classList.toggle('cotizador-paused',document.hidden);});
     setTimeout(moveIndicator,50);
     window.addEventListener('load',function(){moveIndicator();positionWizardFooter();});
   })();

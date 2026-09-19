@@ -51,18 +51,27 @@
     ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:5px;} ::-webkit-scrollbar-thumb:hover{background:var(--amb-soft);}
 
     .bg-aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
-    .bg-aurora::before{content:'';position:absolute;inset:-60%;background:conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(139,92,246,.06) 80deg, transparent 160deg, rgba(167,139,250,.05) 240deg, transparent 320deg);animation:bgRotate 50s linear infinite;}
+    .bg-aurora::before{content:'';position:absolute;inset:-60%;background:conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(139,92,246,.06) 80deg, transparent 160deg, rgba(167,139,250,.05) 240deg, transparent 320deg);animation:bgRotate 50s linear infinite;will-change:transform;}
+    .bg-aurora.animated-off::before{animation:none!important;}
+    @media (prefers-reduced-motion:reduce){.bg-aurora::before,.a1,.a2,.a3{animation:none!important;}}
     @keyframes bgRotate{to{transform:rotate(360deg);}}
     .aurora{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;}
-    .a1{width:520px;height:520px;background:radial-gradient(circle,rgba(245,165,36,.5),transparent 70%);top:-14%;left:-12%;animation:aur1 16s ease-in-out infinite alternate;}
-    .a2{width:460px;height:460px;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 70%);top:30%;right:-12%;animation:aur2 20s ease-in-out infinite alternate;}
-    .a3{width:500px;height:500px;background:radial-gradient(circle,rgba(245,165,36,.4),transparent 70%);bottom:-16%;left:20%;animation:aur3 24s ease-in-out infinite alternate;}
+    .a1{width:520px;height:520px;background:radial-gradient(circle,rgba(245,165,36,.5),transparent 70%);top:-14%;left:-12%;animation:aur1 16s ease-in-out infinite;will-change:transform;}
+    .a2{width:460px;height:460px;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 70%);top:30%;right:-12%;animation:aur2 20s ease-in-out infinite;will-change:transform;}
+    .a3{width:500px;height:500px;background:radial-gradient(circle,rgba(245,165,36,.4),transparent 70%);bottom:-16%;left:20%;animation:aur3 24s ease-in-out infinite;will-change:transform;}
+    @media (prefers-reduced-motion:reduce){.a1,.a2,.a3{animation:none!important;}}
+    /* En móvil el blur gigante es el que más parpadea y más GPU cuesta */
+    @media (max-width:959px){
+      .aurora{filter:blur(60px);opacity:.3;}
+      .bg-aurora::before{animation-duration:80s;}
+    }
     @keyframes aur1{to{transform:translate(120px,80px) scale(1.15);}}
     @keyframes aur2{to{transform:translate(-100px,60px) scale(1.1);}}
     @keyframes aur3{to{transform:translate(80px,-70px) scale(1.2);}}
 
     .container{width:100%;max-width:920px;margin:0 auto;padding:0 1rem;}
-    .grad-text{background:linear-gradient(135deg,var(--amb-light),var(--amb),var(--amb-light));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:textShift 5s linear infinite;}
+    .grad-text{background:linear-gradient(135deg,var(--amb-light),var(--amb),var(--amb-light));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:textShift 5s linear infinite;will-change:background-position;}
+    @media (prefers-reduced-motion:reduce){.grad-text{animation:none!important;background-size:100% 100%;-webkit-background-clip:text;background-clip:text;color:var(--amb);}}
     @keyframes textShift{to{background-position:200% center;}}
 
     .navbar{position:sticky;top:0;z-index:100;padding:.6rem 0;background:var(--glass-bg);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);}
@@ -399,5 +408,9 @@
     .btn-email-full{grid-column:1/-1;}
     .info-text-small{font-size:.74rem;color:var(--text-dim);margin-top:.85rem;}
     .info-text-icon{color:var(--amb);}
+    /* Perf: auroras pausadas cuando el cotizador no está en vista */
+    .cotizador-paused .bg-aurora::before{animation:none!important;}
+    .cotizador-paused .a1,.cotizador-paused .a2,.cotizador-paused .a3{animation:none!important;}
+    .cotizador-paused .grad-text{animation:none!important;background-size:100% 100%;-webkit-background-clip:text;background-clip:text;color:var(--amb);}
     .modal-field-mb{margin-bottom:.7rem;}
   
