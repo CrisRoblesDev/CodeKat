@@ -40,6 +40,9 @@
       contain:layout style paint;
     }
     main{flex:1;contain:layout style paint;}
+    /* FIX botones nativos (Chrome Android pinta fondo claro por defecto) */
+    button{background:transparent;border:0;font:inherit;color:inherit;padding:0;cursor:pointer;}
+    button:disabled{cursor:not-allowed;}
     /* Contención de paneles fuera de pantalla */
     .wpanel{contain:layout style paint;content-visibility:auto;contain-intrinsic-size:0 800px;}
     .wpanel.active{content-visibility:visible;}
@@ -155,7 +158,7 @@
     .wizard-nav{position:relative;display:flex;gap:.3rem;overflow-x:auto;padding:.4rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:999px;scrollbar-width:none;}
     .wizard-nav::-webkit-scrollbar{display:none;}
     .nav-indicator{position:absolute;top:4px;bottom:4px;border-radius:999px;background:linear-gradient(135deg,var(--amb-soft),var(--amb-dark));box-shadow:0 4px 14px var(--amb-glow);transition:left .35s var(--ease),width .35s var(--ease);z-index:0;}
-    .wtab{position:relative;z-index:1;flex-shrink:0;display:flex;align-items:center;gap:.45rem;padding:.5rem .85rem;border-radius:999px;color:var(--text-muted);font-size:.8rem;font-weight:600;white-space:nowrap;transition:color .3s;}
+    .wtab{position:relative;z-index:1;flex-shrink:0;display:flex;align-items:center;gap:.45rem;padding:.5rem .85rem;border:0;border-radius:999px;background:transparent;color:var(--text-muted);font-size:.8rem;font-weight:600;white-space:nowrap;transition:color .3s;}
     .wtab i{font-size:.9rem;}
     .wtab.active{color:#fff;}
     .wtab:hover:not(.active){color:var(--white);}

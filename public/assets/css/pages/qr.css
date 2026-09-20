@@ -260,5 +260,7 @@
 }
 
 /* FIX diseño: .btn-ghost usado en qr (Atrás, tarjeta SVG) sin definición global */
+button{background:transparent;border:0;font:inherit;color:inherit;padding:0;cursor:pointer;}
+button:disabled{cursor:not-allowed;}
 .btn-ghost{background:var(--glass-bg);color:var(--white);border:1px solid var(--glass-border);}
 .btn-ghost:hover:not(:disabled){background:var(--glass-bg-strong);border-color:var(--purple);transform:translateY(-2px);}

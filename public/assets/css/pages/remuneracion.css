@@ -295,6 +295,8 @@
     /* Clase para estilo que estaba inline en remuneracion.astro */
     .btn-full-width{width:100%;}
     /* FIX diseño: base de botones, glass, gradiente, theme-toggle y reveal */
+    button{background:transparent;border:0;font:inherit;color:inherit;padding:0;cursor:pointer;}
+    button:disabled{cursor:not-allowed;}
     .btn{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:.5rem;padding:.6rem .95rem;border-radius:11px;font-weight:600;font-size:.85rem;transition:all var(--t-fast) var(--ease);white-space:nowrap;cursor:pointer;border:1px solid transparent;}
     .btn:disabled{opacity:.45;cursor:not-allowed;}
     .btn-primary{background:linear-gradient(135deg,var(--amb-soft),var(--amb-dark));color:#fff;box-shadow:0 6px 18px var(--amb-glow);}
