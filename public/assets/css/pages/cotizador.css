@@ -489,4 +489,27 @@
     .footer{contain:layout style paint;}
     .footer-cta{contain:layout style paint;}
     .footer-marquee{contain:layout style paint;}
+    /* FIX responsive móvil: nada recortado, todo visible */
+    @media (max-width:640px){
+      /* Vista previa: 1 columna y scroll horizontal en escritorio */
+      .qd-parties,.quote-preview-wrap.wide .qd-parties{grid-template-columns:1fr;}
+      .quote-preview-wrap{overflow-x:auto;}
+      .quote-preview-wrap.wide .quote-doc{min-width:540px;}
+      .quote-preview-wrap.narrow .quote-doc{min-width:0;}
+      .quote-preview-wrap .quote-doc{font-size:.82rem;}
+      /* Descarga: botones full-width apilados */
+      .actions-grid{grid-template-columns:1fr;}
+      /* Wizard footer compacto */
+      .wizard-footer{gap:.5rem;padding:.55rem .7rem;}
+      .wf-counter{font-size:.7rem;white-space:nowrap;}
+      .wf-progress{max-width:110px;}
+      .wizard-footer .btn{padding:.55rem .7rem;font-size:.78rem;}
+      /* Toast por encima del footer fijo */
+      .toast{bottom:5.5rem;max-width:calc(100vw - 2rem);white-space:normal;text-align:center;}
+      /* Modales a todo ancho seguro */
+      .fm-backdrop{padding:0 .75rem;}
+      /* WhatsApp flotante no tapa el footer del wizard */
+      .wa-float{bottom:6.2rem;}
+      .wa-float .wa-tooltip{display:none;}
+    }
   
