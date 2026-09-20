@@ -170,6 +170,18 @@
     .wizard-footer-wrap{position:fixed;bottom:12px;left:0;right:0;z-index:60;pointer-events:none;padding:0 1rem;transition:bottom .15s linear;}
     /* CAMBIO 1: pointer-events:auto para que los botones reciban clics */
     .wizard-footer{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);pointer-events:auto;}
+    /* FIX cotizador usable: el footer es fixed en desktop y móvil, reservar espacio siempre */
+    main{padding-bottom:130px;}
+    .app-intro{padding:2rem 0 1rem;text-align:center;max-width:640px;margin:0 auto;}
+    .app-intro h1{font-size:clamp(1.7rem,4.5vw,2.5rem);letter-spacing:-.02em;}
+    .app-intro p{color:var(--text-muted);font-size:.92rem;margin-top:.4rem;}
+    .btn{min-height:44px;}
+    .btn:disabled{opacity:.45;cursor:not-allowed;}
+    .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible,.btn:focus-visible,.wtab:focus-visible{outline:2px solid var(--amb);outline-offset:2px;}
+    @media (prefers-reduced-motion:reduce){
+      .wpanel.active.from-right,.wpanel.active.from-left{animation:none;}
+      .nav-indicator,.wf-progress span{transition:none;}
+    }
     .wf-center{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;}
     .wf-counter{font-size:.78rem;color:var(--text-muted);font-weight:600;}
     .wf-counter b{color:var(--white);}
