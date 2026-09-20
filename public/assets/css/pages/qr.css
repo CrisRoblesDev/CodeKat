@@ -258,3 +258,7 @@
 @media (prefers-reduced-motion: reduce) {
   .qr-view, .qr-panel, .qr-demo { transition: none !important; animation: none !important; }
 }
+
+/* FIX diseño: .btn-ghost usado en qr (Atrás, tarjeta SVG) sin definición global */
+.btn-ghost{background:var(--glass-bg);color:var(--white);border:1px solid var(--glass-border);}
+.btn-ghost:hover:not(:disabled){background:var(--glass-bg-strong);border-color:var(--purple);transform:translateY(-2px);}

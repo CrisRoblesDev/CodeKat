@@ -294,4 +294,20 @@
     @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
     /* Clase para estilo que estaba inline en remuneracion.astro */
     .btn-full-width{width:100%;}
+    /* FIX diseño: base de botones, glass, gradiente, theme-toggle y reveal */
+    .btn{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:.5rem;padding:.6rem .95rem;border-radius:11px;font-weight:600;font-size:.85rem;transition:all var(--t-fast) var(--ease);white-space:nowrap;cursor:pointer;border:1px solid transparent;}
+    .btn:disabled{opacity:.45;cursor:not-allowed;}
+    .btn-primary{background:linear-gradient(135deg,var(--amb-soft),var(--amb-dark));color:#fff;box-shadow:0 6px 18px var(--amb-glow);}
+    .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 26px var(--amb-glow);}
+    .btn-ghost{background:var(--glass-bg);color:var(--white);border-color:var(--glass-border);}
+    .btn-ghost:hover:not(:disabled){border-color:var(--amb);background:var(--glass-bg-strong);}
+    .btn-sm{padding:.4rem .7rem;font-size:.78rem;min-height:36px;}
+    .btn-glass{background:var(--glass-bg);color:var(--white);border:1px solid var(--glass-border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 4px 16px var(--shadow-color);}
+    .btn-glass:hover:not(:disabled){background:var(--glass-bg-strong);border-color:var(--amb);transform:translateY(-2px);}
+    .grad-anim{background:linear-gradient(135deg,var(--amb-soft),var(--amb-dark),var(--amb-soft));background-size:200% 200%;animation:gradShift 6s ease infinite;}
+    @keyframes gradShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+    .theme-toggle-mini{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);color:var(--amb-light);cursor:pointer;}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible,.btn:focus-visible{outline:2px solid var(--amb);outline-offset:2px;}
   
