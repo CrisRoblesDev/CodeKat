@@ -93,7 +93,6 @@
     /* Optimización de will-change: solo en elementos que realmente animan */
     .grad-text{will-change:background-position;}
     .scroll-progress{will-change:transform;}
-    .nav-indicator{will-change:left,width;}
     .wf-progress span{will-change:width;}
     .burger-lines span{will-change:transform,opacity;}
     /* Evitar repintes innarios en imágenes */
@@ -174,12 +173,12 @@
     .app-intro h1{font-size:clamp(1.6rem,4.5vw,2.4rem);}
 
     .wizard-nav-wrap{position:sticky;top:60px;z-index:60;padding:.5rem 0 .4rem;}
-    .wizard-nav{position:relative;display:flex;gap:.3rem;overflow-x:auto;padding:.4rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:999px;scrollbar-width:none;}
+    .wizard-nav{position:relative;display:flex;gap:.3rem;overflow-x:auto;padding:.4rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:999px;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding:.4rem;}
     .wizard-nav::-webkit-scrollbar{display:none;}
-    .nav-indicator{position:absolute;top:4px;bottom:4px;border-radius:999px;background:linear-gradient(135deg,var(--amb-soft),var(--amb-dark));box-shadow:0 4px 14px var(--amb-glow);transition:left .35s var(--ease),width .35s var(--ease);z-index:0;}
+    .wtab{scroll-snap-align:start;}
     .wtab{position:relative;z-index:1;flex-shrink:0;display:flex;align-items:center;gap:.45rem;padding:.5rem .85rem;border:0;border-radius:999px;background:transparent;color:var(--text-muted);font-size:.8rem;font-weight:600;white-space:nowrap;transition:color .3s;}
     .wtab i{font-size:.9rem;}
-    .wtab.active{color:#fff;}
+    .wtab.active{color:#fff;background:linear-gradient(135deg,var(--amb-soft),var(--amb-dark));box-shadow:0 4px 14px var(--amb-glow);}
     .wtab:hover:not(.active){color:var(--white);}
 
     .wpanel{display:none;}
@@ -202,7 +201,7 @@
     .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible,.btn:focus-visible,.wtab:focus-visible{outline:2px solid var(--amb);outline-offset:2px;}
     @media (prefers-reduced-motion:reduce){
       .wpanel.active.from-right,.wpanel.active.from-left{animation:none;}
-      .nav-indicator,.wf-progress span{transition:none;}
+      .wf-progress span,.wtab{transition:none;}
       .bg-aurora::before,.aurora,.grad-anim{animation:none!important;}
       .reveal{opacity:1!important;transform:none!important;}
     }
