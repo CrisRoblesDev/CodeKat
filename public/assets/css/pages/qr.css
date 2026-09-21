@@ -14,7 +14,7 @@
 
 .qr-shell {
   --qrh: calc(100dvh - 270px);
-  height: max(400px, min(600px, var(--qrh)));
+  height: clamp(min(400px, calc(100dvh - 140px)), var(--qrh), 600px);
   max-width: 560px; margin: 4px auto 10px;
   background: var(--glass-bg, rgba(23,23,31,.55));
   border: 1px solid var(--glass-border, rgba(167,139,250,.25));
@@ -264,3 +264,11 @@ button{background:transparent;border:0;font:inherit;color:inherit;padding:0;curs
 button:disabled{cursor:not-allowed;}
 .btn-ghost{background:var(--glass-bg);color:var(--white);border:1px solid var(--glass-border);}
 .btn-ghost:hover:not(:disabled){background:var(--glass-bg-strong);border-color:var(--purple);transform:translateY(-2px);}
+
+/* Pantallas bajas: intro compacta para dar aire a la shell */
+@media (max-height: 640px) {
+  .qr-page main { padding: 64px 0 0; }
+  .qr-intro p, .qr-note { display: none; }
+  .qr-intro h1 { font-size: 1.1rem; }
+  .qr-shell { --qrh: calc(100dvh - 200px); }
+}
