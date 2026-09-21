@@ -162,8 +162,11 @@
     state.step = Math.max(0, Math.min(2, n));
     $$(".qr-tabs button").forEach((b, i) => { b.classList.toggle("on", i === state.step); b.setAttribute("aria-selected", i === state.step); });
     $$(".qr-panel").forEach((p, i) => {
-      p.classList.toggle("on", i === state.step);
+      const on = i === state.step;
+      p.classList.toggle("on", on);
       p.classList.toggle("off-left", i < state.step);
+      /* Scroll interno del paso (nunca mover la página: la shell es fija) */
+      if (on) { try { p.scrollTop = 0; } catch (e) {} }
     });
     $("#stepNow").textContent = state.step + 1;
     $("#qrBar").style.width = ((state.step + 1) / 3 * 100) + "%";
@@ -171,6 +174,13 @@
 
   function bind() {
     $("#qrStart")?.addEventListener("click", () => showView("app"));
+    /* Entrada directa a la app para trabajar sin pasar por la landing:
+       /qr/#app o /qr/?app=1 — la shell mantiene la misma altura fija. */
+    try {
+      const direct = window.location.hash === "#app" ||
+        /(?:\?|&)app=1/.test(window.location.search);
+      if (direct) { showView("app"); goStep(0); }
+    } catch (e) {}
     $("#qrSample")?.addEventListener("click", () => {
       Object.assign(state, PRESETS.sunset);
       state.cardTitle = "Café Aurora";
@@ -481,4 +491,6 @@
   }
 
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", () => { bind(); goStep(0); updateMini(); renderDemo(); }) : (bind(), goStep(0), updateMini(), renderDemo());
+  /* Expuesto para el script progresivo inline de qr.astro (evita doble vista). */
+  try { window.__qrShowApp = () => showView("app"); } catch (e) {}
 })();

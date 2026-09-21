@@ -140,11 +140,9 @@
       if(STEPS[n].key==='preview'){renderPreviewNow();}
       if(STEPS[n].key==='descarga'){renderTotals();}
       if(STEPS[n].key==='diseno'){renderDesignThumbs();}
-      /* Un solo scroll de página, anclado al wizard (no al top) para no marear */
-      try{
-        var anchor=el('wizardNav');
-        if(anchor){var y=anchor.getBoundingClientRect().top+window.scrollY-70;window.scrollTo({top:y<0?0:y,behavior:'smooth'});}
-      }catch(e){}
+      /* Sin scroll de página al cambiar de paso: la shell tiene altura fija por
+         viewport y el paso hace scroll interno. Mover window aquí era lo que
+         "ajustaba la pantalla" y rompía la experiencia. */
     }
     function updateFooter(){
       setTxt('stepNow',currentStep+1);setTxt('stepTotal',STEPS.length);

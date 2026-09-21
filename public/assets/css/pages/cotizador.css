@@ -62,9 +62,10 @@
       .theme-toggle-mini{width:36px;height:36px;border-radius:10px;}
       .burger{width:40px;height:40px;border-radius:10px;}
     }
-    /* Contención de paneles fuera de pantalla */
-    .wpanel{contain:layout style paint;content-visibility:auto;contain-intrinsic-size:0 800px;}
-    .wpanel.active{content-visibility:visible;}
+    /* Contención de paneles fuera de pantalla (sin content-visibility:
+       con display:none/block el tamaño lo fija la shell; content-visibility
+       con intrinsic-size provocaba saltos de scrollbar al cambiar de paso) */
+    .wpanel{contain:layout style paint;}
     /* Contención de la barra de navegación optimizada */
     .navbar{position:sticky;top:0;z-index:100;padding:.6rem 0;background:var(--glass-bg);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border-bottom:1px solid var(--border);contain:layout style paint;will-change:transform;}
     .navbar.scrolled{border-bottom-color:var(--border);background:var(--glass-bg-strong);}
@@ -169,8 +170,7 @@
     .menu-note{margin-top:1.25rem;font-size:.78rem;color:var(--text-dim);display:flex;align-items:center;gap:.5rem;}
     .menu-note i{color:var(--amb);}
 
-    .app-intro{padding:1.5rem 0 1rem;text-align:center;}
-    .app-intro h1{font-size:clamp(1.6rem,4.5vw,2.4rem);}
+    /* (intro compacta definida junto a la shell, más abajo) */
 
     .wizard-nav-wrap{position:sticky;top:60px;z-index:60;padding:.5rem 0 .4rem;}
     .wizard-nav{position:relative;display:flex;gap:.3rem;overflow-x:auto;padding:.4rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:999px;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding:.4rem;}
@@ -191,18 +191,39 @@
     .wizard-footer-wrap{position:static;}
     .cot-foot{flex-shrink:0;border-top:1px solid var(--border);padding:.65rem .9rem;background:rgba(0,0,0,.2);}
     .cot-foot .wizard-footer{max-width:none;margin:0;background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;border-radius:0;}
-    /* Shell contenida estilo QR: alto fluido ajustado a cada pantalla, paneles con scroll interno */
-    .cot-shell{--coth:calc(100dvh - 330px);height:clamp(min(440px,calc(100dvh - 160px)),var(--coth),720px);max-width:760px;margin:.5rem auto 2rem;background:var(--glass-bg-strong);border:1px solid var(--border);border-radius:22px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 20px 60px var(--shadow-color);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
-    /* Pantallas bajas: intro compacta para dar aire a la shell */
+    /* Shell contenida estilo app: altura fija por viewport (no por contenido).
+       La misma altura en los 7 pasos → la card NO se redimensiona al cambiar
+       de paso. El contenido de cada paso hace scroll interno en .cot-panels.
+       min-height acotado con min() para que nunca desborde en pantallas bajas. */
+    .cot-shell{--cot-offset:300px;height:calc(100vh - var(--cot-offset));height:calc(100dvh - var(--cot-offset));min-height:min(430px,calc(100vh - 190px));min-height:min(430px,calc(100dvh - 190px));max-height:720px;max-width:760px;margin:.5rem auto 2rem;background:var(--glass-bg-strong);border:1px solid var(--border);border-radius:22px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 20px 60px var(--shadow-color);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+    /* Primera plana: intro compacta para que la shell quepa completa en el
+       primer viewport y se pueda trabajar directo sin hacer scroll de página */
+    .app-intro{padding:1rem 0 .6rem;text-align:center;max-width:640px;margin:0 auto;}
+    .app-intro h1{font-size:clamp(1.4rem,3.5vw,2rem);letter-spacing:-.02em;}
+    .app-intro p{color:var(--text-muted);font-size:.85rem;margin:.3rem 0 0;}
+    /* Pantallas bajas: intro ultra-compacta + offset menor → la shell sigue
+       visible completa y con altura estable */
+    @media (max-height:740px){
+      .app-intro{padding:.6rem 0 .35rem;}
+      .app-intro h1{font-size:1.25rem;}
+      .app-intro p{font-size:.78rem;margin-top:.2rem;}
+      .cot-shell{--cot-offset:230px;}
+    }
     @media (max-height:640px){
-      .app-intro{padding:.7rem 0 .4rem;}
-      .app-intro h1{font-size:1.35rem;}
+      .app-intro{padding:.5rem 0 .3rem;}
+      .app-intro h1{font-size:1.15rem;}
       .app-intro p{display:none;}
-      .cot-shell{--coth:calc(100dvh - 220px);}
+      .cot-shell{--cot-offset:200px;min-height:min(340px,calc(100vh - 160px));min-height:min(340px,calc(100dvh - 160px));}
+    }
+    @media (max-width:640px){
+      .cot-shell{--cot-offset:260px;}
+    }
+    @media (max-height:640px) and (max-width:640px){
+      .cot-shell{--cot-offset:195px;}
     }
     .cot-tabs-wrap{padding:.7rem .9rem .6rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);flex-shrink:0;}
     .cot-tabs-wrap .wizard-nav{border:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;padding:.1rem;}
-    .cot-panels{flex:1;min-height:0;overflow-y:auto;padding:1rem .95rem;overscroll-behavior:contain;scrollbar-width:thin;}
+    .cot-panels{flex:1;min-height:0;overflow-y:auto;padding:1rem .95rem;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-gutter:stable;}
     .cot-panels .cot-card{margin-bottom:0;}
     .wtab-num{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.12);font-size:.68rem;font-weight:700;flex-shrink:0;}
     .wtab.active .wtab-num{background:rgba(255,255,255,.25);}
@@ -216,9 +237,8 @@
     .wizard-footer{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);pointer-events:auto;}
     /* FIX cotizador usable: footer dentro de la shell, reservar aire abajo */
     main{padding-bottom:2.5rem;}
-    .app-intro{padding:2rem 0 1rem;text-align:center;max-width:640px;margin:0 auto;}
-    .app-intro h1{font-size:clamp(1.7rem,4.5vw,2.5rem);letter-spacing:-.02em;}
-    .app-intro p{color:var(--text-muted);font-size:.92rem;margin-top:.4rem;}
+    /* (intro compacta definida arriba junto a la shell; no duplicar para no
+       empujar la shell fuera del primer viewport) */
     .btn{min-height:44px;}
     .btn:disabled{opacity:.45;cursor:not-allowed;}
     .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible,.btn:focus-visible,.wtab:focus-visible{outline:2px solid var(--amb);outline-offset:2px;}

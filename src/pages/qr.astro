@@ -16,14 +16,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     "/assets/css/components.css",
     "/assets/css/system.css",
     "/assets/css/footer.css",
-    "/assets/css/pages/qr.css?v=3",
+    "/assets/css/pages/qr.css?v=4",
   ]}
   scripts={[
     "https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js",
     "/assets/js/functions/theme.js",
     "/assets/js/functions/menu.js",
     "/assets/js/functions/qr-aether.js",
-    "/assets/js/functions/qr-app.js",
+    "/assets/js/functions/qr-app.js?v=2",
   ]}
   bodyData={{ class: "qr-page" }}
 >
@@ -295,13 +295,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   </div>
   <Fragment slot="after-footer">
     <script is:inline>
-      // Progresivo: revela el generador aunque el JS principal aún no cargue.
+      // Progresivo: usa el showView real si ya cargó (una sola vista visible,
+      // misma altura de shell); si no, revelado mínimo sin duplicar vistas.
       const reveal = () => {
+        if (window.__qrShowApp) { window.__qrShowApp(); return; }
         const app = document.getElementById("qrApp");
-        if (app) { app.hidden = false; app.classList.add("on"); }
+        const land = document.getElementById("qrLanding");
+        if (app) { app.hidden = false; requestAnimationFrame(() => app.classList.add("on")); }
+        if (land) { land.classList.remove("on"); land.classList.add("off-left"); }
       };
       document.getElementById("qrStart")?.addEventListener("click", reveal, { once: true });
       document.getElementById("qrSample")?.addEventListener("click", reveal, { once: true });
+      // Entrada directa: /qr/#app muestra el generador listo para trabajar.
+      if (window.location.hash === "#app") { reveal(); }
     </script>
   </Fragment>
 </BaseLayout>
