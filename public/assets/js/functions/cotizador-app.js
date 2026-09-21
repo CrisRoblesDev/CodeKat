@@ -761,7 +761,7 @@
       document.body.classList.add('modal-open');lockScroll();
       focusNoScroll(b.querySelector('input,select,textarea'));
       setTimeout(function(){safe(fitModalToKeyboard);},80);
-      setTimeout(function(){safe(adjustModalForKeyboard);},450);
+      scheduleModalSettle(450);
     }
     function closeBackdrop(b){
       if(typeof b==='string')b=el(b);if(!b||!b.classList.contains('open'))return;
@@ -861,8 +861,17 @@
     function adjustModalForKeyboard(){
       pinModalToVisual();fitModalToKeyboard();
     }
+    /* Asentamiento ÚNICO con debounce: durante la animación del teclado el
+       viewport se mueve muchas veces; ajustar una sola vez al final evita
+       que el modal "persiga" esos movimientos y se deslice. */
+    var kbSettleT=null;
+    function scheduleModalSettle(ms){
+      try{if(kbSettleT)clearTimeout(kbSettleT);}catch(e){}
+      kbSettleT=setTimeout(function(){safe(adjustModalForKeyboard);},ms||150);
+    }
     function clearModalFit(b){
       try{
+        if(kbSettleT)clearTimeout(kbSettleT);
         var box=b.querySelector?b.querySelector('.fm-box'):null;if(box)box.style.maxHeight='';
         if(b.classList&&b.classList.contains('fm-backdrop')){b.style.top='';b.style.height='';b.style.bottom='';}
         else{var bd=b.closest?b.closest('.fm-backdrop'):null;if(bd){bd.style.top='';bd.style.height='';bd.style.bottom='';}}
@@ -870,23 +879,20 @@
     }
     try{
       if(window.visualViewport){
-        window.visualViewport.addEventListener('resize',function(){safe(adjustModalForKeyboard);});
-        window.visualViewport.addEventListener('scroll',function(){safe(pinModalToVisual);});
+        window.visualViewport.addEventListener('resize',function(){scheduleModalSettle(150);});
       }
     }catch(e){}
     /* Re-pin al asentarse el layout (teclado abriendo/cerrando) */
     window.addEventListener('resize',function(){
-      if(document.querySelector('.fm-backdrop.open'))safe(adjustModalForKeyboard);
+      if(document.querySelector('.fm-backdrop.open'))scheduleModalSettle(150);
     });
     document.addEventListener('focusin',function(e){
       var t=e.target;
       if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT')){
-        /* Doble pasada: agarra la animación del teclado al abrir */
-        setTimeout(function(){safe(adjustModalForKeyboard);},300);
-        setTimeout(function(){
-          safe(adjustModalForKeyboard);
-          try{if(t.scrollIntoView)t.scrollIntoView({block:'nearest'});}catch(_){}
-        },600);
+        /* Sincrónico: muestra el campo en la caja ANTES de que Chrome decida
+           panear el viewport (ese paneo es el "deslizamiento hacia abajo"). */
+        try{if(t.scrollIntoView)t.scrollIntoView({block:'nearest'});}catch(_){}
+        scheduleModalSettle(350);
       }
     });
 
