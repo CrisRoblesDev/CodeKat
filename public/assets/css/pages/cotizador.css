@@ -188,11 +188,27 @@
     @keyframes panelRight{from{opacity:0;transform:translateX(36px);}to{opacity:1;transform:translateX(0);}}
     @keyframes panelLeft{from{opacity:0;transform:translateX(-36px);}to{opacity:1;transform:translateX(0);}}
 
-    .wizard-footer-wrap{position:fixed;bottom:12px;left:0;right:0;z-index:60;pointer-events:none;padding:0 1rem;transition:bottom .15s linear;}
+    .wizard-footer-wrap{position:static;}
+    .cot-foot{flex-shrink:0;border-top:1px solid var(--border);padding:.65rem .9rem;background:rgba(0,0,0,.2);}
+    .cot-foot .wizard-footer{max-width:none;margin:0;background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;border-radius:0;}
+    /* Shell contenida estilo QR: alto fijo ajustado a pantalla, paneles con scroll interno */
+    .cot-shell{--coth:calc(100dvh - 330px);height:max(480px,min(700px,var(--coth)));max-width:760px;margin:.5rem auto 2rem;background:var(--glass-bg-strong);border:1px solid var(--border);border-radius:22px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 20px 60px var(--shadow-color);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+    .cot-tabs-wrap{padding:.7rem .9rem .6rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);flex-shrink:0;}
+    .cot-tabs-wrap .wizard-nav{border:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;padding:.1rem;}
+    .cot-panels{flex:1;min-height:0;overflow-y:auto;padding:1rem .95rem;overscroll-behavior:contain;scrollbar-width:thin;}
+    .cot-panels .cot-card{margin-bottom:0;}
+    .wtab-num{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.12);font-size:.68rem;font-weight:700;flex-shrink:0;}
+    .wtab.active .wtab-num{background:rgba(255,255,255,.25);}
+    /* Modales bottom-sheet en móvil + bloqueo de scroll de fondo */
+    body.modal-open{overflow:hidden;}
+    @media (max-width:640px){
+      .fm-backdrop{place-items:end center;padding:0;}
+      .fm-box{border-radius:20px 20px 0 0;max-height:92dvh;}
+    }
     /* CAMBIO 1: pointer-events:auto para que los botones reciban clics */
     .wizard-footer{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;background:var(--glass-bg-strong);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);pointer-events:auto;}
-    /* FIX cotizador usable: el footer es fixed en desktop y móvil, reservar espacio siempre */
-    main{padding-bottom:130px;}
+    /* FIX cotizador usable: footer dentro de la shell, reservar aire abajo */
+    main{padding-bottom:2.5rem;}
     .app-intro{padding:2rem 0 1rem;text-align:center;max-width:640px;margin:0 auto;}
     .app-intro h1{font-size:clamp(1.7rem,4.5vw,2.5rem);letter-spacing:-.02em;}
     .app-intro p{color:var(--text-muted);font-size:.92rem;margin-top:.4rem;}
@@ -231,16 +247,7 @@
     .wf-progress span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--amb-soft),var(--amb-light));transition:width .4s var(--ease);}
 
     @media (max-width: 767px) {
-      main { padding-bottom: 110px; }
-      .wizard-footer-wrap {
-        position: fixed;
-        bottom: 12px;
-        left: 0; right: 0;
-        z-index: 60;
-        pointer-events: none;
-        padding: 0 1rem;
-        transition: bottom .15s linear;
-      }
+      main { padding-bottom: 2rem; }
     }
 
     .cot-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.15rem;margin-bottom:.85rem;}
@@ -522,12 +529,12 @@
       .wf-counter{font-size:.7rem;white-space:nowrap;}
       .wf-progress{max-width:110px;}
       .wizard-footer .btn{padding:.55rem .7rem;font-size:.78rem;}
-      /* Toast por encima del footer fijo */
-      .toast{bottom:5.5rem;max-width:calc(100vw - 2rem);white-space:normal;text-align:center;}
+      /* Toast y flotante abajo (footer ya va dentro de la shell) */
+      .toast{bottom:1.2rem;max-width:calc(100vw - 2rem);white-space:normal;text-align:center;}
       /* Modales a todo ancho seguro */
       .fm-backdrop{padding:0 .75rem;}
-      /* WhatsApp flotante no tapa el footer del wizard */
-      .wa-float{bottom:6.2rem;}
+      /* WhatsApp flotante compacto en móvil */
+      .wa-float{bottom:1.4rem;}
       .wa-float .wa-tooltip{display:none;}
     }
   

@@ -12,11 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   footerAccent="amber"
   bgVariant="aurora"
   withLoader
-  css={["/assets/css/pages/cotizador.css?v=7"]}
+  css={["/assets/css/pages/cotizador.css?v=8"]}
   scripts={[
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
-    "/assets/js/functions/cotizador-app.js?v=5",
+    "/assets/js/functions/cotizador-app.js?v=6",
     "/assets/js/functions/reveal.js?v=3",
   ]}
 >
@@ -31,13 +31,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   </Fragment>
   <Fragment slot="pre-main">
     <div class="app-intro"><h1>Cotizador <em class="grad-text">profesional</em></h1><p>Completa los 7 pasos: negocio, cliente, ítems, detalles, diseño, vista previa y descarga.</p></div>
-
-    <div class="wizard-nav-wrap">
-      <div class="container"><div class="wizard-nav" id="wizardNav" role="tablist" aria-label="Pasos del cotizador"></div></div>
-    </div>
   </Fragment>
 
   <div class="container">
+    <div class="cot-shell">
+      <div class="cot-tabs-wrap"><div class="wizard-nav" id="wizardNav" role="tablist" aria-label="Pasos del cotizador"></div></div>
+      <div class="cot-panels">
 
     <section class="wpanel active" data-panel="0">
       <div class="cot-card">
@@ -180,17 +179,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <p class="info-text-small"><i class="fa-solid fa-circle-info info-text-icon"></i> El envío por correo abre tu aplicación de correo (gratis). Adjunta el PDF si lo necesitas.</p>
       </div>
     </section>
-
-  </div>
-
-  <div class="wizard-footer-wrap" id="wizardFooterWrap">
-    <div class="wizard-footer">
-      <button class="btn btn-ghost" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
-      <div class="wf-center">
-        <span class="wf-counter">Paso <b id="stepNow">1</b> de <span id="stepTotal">7</span></span>
-        <div class="wf-progress"><span id="progressBar"></span></div>
       </div>
-      <button class="btn btn-primary" id="nextBtn">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+      <div class="cot-foot" id="wizardFooterWrap">
+        <div class="wizard-footer">
+          <button class="btn btn-ghost" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
+          <div class="wf-center">
+            <span class="wf-counter">Paso <b id="stepNow">1</b> de <span id="stepTotal">7</span></span>
+            <div class="wf-progress"><span id="progressBar"></span></div>
+          </div>
+          <button class="btn btn-primary" id="nextBtn">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
     </div>
   </div>
 
