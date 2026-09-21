@@ -12,11 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   footerAccent="amber"
   bgVariant="aurora"
   withLoader
-  css={["/assets/css/pages/cotizador.css?v=17"]}
+  css={["/assets/css/pages/cotizador.css?v=18"]}
   scripts={[
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
-    "/assets/js/functions/cotizador-app.js?v=13",
+    "/assets/js/functions/cotizador-app.js?v=14",
     "/assets/js/functions/reveal.js?v=3",
   ]}
 >
@@ -76,9 +76,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="cot-card">
         <div class="cot-card-head">
           <span class="cot-card-ico"><i class="fa-solid fa-list-check"></i></span>
-          <div><h2>Ítems de la cotización</h2><p>Arrastra para reordenar · toca ✎ para editar</p></div>
+          <div><h2>Ítems de la cotización</h2><p>Desliza para verlos · toca ✎ para editar</p></div>
         </div>
-        <div class="items-list" id="itemsList"></div>
+        <div class="carousel">
+          <button class="car-btn" id="iPrev" type="button" aria-label="Ítem anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="car-track" id="itemsTrack"><div class="items-list" id="itemsList"></div></div>
+          <button class="car-btn" id="iNext" type="button" aria-label="Ítem siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
         <button class="btn btn-primary" id="openItemModal" type="button"><i class="fa-solid fa-plus"></i> Agregar ítem</button>
         <div class="items-total-bar"><span>Total actual</span><span id="itemsTotalChip">—</span></div>
       </div>

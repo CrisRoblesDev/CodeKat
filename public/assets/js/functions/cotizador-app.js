@@ -237,12 +237,6 @@
         card.addEventListener('drop',function(e){e.preventDefault();card.classList.remove('drag-over'); if(dragSrcId&&dragSrcId!==it.id)reorderItems(dragSrcId,it.id);});
         card.addEventListener('dragend',function(){card.classList.remove('dragging');dragSrcId=null;allowDrag=false;});
       });
-      /* Tope visual de 5: el resto se alcanza reordenando con ↑↓ */
-      if(state.items.length>5){
-        var more=document.createElement('div');more.className='items-more';
-        more.textContent='+'+(state.items.length-5)+' más · reordena con ↑↓ para verlos';
-        wrap.appendChild(more);
-      }
       wrap.querySelectorAll('.mini-btn').forEach(function(btn){
         btn.addEventListener('click',function(){moveItem(btn.getAttribute('data-id'),parseInt(btn.getAttribute('data-dir'),10));});
       });
@@ -270,8 +264,9 @@
       itemBackdrop.classList.add('open');itemBackdrop.setAttribute('aria-hidden','false');
       document.body.classList.add('modal-open');lockScroll();
       focusNoScroll(el('itemModalName'));
+      setTimeout(function(){safe(fitModalToKeyboard);},80);
     }
-    function closeItemModal(){if(!itemBackdrop)return;itemBackdrop.classList.remove('open');itemBackdrop.setAttribute('aria-hidden','true');unlockScroll();document.body.classList.remove('modal-open');editingItemId=null;}
+    function closeItemModal(){if(!itemBackdrop)return;itemBackdrop.classList.remove('open');itemBackdrop.setAttribute('aria-hidden','true');clearModalFit(itemBackdrop);unlockScroll();document.body.classList.remove('modal-open');editingItemId=null;}
     on('openItemModal','click',function(){openItemModal('add');});
     on('itemClose','click',closeItemModal);
     on('itemCancel','click',closeItemModal);
@@ -340,8 +335,8 @@
       ctx.fillText(initials,w/2,h/2+4);
     }
     var lmBackdrop=el('lmBackdrop');
-    function openLm(){if(!lmBackdrop)return;lmBackdrop.classList.add('open');lmBackdrop.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');lockScroll();safe(drawLogo);focusNoScroll(el('lmInitials'));}
-    function closeLm(){if(!lmBackdrop)return;lmBackdrop.classList.remove('open');lmBackdrop.setAttribute('aria-hidden','true');unlockScroll();document.body.classList.remove('modal-open');}
+    function openLm(){if(!lmBackdrop)return;lmBackdrop.classList.add('open');lmBackdrop.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');lockScroll();safe(drawLogo);focusNoScroll(el('lmInitials'));setTimeout(function(){safe(fitModalToKeyboard);},80);}
+    function closeLm(){if(!lmBackdrop)return;lmBackdrop.classList.remove('open');lmBackdrop.setAttribute('aria-hidden','true');clearModalFit(lmBackdrop);unlockScroll();document.body.classList.remove('modal-open');}
     on('openLogoMaker','click',openLm);
     on('lmClose','click',closeLm);
     if(lmBackdrop)lmBackdrop.addEventListener('click',function(e){if(e.target===lmBackdrop)closeLm();});
@@ -759,10 +754,12 @@
       b.classList.add('open');b.setAttribute('aria-hidden','false');
       document.body.classList.add('modal-open');lockScroll();
       focusNoScroll(b.querySelector('input,select,textarea'));
+      setTimeout(function(){safe(fitModalToKeyboard);},80);
     }
     function closeBackdrop(b){
       if(typeof b==='string')b=el(b);if(!b||!b.classList.contains('open'))return;
       b.classList.remove('open');b.setAttribute('aria-hidden','true');
+      clearModalFit(b);
       unlockScroll();
       if(!document.querySelector('.fm-backdrop.open'))document.body.classList.remove('modal-open');
     }
@@ -824,6 +821,31 @@
       on(nextId,'click',function(){step(1);});
     }
 
+    /* ═══════════════════════════════════════════════
+       TECLADO: fallback por si el navegador ignora el meta
+       interactive-widget — encoge el modal al área visible real
+       ═══════════════════════════════════════════════ */
+    function fitModalToKeyboard(){
+      var box=document.querySelector('.fm-backdrop.open .fm-box');
+      if(!box)return;
+      try{
+        var vv=window.visualViewport;
+        if(vv&&vv.height)box.style.maxHeight=Math.max(220,Math.round(vv.height*0.92))+'px';
+      }catch(e){}
+    }
+    function clearModalFit(b){
+      try{var box=b.querySelector?b.querySelector('.fm-box'):null;if(box)box.style.maxHeight='';}catch(e){}
+    }
+    try{
+      if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){safe(fitModalToKeyboard);});
+    }catch(e){}
+    document.addEventListener('focusin',function(e){
+      var t=e.target;
+      if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT')){
+        setTimeout(function(){safe(fitModalToKeyboard);},300);
+      }
+    });
+
     var qn=el('quoteNumber');if(qn)qn.value=state.number;
     var qd=el('quoteDate');if(qd)qd.value=state.date;
     safe(buildNav);safe(renderPalettes);safe(renderTextures);safe(renderDesignThumbs);safe(drawLogo);
@@ -831,6 +853,7 @@
     wireCarousel('designTrack','dPrev','dNext');
     wireCarousel('paletteTrack','pPrev','pNext');
     wireCarousel('textureTrack','tPrev','tNext');
+    wireCarousel('itemsTrack','iPrev','iNext');
     window.addEventListener('resize',function(){safe(fitPreview);});
     if(document.fonts&&document.fonts.ready){try{document.fonts.ready.then(function(){safe(centerTab);safe(fitPreview);});}catch(e){}}
     window.addEventListener('resize',function(){safe(centerTab);});
