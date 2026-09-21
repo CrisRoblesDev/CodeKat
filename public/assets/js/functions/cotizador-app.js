@@ -731,9 +731,15 @@
       if(scrollLockCount>0)scrollLockCount--;
       if(scrollLockCount===0)document.body.classList.remove('is-locked');
     }
-    /* Foco sin mover la página; acerca el campo dentro del modal */
+    /* Foco sin mover la página; acerca el campo dentro del modal.
+       SOLO en escritorio: en táctil el autofoco abre el teclado al instante
+       y reflota todo el layout (la página "se desliza"). En móvil el foco
+       lo pone el usuario al tocar el campo, con el pin ya armado. */
+    var isTouchDevice=(('ontouchstart' in window)||(navigator.maxTouchPoints>0));
     function focusNoScroll(f){
       if(!f)return;
+      if(isTouchDevice)return;
+      try{if(window.innerWidth<640)return;}catch(e){}
       setTimeout(function(){
         try{f.focus({preventScroll:true});}catch(_){try{f.focus();}catch(__){}}
         try{if(f.scrollIntoView)f.scrollIntoView({block:'nearest'});}catch(__){}
@@ -868,6 +874,10 @@
         window.visualViewport.addEventListener('scroll',function(){safe(pinModalToVisual);});
       }
     }catch(e){}
+    /* Re-pin al asentarse el layout (teclado abriendo/cerrando) */
+    window.addEventListener('resize',function(){
+      if(document.querySelector('.fm-backdrop.open'))safe(adjustModalForKeyboard);
+    });
     document.addEventListener('focusin',function(e){
       var t=e.target;
       if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT')){
