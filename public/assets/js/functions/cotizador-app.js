@@ -242,10 +242,10 @@
       if(nm)nm.value=it?it.name:'';if(ds)ds.value=it?it.description:'';
       if(qy)qy.value=it?it.qty:1;if(pr)pr.value=it?it.price:0;
       itemBackdrop.classList.add('open');itemBackdrop.setAttribute('aria-hidden','false');
-      document.body.classList.add('modal-open');
-      setTimeout(function(){var f=el('itemModalName');if(f)f.focus();},100);
+      document.body.classList.add('modal-open');lockScroll();
+      focusNoScroll(el('itemModalName'));
     }
-    function closeItemModal(){if(!itemBackdrop)return;itemBackdrop.classList.remove('open');itemBackdrop.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');editingItemId=null;}
+    function closeItemModal(){if(!itemBackdrop)return;itemBackdrop.classList.remove('open');itemBackdrop.setAttribute('aria-hidden','true');unlockScroll();document.body.classList.remove('modal-open');editingItemId=null;}
     on('openItemModal','click',function(){openItemModal('add');});
     on('itemClose','click',closeItemModal);
     on('itemCancel','click',closeItemModal);
@@ -314,8 +314,8 @@
       ctx.fillText(initials,w/2,h/2+4);
     }
     var lmBackdrop=el('lmBackdrop');
-    function openLm(){if(!lmBackdrop)return;lmBackdrop.classList.add('open');lmBackdrop.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');safe(drawLogo);var f=el('lmInitials');if(f)setTimeout(function(){try{f.focus();}catch(_){}},120);}
-    function closeLm(){if(!lmBackdrop)return;lmBackdrop.classList.remove('open');lmBackdrop.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');}
+    function openLm(){if(!lmBackdrop)return;lmBackdrop.classList.add('open');lmBackdrop.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');lockScroll();safe(drawLogo);focusNoScroll(el('lmInitials'));}
+    function closeLm(){if(!lmBackdrop)return;lmBackdrop.classList.remove('open');lmBackdrop.setAttribute('aria-hidden','true');unlockScroll();document.body.classList.remove('modal-open');}
     on('openLogoMaker','click',openLm);
     on('lmClose','click',closeLm);
     if(lmBackdrop)lmBackdrop.addEventListener('click',function(e){if(e.target===lmBackdrop)closeLm();});
@@ -697,6 +697,34 @@
     if(themeMini)themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});
 
     /* ═══════════════════════════════════════════════
+       BLOQUEO DE SCROLL SIN SALTO: congela la página en su posición
+       (evita el deslizamiento al abrir/cerrar modales) con contador
+       para modales anidados (negocio → crear logo).
+       ═══════════════════════════════════════════════ */
+    var scrollLockCount=0,savedScrollY=0;
+    function lockScroll(){
+      if(scrollLockCount===0){
+        savedScrollY=window.scrollY||document.documentElement.scrollTop||0;
+        document.body.style.top=(-savedScrollY)+'px';
+        document.body.classList.add('is-locked');
+      }
+      scrollLockCount++;
+    }
+    function unlockScroll(){
+      if(scrollLockCount>0)scrollLockCount--;
+      if(scrollLockCount===0){
+        document.body.classList.remove('is-locked');
+        document.body.style.top='';
+        window.scrollTo(0,savedScrollY);
+      }
+    }
+    /* Foco sin mover la página */
+    function focusNoScroll(f){
+      if(!f)return;
+      setTimeout(function(){try{f.focus({preventScroll:true});}catch(_){try{f.focus();}catch(__){}}},120);
+    }
+
+    /* ═══════════════════════════════════════════════
        MODALES DE EDICIÓN (negocio / cliente / detalles)
        Apertura genérica con [data-open], cierre con [data-close]
        ═══════════════════════════════════════════════ */
@@ -708,17 +736,18 @@
         if(src&&dst)dst.innerHTML=src.innerHTML;
       }
       b.classList.add('open');b.setAttribute('aria-hidden','false');
-      document.body.classList.add('modal-open');
-      var f=b.querySelector('input,select,textarea');if(f)setTimeout(function(){try{f.focus();}catch(_){}},120);
+      document.body.classList.add('modal-open');lockScroll();
+      focusNoScroll(b.querySelector('input,select,textarea'));
     }
     function closeBackdrop(b){
-      if(typeof b==='string')b=el(b);if(!b)return;
+      if(typeof b==='string')b=el(b);if(!b||!b.classList.contains('open'))return;
       b.classList.remove('open');b.setAttribute('aria-hidden','true');
+      unlockScroll();
       if(!document.querySelector('.fm-backdrop.open'))document.body.classList.remove('modal-open');
     }
     document.addEventListener('click',function(e){
       var opener=e.target.closest?e.target.closest('[data-open]'):null;
-      if(opener){openBackdrop(opener.getAttribute('data-open'));return;}
+      if(opener){if(e.preventDefault)e.preventDefault();openBackdrop(opener.getAttribute('data-open'));return;}
       var closer=e.target.closest?e.target.closest('[data-close]'):null;
       if(closer){var bd=closer.closest?closer.closest('.fm-backdrop'):null;if(bd)closeBackdrop(bd);return;}
       if(e.target.classList&&e.target.classList.contains('fm-backdrop'))closeBackdrop(e.target);
