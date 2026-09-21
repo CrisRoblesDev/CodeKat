@@ -181,7 +181,9 @@
     /* (intro compacta definida junto a la shell, más abajo) */
 
     .wizard-nav-wrap{position:sticky;top:60px;z-index:60;padding:.5rem 0 .4rem;}
-    .wizard-nav{position:relative;display:flex;flex-wrap:wrap;gap:.45rem;overflow:visible;padding:.1rem;scroll-padding:.4rem;}
+    /* Tabs en 1 sola línea con scroll horizontal oculto: ahorra alto del header */
+    .wizard-nav{position:relative;display:flex;gap:.4rem;overflow-x:auto;padding:.15rem;scrollbar-width:none;scroll-snap-type:x proximity;}
+    .wizard-nav::-webkit-scrollbar{display:none;}
     .wizard-nav::-webkit-scrollbar{display:none;}
     .wtab{scroll-snap-align:start;}
     /* Neo-brutalism: pastillas con borde grueso y sombra dura */
@@ -200,18 +202,31 @@
     .wizard-footer-wrap{position:static;}
     .cot-foot{flex-shrink:0;border-top:var(--nb-border);padding:.65rem .85rem;background:var(--nb-paper);border-radius:0 0 17px 17px;}
     .cot-foot .wizard-footer{max-width:none;margin:0;background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;border-radius:0;}
-    /* ═ Neo-brutalism SIN SCROLL: shell blanca con borde grueso y sombra dura.
-       Altura AUTO (crece con el contenido) y panels con overflow visible:
-       cada card se ve completa sin scroll interno. Las listas largas de
-       opciones (diseños, paletas, texturas) usan carrusel horizontal. */
-    .cot-shell{max-width:780px;margin:.5rem auto 2rem;background:var(--nb-card);border:var(--nb-border);border-radius:20px;overflow:visible;position:relative;display:flex;flex-direction:column;box-shadow:var(--nb-shadow-lg);}
+    /* ═ Shell FIJA por viewport: la misma altura en los 7 pasos → la card
+       NO se redimensiona al cambiar de paso y se ajusta a cada pantalla.
+       El contenido hace scroll vertical interno en .cot-panels. */
+    .cot-shell{--cot-offset:300px;height:calc(100vh - var(--cot-offset));height:calc(100dvh - var(--cot-offset));min-height:min(430px,calc(100vh - 190px));min-height:min(430px,calc(100dvh - 190px));max-height:680px;max-width:780px;margin:.5rem auto 2rem;background:var(--nb-card);border:var(--nb-border);border-radius:20px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:var(--nb-shadow-lg);}
+    @media (max-height:740px){
+      .cot-shell{--cot-offset:236px;}
+    }
+    @media (max-height:640px){
+      .cot-shell{--cot-offset:206px;min-height:min(340px,calc(100vh - 160px));min-height:min(340px,calc(100dvh - 160px));}
+    }
+    @media (max-width:640px){
+      .cot-shell{--cot-offset:262px;}
+    }
+    @media (max-height:640px) and (max-width:640px){
+      .cot-shell{--cot-offset:198px;}
+    }
     .app-intro{padding:1rem 0 .8rem;text-align:center;max-width:640px;margin:0 auto;}
     .app-intro h1{font-size:clamp(1.4rem,3.5vw,2rem);letter-spacing:-.02em;color:var(--white);font-weight:800;}
     .app-intro .grad-text{background:var(--nb-yellow);color:var(--nb-ink);padding:.05em .3em;border:var(--nb-border);border-radius:10px;box-shadow:var(--nb-shadow-sm);display:inline-block;transform:rotate(-1.5deg);-webkit-background-clip:border-box;background-clip:border-box;}
     .app-intro p{display:inline-block;margin:.55rem 0 0;background:#fff;color:var(--nb-ink);border:var(--nb-border);border-radius:999px;box-shadow:var(--nb-shadow-sm);padding:.35rem .9rem;font-size:.82rem;font-weight:600;}
     .cot-tabs-wrap{padding:.7rem .8rem .6rem;border-bottom:var(--nb-border);background:var(--nb-yellow);border-radius:17px 17px 0 0;flex-shrink:0;}
     .cot-tabs-wrap .wizard-nav{border:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;padding:.1rem;}
-    .cot-panels{flex:1;min-height:0;overflow:visible;padding:.9rem;}
+    .cot-panels{flex:1;min-height:0;overflow-y:auto;padding:.9rem;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--nb-ink) transparent;}
+    .cot-panels::-webkit-scrollbar{width:8px;}
+    .cot-panels::-webkit-scrollbar-thumb{background:var(--nb-ink);border-radius:4px;}
     .cot-panels .cot-card{margin-bottom:0;}
     .wtab-num{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:50%;background:var(--nb-yellow);border:2px solid currentColor;font-size:.68rem;font-weight:800;flex-shrink:0;}
     .wtab.active .wtab-num{background:var(--nb-yellow);color:var(--nb-ink);}
@@ -276,8 +291,9 @@
     .cot-card-head h2{font-size:1rem;color:var(--nb-ink);font-weight:800;}
     .cot-card-head p{font-size:.76rem;color:#5B5546;font-weight:600;margin:.1rem 0 0;}
 
-    /* Resumen compacto: cada fila abre el modal de edición */
-    .sum-list{display:flex;flex-direction:column;border:2.5px solid var(--nb-ink);border-radius:12px;overflow:hidden;margin-bottom:.7rem;background:#fff;}
+    /* Resumen compacto: cada fila abre el modal de edición.
+       Con tope de alto + scroll vertical para ahorrar espacio. */
+    .sum-list{display:flex;flex-direction:column;border:2.5px solid var(--nb-ink);border-radius:12px;overflow-y:auto;margin-bottom:.7rem;background:#fff;max-height:264px;scrollbar-width:thin;scrollbar-color:var(--nb-ink) transparent;}
     .sum-row{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.55rem .7rem;background:#fff;border-bottom:2px solid #EDE6D3;font-size:.84rem;transition:background .12s;}
     .sum-row:last-child{border-bottom:0;}
     .sum-row:hover{background:var(--nb-paper);}
@@ -303,7 +319,7 @@
     .logo-thumb img{width:100%;height:100%;object-fit:contain;}
     .logo-thumb i{color:#8A8171;font-size:1.1rem;}
 
-    .items-list{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.8rem;overflow:visible;}
+    .items-list{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.8rem;max-height:300px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--nb-ink) transparent;padding-right:.1rem;}
     .items-empty{text-align:center;color:var(--nb-ink);font-weight:700;padding:1.3rem;border:2.5px dashed var(--nb-ink);border-radius:12px;background:var(--nb-paper);}
     .items-empty i{font-size:1.5rem;display:block;margin-bottom:.35rem;}
     .item-card{background:#fff;border:2.5px solid var(--nb-ink);border-radius:12px;box-shadow:var(--nb-shadow-sm);padding:.6rem .7rem;display:flex;align-items:center;gap:.55rem;transition:border-color var(--t-fast) var(--ease),opacity .2s,transform .2s;}
@@ -368,6 +384,17 @@
     .color-field label{font-size:.68rem;color:var(--nb-ink);font-weight:800;text-transform:uppercase;}
     .color-field input[type=color]{width:100%;height:40px;border:2.5px solid var(--nb-ink);border-radius:10px;background:#fff;padding:3px;cursor:pointer;box-shadow:var(--nb-shadow-sm);}
 
+    /* Vista previa MINIATURA: el documento completo encajado sin scroll.
+       Para verlo a tamaño real, el botón abre el modal. */
+    .preview-stage{border:var(--nb-border);border-radius:12px;background:var(--nb-paper);height:clamp(230px,42dvh,390px);overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:.7rem;}
+    #previewScale{transform-origin:top left;flex-shrink:0;}
+    .preview-stage .quote-doc{margin:0;width:100%;}
+    .preview-stage.movil .quote-doc{width:380px;}
+    .preview-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+    .preview-actions .btn{flex:1;min-width:200px;}
+    .preview-full-box{max-width:720px;}
+    .preview-full-doc{border:var(--nb-border);border-radius:12px;overflow-y:auto;max-height:70vh;max-height:70dvh;background:#fff;scrollbar-width:thin;}
+    .preview-full-doc .quote-doc{border:0;border-radius:0;box-shadow:none;}
     .quote-doc{background:#fff;color:#1a1a2e;border:var(--nb-border);border-radius:14px;overflow:hidden;box-shadow:var(--nb-shadow);font-size:.85rem;}
     .preview-mode-row{display:flex;justify-content:flex-end;margin-bottom:.7rem;}
     .pv-toggle{display:inline-flex;gap:.25rem;background:#fff;border:2.5px solid var(--nb-ink);border-radius:999px;padding:.25rem;box-shadow:var(--nb-shadow-sm);}
@@ -579,6 +606,9 @@
       .cot-panels{padding:.7rem;}
       .cot-card{padding:.8rem;}
       .sum-k{width:74px;}
+      .sum-list{max-height:210px;}
+      .items-list{max-height:220px;}
+      .preview-stage{height:clamp(210px,38dvh,320px);}
       .car-btn{width:30px;min-height:56px;font-size:.9rem;}
       .design-opt{width:132px;}
       .color-row{gap:.4rem;}

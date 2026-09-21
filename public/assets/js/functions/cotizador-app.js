@@ -451,6 +451,25 @@
         '</div>'+
         '<div class="qd-foot"><span>'+(esc(s.name)||'Cotización')+'</span><span>'+(esc(s.email)||'')+' '+(esc(s.phone)||'')+'</span></div>';
       qd.innerHTML=html;
+      /* Si estamos en el paso Vista previa, re-encajar la miniatura */
+      if(STEPS[currentStep].key==='preview'&&window.requestAnimationFrame){
+        requestAnimationFrame(function(){safe(fitPreview);});
+      }
+    }
+
+    /* Miniatura: escala el documento para que se vea COMPLETO sin scroll */
+    function fitPreview(){
+      var stage=el('previewStage'),doc=el('quoteDoc'),wrap=el('previewScale');
+      if(!stage||!doc||!wrap)return;
+      if(STEPS[currentStep].key!=='preview')return;
+      wrap.style.transform='';
+      var dw=doc.scrollWidth||doc.offsetWidth,dh=doc.scrollHeight||doc.offsetHeight;
+      var sw=stage.clientWidth-16,sh=stage.clientHeight-16;
+      if(!dw||!dh||!sw||!sh)return;
+      var s=Math.min(sw/dw,sh/dh,1);
+      wrap.style.transform='scale('+s+')';
+      wrap.style.width=Math.round(dw*s)+'px';
+      wrap.style.height=Math.round(dh*s)+'px';
     }
 
     function download(filename,content,type){
@@ -683,6 +702,11 @@
        ═══════════════════════════════════════════════ */
     function openBackdrop(id){
       var b=typeof id==='string'?el(id):id;if(!b)return;
+      /* Al abrir la vista real, clonar el documento actual */
+      if((typeof id==='string'?id:(b.id||''))==='previewBackdrop'){
+        var src=el('quoteDoc'),dst=el('previewFullDoc');
+        if(src&&dst)dst.innerHTML=src.innerHTML;
+      }
       b.classList.add('open');b.setAttribute('aria-hidden','false');
       document.body.classList.add('modal-open');
       var f=b.querySelector('input,select,textarea');if(f)setTimeout(function(){try{f.focus();}catch(_){}},120);
@@ -757,8 +781,9 @@
         Array.prototype.forEach.call(document.querySelectorAll('#previewMode button'),function(x){
           var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-selected',on?'true':'false');
         });
-        var w=el('previewWrap');
-        if(w){w.classList.toggle('narrow',previewMode==='movil');w.classList.toggle('wide',previewMode!=='movil');}
+        var st=el('previewStage');
+        if(st){st.classList.toggle('movil',previewMode==='movil');}
+        safe(fitPreview);
       });
     });
     /* En móvil arrancar en vista Móvil para que todo el contenido se vea */
@@ -775,7 +800,8 @@
     wireCarousel('designTrack','dPrev','dNext');
     wireCarousel('paletteTrack','pPrev','pNext');
     wireCarousel('textureTrack','tPrev','tNext');
-    if(document.fonts&&document.fonts.ready){try{document.fonts.ready.then(function(){safe(centerTab);});}catch(e){}}
+    window.addEventListener('resize',function(){safe(fitPreview);});
+    if(document.fonts&&document.fonts.ready){try{document.fonts.ready.then(function(){safe(centerTab);safe(fitPreview);});}catch(e){}}
     window.addEventListener('resize',function(){safe(centerTab);});
   /* Pausa de auroras con pestaña oculta (ahorro GPU, evita parpadeo al volver) */
   document.addEventListener('visibilitychange',function(){

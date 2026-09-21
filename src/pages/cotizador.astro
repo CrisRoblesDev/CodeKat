@@ -12,11 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   footerAccent="amber"
   bgVariant="aurora"
   withLoader
-  css={["/assets/css/pages/cotizador.css?v=12"]}
+  css={["/assets/css/pages/cotizador.css?v=13"]}
   scripts={[
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
-    "/assets/js/functions/cotizador-app.js?v=8",
+    "/assets/js/functions/cotizador-app.js?v=9",
     "/assets/js/functions/reveal.js?v=3",
   ]}
 >
@@ -137,7 +137,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="cot-card">
         <div class="cot-card-head">
           <span class="cot-card-ico"><i class="fa-solid fa-eye"></i></span>
-          <div><h2>Vista previa</h2><p>Así se verá tu cotización</p></div>
+          <div><h2>Vista previa</h2><p>Miniatura completa · amplía para ver el tamaño real</p></div>
         </div>
         <div class="preview-mode-row">
           <div class="pv-toggle" id="previewMode" role="tablist" aria-label="Modo de vista previa">
@@ -145,8 +145,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <button type="button" data-v="escritorio" class="on" role="tab" aria-selected="true"><i class="fa-solid fa-desktop"></i> Escritorio</button>
           </div>
         </div>
-        <div class="quote-preview-wrap wide" id="previewWrap">
-          <div class="quote-doc" id="quoteDoc"></div>
+        <div class="preview-stage" id="previewStage">
+          <div id="previewScale"><div class="quote-doc" id="quoteDoc"></div></div>
+        </div>
+        <div class="preview-actions">
+          <button class="btn btn-primary" data-open="previewBackdrop" type="button"><i class="fa-solid fa-expand"></i> Ver tamaño real</button>
         </div>
       </div>
     </section>
@@ -271,6 +274,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="fm-foot">
           <button class="btn btn-primary" data-close type="button"><i class="fa-solid fa-check"></i> Listo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fm-backdrop" id="previewBackdrop" aria-hidden="true">
+      <div class="fm-box preview-full-box" role="dialog" aria-modal="true" aria-label="Vista previa tamaño real">
+        <div class="fm-head">
+          <h3><i class="fa-solid fa-eye"></i> Vista previa · tamaño real</h3>
+          <button class="fm-close" data-close aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="fm-body">
+          <div class="preview-full-doc"><div class="quote-doc" id="previewFullDoc"></div></div>
+        </div>
+        <div class="fm-foot">
+          <button class="btn btn-primary" data-close type="button"><i class="fa-solid fa-check"></i> Cerrar</button>
         </div>
       </div>
     </div>
