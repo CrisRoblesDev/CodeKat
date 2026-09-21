@@ -43,6 +43,25 @@
     /* FIX botones nativos (Chrome Android pinta fondo claro por defecto) */
     button{background:transparent;border:0;font:inherit;color:inherit;padding:0;cursor:pointer;}
     button:disabled{cursor:not-allowed;}
+    /* FIX base global de design.css ausente en esta página: links, imgs, heads, box-model */
+    *,*::before,*::after{box-sizing:border-box;}
+    img,svg{max-width:100%;display:block;}
+    a{color:inherit;text-decoration:none;}
+    h1,h2,h3,h4{margin:0;line-height:1.2;}
+    body.menu-open{overflow:hidden;}
+    /* FIX navbar: sin subrayado, sin desborde, hamburguesa siempre visible */
+    .brand{text-decoration:none;color:var(--white);}
+    .nav-inner{min-width:0;}
+    .brand{min-width:0;overflow:hidden;flex-shrink:1;}
+    .brand-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .nav-right{flex-shrink:0;}
+    @media (max-width:380px){
+      .nav-inner{gap:.6rem;}
+      .brand{gap:.45rem;font-size:.95rem;}
+      .brand-logo{width:32px;height:32px;}
+      .theme-toggle-mini{width:36px;height:36px;border-radius:10px;}
+      .burger{width:40px;height:40px;border-radius:10px;}
+    }
     /* Contención de paneles fuera de pantalla */
     .wpanel{contain:layout style paint;content-visibility:auto;contain-intrinsic-size:0 800px;}
     .wpanel.active{content-visibility:visible;}
@@ -51,7 +70,7 @@
     .navbar.scrolled{border-bottom-color:var(--border);background:var(--glass-bg-strong);}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;contain:layout style;}
     /* Contención del menú */
-    .nav-menu{position:fixed;top:0;right:0;width:100%;height:100vh;height:100dvh;z-index:105;background:var(--bg);overflow-y:auto;padding:5.5rem 1.5rem 2rem;transform:translateX(100%);transition:transform .5s var(--ease),visibility 0s .5s;visibility:hidden;contain:layout style paint;}
+    .nav-menu{position:fixed;top:0;right:0;width:100%;height:100vh;height:100dvh;z-index:105;background:var(--bg);overflow-y:auto;padding:6rem 1.5rem 2rem;transform:translateX(100%);transition:transform .5s var(--ease),visibility 0s .5s;visibility:hidden;contain:layout style paint;}
     .nav-menu.open{transform:translateX(0);visibility:visible;transition:transform .5s var(--ease),visibility 0s 0s;}
     /* Contención del footer */
     .footer{position:relative;border-top:1px solid var(--border);overflow:hidden;contain:layout style paint;}
