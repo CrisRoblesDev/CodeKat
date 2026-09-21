@@ -755,6 +755,7 @@
       document.body.classList.add('modal-open');lockScroll();
       focusNoScroll(b.querySelector('input,select,textarea'));
       setTimeout(function(){safe(fitModalToKeyboard);},80);
+      setTimeout(function(){safe(adjustModalForKeyboard);},450);
     }
     function closeBackdrop(b){
       if(typeof b==='string')b=el(b);if(!b||!b.classList.contains('open'))return;
@@ -833,16 +834,49 @@
         if(vv&&vv.height)box.style.maxHeight=Math.max(220,Math.round(vv.height*0.92))+'px';
       }catch(e){}
     }
+    /* Fija el telón al viewport VISUAL: aunque el teclado no encoja el
+       layout (adjustPan/WebView), el modal queda pegado sobre el teclado. */
+    function pinModalToVisual(){
+      var bd=document.querySelector('.fm-backdrop.open');
+      if(!bd)return;
+      try{
+        var vv=window.visualViewport;
+        if(!vv||!vv.height)return;
+        var layoutH=window.innerHeight||0;
+        if(layoutH&&vv.height<layoutH*0.92){
+          bd.style.top=Math.round(vv.offsetTop||0)+'px';
+          bd.style.height=Math.round(vv.height)+'px';
+          bd.style.bottom='auto';
+        }else{
+          bd.style.top='';bd.style.height='';bd.style.bottom='';
+        }
+      }catch(e){}
+    }
+    function adjustModalForKeyboard(){
+      pinModalToVisual();fitModalToKeyboard();
+    }
     function clearModalFit(b){
-      try{var box=b.querySelector?b.querySelector('.fm-box'):null;if(box)box.style.maxHeight='';}catch(e){}
+      try{
+        var box=b.querySelector?b.querySelector('.fm-box'):null;if(box)box.style.maxHeight='';
+        if(b.classList&&b.classList.contains('fm-backdrop')){b.style.top='';b.style.height='';b.style.bottom='';}
+        else{var bd=b.closest?b.closest('.fm-backdrop'):null;if(bd){bd.style.top='';bd.style.height='';bd.style.bottom='';}}
+      }catch(e){}
     }
     try{
-      if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){safe(fitModalToKeyboard);});
+      if(window.visualViewport){
+        window.visualViewport.addEventListener('resize',function(){safe(adjustModalForKeyboard);});
+        window.visualViewport.addEventListener('scroll',function(){safe(pinModalToVisual);});
+      }
     }catch(e){}
     document.addEventListener('focusin',function(e){
       var t=e.target;
       if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT')){
-        setTimeout(function(){safe(fitModalToKeyboard);},300);
+        /* Doble pasada: agarra la animación del teclado al abrir */
+        setTimeout(function(){safe(adjustModalForKeyboard);},300);
+        setTimeout(function(){
+          safe(adjustModalForKeyboard);
+          try{if(t.scrollIntoView)t.scrollIntoView({block:'nearest'});}catch(_){}
+        },600);
       }
     });
 
