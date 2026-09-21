@@ -677,6 +677,79 @@
     themeBtns.forEach(function(b){b.addEventListener('click',function(){setTheme(b.getAttribute('data-theme-set'));});});
     if(themeMini)themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});
 
+    /* ═══════════════════════════════════════════════
+       MODALES DE EDICIÓN (negocio / cliente / detalles)
+       Apertura genérica con [data-open], cierre con [data-close]
+       ═══════════════════════════════════════════════ */
+    function openBackdrop(id){
+      var b=typeof id==='string'?el(id):id;if(!b)return;
+      b.classList.add('open');b.setAttribute('aria-hidden','false');
+      document.body.classList.add('modal-open');
+      var f=b.querySelector('input,select,textarea');if(f)setTimeout(function(){try{f.focus();}catch(_){}},120);
+    }
+    function closeBackdrop(b){
+      if(typeof b==='string')b=el(b);if(!b)return;
+      b.classList.remove('open');b.setAttribute('aria-hidden','true');
+      if(!document.querySelector('.fm-backdrop.open'))document.body.classList.remove('modal-open');
+    }
+    document.addEventListener('click',function(e){
+      var opener=e.target.closest?e.target.closest('[data-open]'):null;
+      if(opener){openBackdrop(opener.getAttribute('data-open'));return;}
+      var closer=e.target.closest?e.target.closest('[data-close]'):null;
+      if(closer){var bd=closer.closest?closer.closest('.fm-backdrop'):null;if(bd)closeBackdrop(bd);return;}
+      if(e.target.classList&&e.target.classList.contains('fm-backdrop'))closeBackdrop(e.target);
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'){
+        var open=document.querySelector('.fm-backdrop.open');
+        if(open&&(open.id==='bizBackdrop'||open.id==='clientBackdrop'||open.id==='detailsBackdrop'))closeBackdrop(open);
+      }
+    });
+
+    /* Resúmenes compactos de cada card */
+    function setSum(id,v,fallback){
+      var e=el(id);if(!e)return;
+      var t=String(v==null?'':v).trim();
+      e.textContent=t||fallback||'Sin completar';
+      e.classList.toggle('empty',!t);
+    }
+    function renderSummaries(){
+      setSum('sumSenderName',state.sender.name);setSum('sumSenderTax',state.sender.tax);
+      setSum('sumSenderEmail',state.sender.email);setSum('sumSenderPhone',state.sender.phone);
+      setSum('sumSenderWeb',state.sender.web);
+      setSum('sumClientName',state.client.name);setSum('sumClientCompany',state.client.company);
+      setSum('sumClientEmail',state.client.email);setSum('sumClientPhone',state.client.phone);
+      setSum('sumQuoteTitle',state.title,'Cotización');setSum('sumQuoteNumber',state.number);
+      setSum('sumQuoteDate',state.date?dateFmt(state.date):'');
+      setSum('sumValidDays',(state.validDays||0)+' días');
+      var cur=el('currency');setSum('sumCurrency',cur?cur.options[cur.selectedIndex].text.split(' ')[0]:state.currency,state.currency);
+      setSum('sumDiscount',(state.discount||0)+'%');setSum('sumTax',(state.tax||0)+'%');
+      setSum('sumNotes',state.notes,'Sin notas');
+      var sl=el('sumLogoThumb');
+      if(sl){
+        if(state.logo){sl.innerHTML='<img src="'+state.logo+'" alt="logo" />';}
+        else{sl.innerHTML='<i class="fa-regular fa-image"></i>';}
+      }
+      setSum('sumLogoTxt',state.logo?'Logo aplicado':'Sin logo','Sin logo');
+    }
+    /* Refrescar resúmenes ante cualquier cambio en los formularios */
+    document.addEventListener('input',function(){safe(renderSummaries);});
+    document.addEventListener('change',function(){safe(renderSummaries);});
+
+    /* ═══════════════════════════════════════════════
+       CARRUSELES (diseños / paletas / texturas)
+       ═══════════════════════════════════════════════ */
+    function wireCarousel(trackId,prevId,nextId){
+      var track=el(trackId);if(!track)return;
+      function step(dir){
+        var w=track.clientWidth||280;
+        try{track.scrollBy({left:dir*w*0.8,behavior:'smooth'});}
+        catch(e){track.scrollLeft+=dir*w*0.8;}
+      }
+      on(prevId,'click',function(){step(-1);});
+      on(nextId,'click',function(){step(1);});
+    }
+
     var previewMode='escritorio';
     Array.prototype.forEach.call(document.querySelectorAll('#previewMode button'),function(b){
       b.addEventListener('click',function(){
@@ -698,7 +771,10 @@
     var qn=el('quoteNumber');if(qn)qn.value=state.number;
     var qd=el('quoteDate');if(qd)qd.value=state.date;
     safe(buildNav);safe(renderPalettes);safe(renderTextures);safe(renderDesignThumbs);safe(drawLogo);
-    safe(renderItems);safe(renderTotals);safe(renderPreviewNow);safe(updateFooter);safe(centerTab);
+    safe(renderItems);safe(renderTotals);safe(renderPreviewNow);safe(updateFooter);safe(centerTab);safe(renderSummaries);
+    wireCarousel('designTrack','dPrev','dNext');
+    wireCarousel('paletteTrack','pPrev','pNext');
+    wireCarousel('textureTrack','tPrev','tNext');
     if(document.fonts&&document.fonts.ready){try{document.fonts.ready.then(function(){safe(centerTab);});}catch(e){}}
     window.addEventListener('resize',function(){safe(centerTab);});
   /* Pausa de auroras con pestaña oculta (ahorro GPU, evita parpadeo al volver) */

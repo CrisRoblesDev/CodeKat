@@ -12,11 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   footerAccent="amber"
   bgVariant="aurora"
   withLoader
-  css={["/assets/css/pages/cotizador.css?v=11"]}
+  css={["/assets/css/pages/cotizador.css?v=12"]}
   scripts={[
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
-    "/assets/js/functions/cotizador-app.js?v=7",
+    "/assets/js/functions/cotizador-app.js?v=8",
     "/assets/js/functions/reveal.js?v=3",
   ]}
 >
@@ -42,24 +42,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="cot-card">
         <div class="cot-card-head">
           <span class="cot-card-ico"><i class="fa-solid fa-store"></i></span>
-          <div><h2>Tu negocio (quien cotiza)</h2><p>Datos de quien envía la cotización</p></div>
+          <div><h2>Tu negocio (quien cotiza)</h2><p>Toca una fila para editar</p></div>
         </div>
-        <div class="field-grid">
-          <div class="field"><label>Nombre / Empresa *</label><input type="text" id="senderName" placeholder="Ej: Comercial Pérez" /></div>
-          <div class="field"><label>Identificación (RUT, NIT, RFC…)</label><input type="text" id="senderTax" placeholder="Ej: 76.123.456-7" /></div>
-          <div class="field"><label>Correo</label><input type="email" id="senderEmail" placeholder="ventas@tunegocio.com" /></div>
-          <div class="field"><label>Teléfono</label><input type="tel" id="senderPhone" placeholder="+56 9 ..." /></div>
-          <div class="field full"><label>Sitio web / Dirección</label><input type="text" id="senderWeb" placeholder="www.tunegocio.com · Av. Siempre Viva 742" /></div>
-          <div class="field full">
-            <label>Logo</label>
-            <div class="logo-drop">
-              <span class="logo-thumb" id="logoThumb"><i class="fa-regular fa-image"></i></span>
-              <input type="file" id="logoInput" accept="image/*" />
-              <button class="btn btn-ghost btn-sm" id="openLogoMaker" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Crear logo</button>
-              <button class="btn btn-ghost btn-sm" id="removeLogo" type="button"><i class="fa-solid fa-xmark"></i> Quitar</button>
-            </div>
-          </div>
+        <div class="sum-list">
+          <button type="button" class="sum-row" data-open="bizBackdrop"><span class="sum-k">Nombre</span><span class="sum-v" id="sumSenderName">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="bizBackdrop"><span class="sum-k">Identif.</span><span class="sum-v" id="sumSenderTax">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="bizBackdrop"><span class="sum-k">Correo</span><span class="sum-v" id="sumSenderEmail">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="bizBackdrop"><span class="sum-k">Teléfono</span><span class="sum-v" id="sumSenderPhone">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="bizBackdrop"><span class="sum-k">Web/Dir.</span><span class="sum-v" id="sumSenderWeb">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="bizBackdrop"><span class="sum-k">Logo</span><span class="sum-logo" id="sumLogoThumb"><i class="fa-regular fa-image"></i></span><span class="sum-v" id="sumLogoTxt">Sin logo</span><i class="fa-solid fa-pen"></i></button>
         </div>
+        <button class="btn btn-primary" data-open="bizBackdrop" type="button"><i class="fa-solid fa-pen-to-square"></i> Editar datos del negocio</button>
       </div>
     </section>
 
@@ -67,14 +60,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="cot-card">
         <div class="cot-card-head">
           <span class="cot-card-ico"><i class="fa-solid fa-user"></i></span>
-          <div><h2>Cliente (quien recibe)</h2><p>Datos de tu cliente o prospecto</p></div>
+          <div><h2>Cliente (quien recibe)</h2><p>Toca una fila para editar</p></div>
         </div>
-        <div class="field-grid">
-          <div class="field"><label>Nombre *</label><input type="text" id="clientName" placeholder="Ej: María González" /></div>
-          <div class="field"><label>Empresa</label><input type="text" id="clientCompany" placeholder="Ej: Café Aurora" /></div>
-          <div class="field"><label>Correo</label><input type="email" id="clientEmail" placeholder="cliente@correo.com" /></div>
-          <div class="field"><label>Teléfono</label><input type="tel" id="clientPhone" placeholder="+56 9 ..." /></div>
+        <div class="sum-list">
+          <button type="button" class="sum-row" data-open="clientBackdrop"><span class="sum-k">Nombre</span><span class="sum-v" id="sumClientName">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="clientBackdrop"><span class="sum-k">Empresa</span><span class="sum-v" id="sumClientCompany">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="clientBackdrop"><span class="sum-k">Correo</span><span class="sum-v" id="sumClientEmail">Sin completar</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="clientBackdrop"><span class="sum-k">Teléfono</span><span class="sum-v" id="sumClientPhone">Sin completar</span><i class="fa-solid fa-pen"></i></button>
         </div>
+        <button class="btn btn-primary" data-open="clientBackdrop" type="button"><i class="fa-solid fa-pen-to-square"></i> Editar datos del cliente</button>
       </div>
     </section>
 
@@ -94,27 +88,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="cot-card">
         <div class="cot-card-head">
           <span class="cot-card-ico"><i class="fa-solid fa-file-invoice"></i></span>
-          <div><h2>Detalles de la cotización</h2><p>Título, número, fecha, moneda e impuestos</p></div>
+          <div><h2>Detalles de la cotización</h2><p>Toca una fila para editar</p></div>
         </div>
-        <div class="field-grid">
-          <div class="field"><label>Título</label><input type="text" id="quoteTitle" value="Cotización" /></div>
-          <div class="field"><label>N° de cotización</label><input type="text" id="quoteNumber" /></div>
-          <div class="field"><label>Fecha</label><input type="date" id="quoteDate" /></div>
-          <div class="field"><label>Válida por (días)</label><input type="number" id="validDays" value="15" min="0" /></div>
-          <div class="field"><label>Moneda</label>
-            <select id="currency">
-              <option value="$">$ — Peso</option>
-              <option value="US$">US$ — Dólar</option>
-              <option value="€">€ — Euro</option>
-              <option value="MX$">MX$ — Peso mexicano</option>
-              <option value="S/">S/ — Sol</option>
-              <option value="Bs">Bs — Bolívar</option>
-            </select>
-          </div>
-          <div class="field"><label>Descuento %</label><input type="number" id="discountInput" value="0" min="0" max="100" /></div>
-          <div class="field"><label>Impuesto % (IVA)</label><input type="number" id="taxInput" value="0" min="0" max="100" /></div>
-          <div class="field full"><label>Notas / condiciones</label><textarea id="quoteNotes" placeholder="Ej: Precios con IVA incluido. Pago 50% al iniciar..."></textarea></div>
+        <div class="sum-list">
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Título</span><span class="sum-v" id="sumQuoteTitle">Cotización</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">N°</span><span class="sum-v" id="sumQuoteNumber">—</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Fecha</span><span class="sum-v" id="sumQuoteDate">—</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Validez</span><span class="sum-v" id="sumValidDays">15 días</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Moneda</span><span class="sum-v" id="sumCurrency">$</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Dscto.</span><span class="sum-v" id="sumDiscount">0%</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Impto.</span><span class="sum-v" id="sumTax">0%</span><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Notas</span><span class="sum-v" id="sumNotes">Sin notas</span><i class="fa-solid fa-pen"></i></button>
         </div>
+        <button class="btn btn-primary" data-open="detailsBackdrop" type="button"><i class="fa-solid fa-pen-to-square"></i> Editar detalles</button>
       </div>
     </section>
 
@@ -122,11 +108,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="cot-card">
         <div class="cot-card-head">
           <span class="cot-card-ico"><i class="fa-solid fa-paintbrush"></i></span>
-          <div><h2>Diseño de la cotización</h2><p>Desliza para elegir diseño y colores</p></div>
+          <div><h2>Diseño de la cotización</h2><p>Usa las flechas para ver más opciones</p></div>
         </div>
-        <div class="design-grid" id="designGrid"></div>
-        <div class="palette-row" id="paletteRow"></div>
-        <div class="texture-row" id="textureRow"></div>
+        <div class="carousel">
+          <button class="car-btn" id="dPrev" type="button" aria-label="Diseños anteriores"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="car-track" id="designTrack"><div class="design-grid" id="designGrid"></div></div>
+          <button class="car-btn" id="dNext" type="button" aria-label="Más diseños"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="carousel">
+          <button class="car-btn" id="pPrev" type="button" aria-label="Paletas anteriores"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="car-track" id="paletteTrack"><div class="palette-row" id="paletteRow"></div></div>
+          <button class="car-btn" id="pNext" type="button" aria-label="Más paletas"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="carousel">
+          <button class="car-btn" id="tPrev" type="button" aria-label="Texturas anteriores"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="car-track" id="textureTrack"><div class="palette-row" id="textureRow"></div></div>
+          <button class="car-btn" id="tNext" type="button" aria-label="Más texturas"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
         <div class="color-row">
           <div class="color-field"><label>Primario</label><input type="color" id="colorPrimary" value="#8B5CF6" /></div>
           <div class="color-field"><label>Secundario</label><input type="color" id="colorSecondary" value="#C4B5FD" /></div>
@@ -194,6 +192,89 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   </div>
 
   <Fragment slot="after-footer">
+    <div class="fm-backdrop" id="bizBackdrop" aria-hidden="true">
+      <div class="fm-box" role="dialog" aria-modal="true" aria-label="Editar negocio">
+        <div class="fm-head">
+          <h3><i class="fa-solid fa-store"></i> Tu negocio</h3>
+          <button class="fm-close" data-close aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="fm-body">
+          <div class="field-grid">
+            <div class="field"><label>Nombre / Empresa *</label><input type="text" id="senderName" placeholder="Ej: Comercial Pérez" /></div>
+            <div class="field"><label>Identificación (RUT, NIT, RFC…)</label><input type="text" id="senderTax" placeholder="Ej: 76.123.456-7" /></div>
+            <div class="field"><label>Correo</label><input type="email" id="senderEmail" placeholder="ventas@tunegocio.com" /></div>
+            <div class="field"><label>Teléfono</label><input type="tel" id="senderPhone" placeholder="+56 9 ..." /></div>
+            <div class="field full"><label>Sitio web / Dirección</label><input type="text" id="senderWeb" placeholder="www.tunegocio.com · Av. Siempre Viva 742" /></div>
+            <div class="field full">
+              <label>Logo</label>
+              <div class="logo-drop">
+                <span class="logo-thumb" id="logoThumb"><i class="fa-regular fa-image"></i></span>
+                <input type="file" id="logoInput" accept="image/*" />
+                <button class="btn btn-ghost btn-sm" id="openLogoMaker" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Crear logo</button>
+                <button class="btn btn-ghost btn-sm" id="removeLogo" type="button"><i class="fa-solid fa-xmark"></i> Quitar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fm-foot">
+          <button class="btn btn-primary" data-close type="button"><i class="fa-solid fa-check"></i> Listo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fm-backdrop" id="clientBackdrop" aria-hidden="true">
+      <div class="fm-box" role="dialog" aria-modal="true" aria-label="Editar cliente">
+        <div class="fm-head">
+          <h3><i class="fa-solid fa-user"></i> Cliente</h3>
+          <button class="fm-close" data-close aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="fm-body">
+          <div class="field-grid">
+            <div class="field"><label>Nombre *</label><input type="text" id="clientName" placeholder="Ej: María González" /></div>
+            <div class="field"><label>Empresa</label><input type="text" id="clientCompany" placeholder="Ej: Café Aurora" /></div>
+            <div class="field"><label>Correo</label><input type="email" id="clientEmail" placeholder="cliente@correo.com" /></div>
+            <div class="field"><label>Teléfono</label><input type="tel" id="clientPhone" placeholder="+56 9 ..." /></div>
+          </div>
+        </div>
+        <div class="fm-foot">
+          <button class="btn btn-primary" data-close type="button"><i class="fa-solid fa-check"></i> Listo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fm-backdrop" id="detailsBackdrop" aria-hidden="true">
+      <div class="fm-box" role="dialog" aria-modal="true" aria-label="Editar detalles">
+        <div class="fm-head">
+          <h3><i class="fa-solid fa-file-invoice"></i> Detalles</h3>
+          <button class="fm-close" data-close aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="fm-body">
+          <div class="field-grid">
+            <div class="field"><label>Título</label><input type="text" id="quoteTitle" value="Cotización" /></div>
+            <div class="field"><label>N° de cotización</label><input type="text" id="quoteNumber" /></div>
+            <div class="field"><label>Fecha</label><input type="date" id="quoteDate" /></div>
+            <div class="field"><label>Válida por (días)</label><input type="number" id="validDays" value="15" min="0" /></div>
+            <div class="field"><label>Moneda</label>
+              <select id="currency">
+                <option value="$">$ — Peso</option>
+                <option value="US$">US$ — Dólar</option>
+                <option value="€">€ — Euro</option>
+                <option value="MX$">MX$ — Peso mexicano</option>
+                <option value="S/">S/ — Sol</option>
+                <option value="Bs">Bs — Bolívar</option>
+              </select>
+            </div>
+            <div class="field"><label>Descuento %</label><input type="number" id="discountInput" value="0" min="0" max="100" /></div>
+            <div class="field"><label>Impuesto % (IVA)</label><input type="number" id="taxInput" value="0" min="0" max="100" /></div>
+            <div class="field full"><label>Notas / condiciones</label><textarea id="quoteNotes" placeholder="Ej: Precios con IVA incluido. Pago 50% al iniciar..."></textarea></div>
+          </div>
+        </div>
+        <div class="fm-foot">
+          <button class="btn btn-primary" data-close type="button"><i class="fa-solid fa-check"></i> Listo</button>
+        </div>
+      </div>
+    </div>
+
     <div class="fm-backdrop" id="lmBackdrop" aria-hidden="true">
       <div class="fm-box" role="dialog" aria-modal="true" aria-label="Creador de logo">
         <div class="fm-head">
