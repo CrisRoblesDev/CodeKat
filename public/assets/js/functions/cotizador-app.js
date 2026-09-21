@@ -127,22 +127,42 @@
         nav.scrollTo({left:b.offsetLeft-nav.clientWidth/2+b.offsetWidth/2,behavior:'smooth'});
       }catch(e){nav.scrollLeft=b.offsetLeft-nav.clientWidth/2+b.offsetWidth/2;}
     }
+    /* Transición deslizante: la saliente se va a un lado y la entrante
+       llega desde el otro (Siguiente: sale ← / entra → · Atrás: al revés) */
+    var slideTimer=null;
     function goToStep(n){
       if(n<0||n>=STEPS.length)return;
-      var dir=n>currentStep?'fwd':'back';currentStep=n;
+      if(n===currentStep){updateFooter();return;}
+      var dir=n>currentStep?'fwd':'back';
       var panels=document.querySelectorAll('.wpanel');
-      panels.forEach(function(p){p.classList.remove('active','from-left','from-right');});
-      panels[n].classList.add('active',dir==='fwd'?'from-right':'from-left');
+      var oldP=panels[currentStep],newP=panels[n];
+      currentStep=n;
+      try{if(slideTimer)clearTimeout(slideTimer);}catch(e){}
+      panels.forEach(function(p){p.classList.remove('exit-left','exit-right','enter-right','enter-left');});
+      if(oldP&&newP&&oldP!==newP){
+        var enterCls=dir==='fwd'?'enter-right':'enter-left';
+        var exitCls=dir==='fwd'?'exit-left':'exit-right';
+        newP.classList.add(enterCls);
+        void newP.offsetWidth;
+        oldP.classList.remove('active');
+        oldP.classList.add(exitCls);
+        newP.classList.add('active');
+        newP.classList.remove(enterCls);
+        slideTimer=setTimeout(function(){
+          if(oldP)oldP.classList.remove('exit-left','exit-right');
+        },340);
+      }else if(newP){
+        panels.forEach(function(p){p.classList.remove('active');});
+        newP.classList.add('active');
+      }
       navBtns.forEach(function(b,i){b.classList.toggle('active',i===n);b.setAttribute('aria-selected',i===n?'true':'false');});
       centerTab();
-      try{var cp=document.querySelector('.cot-panels');if(cp)cp.scrollTop=0;}catch(e){}
       updateFooter();
       if(STEPS[n].key==='preview'){renderPreviewNow();}
       if(STEPS[n].key==='descarga'){renderTotals();}
       if(STEPS[n].key==='diseno'){renderDesignThumbs();}
-      /* Sin scroll de página al cambiar de paso: la shell tiene altura fija por
-         viewport y el paso hace scroll interno. Mover window aquí era lo que
-         "ajustaba la pantalla" y rompía la experiencia. */
+      /* Sin scroll de página al cambiar de paso: la shell tiene altura fija
+         por viewport y los paneles se deslizan sin mover window. */
     }
     function updateFooter(){
       setTxt('stepNow',currentStep+1);setTxt('stepTotal',STEPS.length);
@@ -217,6 +237,12 @@
         card.addEventListener('drop',function(e){e.preventDefault();card.classList.remove('drag-over'); if(dragSrcId&&dragSrcId!==it.id)reorderItems(dragSrcId,it.id);});
         card.addEventListener('dragend',function(){card.classList.remove('dragging');dragSrcId=null;allowDrag=false;});
       });
+      /* Tope visual de 5: el resto se alcanza reordenando con ↑↓ */
+      if(state.items.length>5){
+        var more=document.createElement('div');more.className='items-more';
+        more.textContent='+'+(state.items.length-5)+' más · reordena con ↑↓ para verlos';
+        wrap.appendChild(more);
+      }
       wrap.querySelectorAll('.mini-btn').forEach(function(btn){
         btn.addEventListener('click',function(){moveItem(btn.getAttribute('data-id'),parseInt(btn.getAttribute('data-dir'),10));});
       });
@@ -710,14 +736,6 @@
       if(scrollLockCount>0)scrollLockCount--;
       if(scrollLockCount===0)document.body.classList.remove('is-locked');
     }
-    /* Evita que el fondo se deslice al arrastrar sobre el telón del modal.
-       La caja (.fm-box) sigue scrolleando con normalidad. */
-    document.addEventListener('touchmove',function(e){
-      var t=e.target;
-      if(t&&t.classList&&t.classList.contains('fm-backdrop')){
-        if(e.cancelable)e.preventDefault();
-      }
-    },{passive:false});
     /* Foco sin mover la página; acerca el campo dentro del modal */
     function focusNoScroll(f){
       if(!f)return;
