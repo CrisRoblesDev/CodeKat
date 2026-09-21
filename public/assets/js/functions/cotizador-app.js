@@ -724,13 +724,24 @@
        ═══════════════════════════════════════════════ */
     var scrollLockCount=0;
     function lockScroll(){
-      if(scrollLockCount===0)document.body.classList.add('is-locked');
+      if(scrollLockCount===0){
+        document.body.classList.add('is-locked');
+        vkOverlay(true);
+      }
       scrollLockCount++;
     }
     function unlockScroll(){
       if(scrollLockCount>0)scrollLockCount--;
-      if(scrollLockCount===0)document.body.classList.remove('is-locked');
+      if(scrollLockCount===0){
+        document.body.classList.remove('is-locked');
+        vkOverlay(false);
+      }
     }
+    /* El teclado avisa su geometría exacta: un solo ajuste, sin persecución */
+    try{
+      var _vk=vkApi();
+      if(_vk&&_vk.addEventListener)_vk.addEventListener('geometrychange',function(){scheduleModalSettle(120);});
+    }catch(e){}
     /* Foco sin mover la página; acerca el campo dentro del modal.
        SOLO en escritorio: en táctil el autofoco abre el teclado al instante
        y reflota todo el layout (la página "se desliza"). En móvil el foco
@@ -829,9 +840,22 @@
     }
 
     /* ═══════════════════════════════════════════════
-       TECLADO: fallback por si el navegador ignora el meta
-       interactive-widget — encoge el modal al área visible real
+       TECLADO: la API virtualKeyboard da el rect exacto del teclado y
+       evita que el layout se reencoga (cero deslizamiento). Fallback:
+       pin al viewport visual. Último recurso: nativo.
        ═══════════════════════════════════════════════ */
+    function vkApi(){try{return navigator.virtualKeyboard||null;}catch(e){return null;}}
+    function vkOverlay(on){
+      var vk=vkApi();if(!vk)return;
+      try{vk.overlaysContent=!!on;}catch(e){}
+    }
+    function vkKbHeight(){
+      try{
+        var vk=vkApi();
+        if(vk&&vk.boundingRect&&vk.boundingRect.height)return Math.round(vk.boundingRect.height);
+      }catch(e){}
+      return 0;
+    }
     function fitModalToKeyboard(){
       var box=document.querySelector('.fm-backdrop.open .fm-box');
       if(!box)return;
@@ -859,6 +883,22 @@
       }catch(e){}
     }
     function adjustModalForKeyboard(){
+      /* Vía 1 (determinista): rect exacto del teclado, sin reflow del layout */
+      try{
+        var kbH=vkKbHeight();
+        if(kbH>40){
+          var bd2=document.querySelector('.fm-backdrop.open');
+          var box2=bd2?bd2.querySelector('.fm-box'):null;
+          if(bd2&&box2){
+            bd2.style.top='';bd2.style.height='';
+            bd2.style.bottom=kbH+'px';
+            var room=(window.innerHeight||0)-kbH-24;
+            box2.style.maxHeight=Math.max(220,room)+'px';
+            return;
+          }
+        }
+      }catch(e){}
+      /* Vía 2: pin al viewport visual */
       pinModalToVisual();fitModalToKeyboard();
     }
     /* Asentamiento ÚNICO con debounce: durante la animación del teclado el
@@ -923,4 +963,19 @@
   });
   setTimeout(function(){safe(centerTab);},50);
   window.addEventListener('load',function(){safe(centerTab);});
+  /* Diagnóstico ?debug o #debug: métricas vivas del viewport + teclado */
+  try{
+    if(location.search.indexOf('debug')>-1||location.hash==='#debug'){
+      var dd=document.createElement('div');
+      dd.style.cssText='position:fixed;top:0;left:0;z-index:99999;background:#000;color:#0f0;font:11px/1.5 monospace;padding:6px 8px;opacity:.92;pointer-events:none;white-space:pre;';
+      document.body.appendChild(dd);
+      setInterval(function(){
+        try{
+          var vv=window.visualViewport,kbH=0,vk=false;
+          try{if(navigator.virtualKeyboard){vk=true;if(navigator.virtualKeyboard.boundingRect)kbH=Math.round(navigator.virtualKeyboard.boundingRect.height);}}catch(e){}
+          dd.textContent='IH='+window.innerHeight+' VV='+(vv?Math.round(vv.height):'-')+' off='+(vv?Math.round(vv.offsetTop):'-')+' kbAPI='+vk+' kbH='+kbH+' modal='+document.querySelectorAll('.fm-backdrop.open').length;
+        }catch(e){}
+      },300);
+    }
+  }catch(e){}
 })();
