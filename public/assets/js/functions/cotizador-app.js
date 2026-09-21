@@ -697,31 +697,34 @@
     if(themeMini)themeMini.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light');});
 
     /* ═══════════════════════════════════════════════
-       BLOQUEO DE SCROLL SIN SALTO: congela la página en su posición
-       (evita el deslizamiento al abrir/cerrar modales) con contador
-       para modales anidados (negocio → crear logo).
+       BLOQUEO DE SCROLL SIN SALTO: overflow oculto (conserva la posición
+       exacta, compatible con teclado móvil) + contador para modales
+       anidados (negocio → crear logo).
        ═══════════════════════════════════════════════ */
-    var scrollLockCount=0,savedScrollY=0;
+    var scrollLockCount=0;
     function lockScroll(){
-      if(scrollLockCount===0){
-        savedScrollY=window.scrollY||document.documentElement.scrollTop||0;
-        document.body.style.top=(-savedScrollY)+'px';
-        document.body.classList.add('is-locked');
-      }
+      if(scrollLockCount===0)document.body.classList.add('is-locked');
       scrollLockCount++;
     }
     function unlockScroll(){
       if(scrollLockCount>0)scrollLockCount--;
-      if(scrollLockCount===0){
-        document.body.classList.remove('is-locked');
-        document.body.style.top='';
-        window.scrollTo(0,savedScrollY);
-      }
+      if(scrollLockCount===0)document.body.classList.remove('is-locked');
     }
-    /* Foco sin mover la página */
+    /* Evita que el fondo se deslice al arrastrar sobre el telón del modal.
+       La caja (.fm-box) sigue scrolleando con normalidad. */
+    document.addEventListener('touchmove',function(e){
+      var t=e.target;
+      if(t&&t.classList&&t.classList.contains('fm-backdrop')){
+        if(e.cancelable)e.preventDefault();
+      }
+    },{passive:false});
+    /* Foco sin mover la página; acerca el campo dentro del modal */
     function focusNoScroll(f){
       if(!f)return;
-      setTimeout(function(){try{f.focus({preventScroll:true});}catch(_){try{f.focus();}catch(__){}}},120);
+      setTimeout(function(){
+        try{f.focus({preventScroll:true});}catch(_){try{f.focus();}catch(__){}}
+        try{if(f.scrollIntoView)f.scrollIntoView({block:'nearest'});}catch(__){}
+      },120);
     }
 
     /* ═══════════════════════════════════════════════
