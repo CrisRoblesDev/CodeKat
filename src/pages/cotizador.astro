@@ -12,11 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   footerAccent="amber"
   bgVariant="aurora"
   withLoader
-  css={["/assets/css/pages/cotizador.css?v=19"]}
+  css={["/assets/css/pages/cotizador.css?v=20"]}
   scripts={[
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
-    "/assets/js/functions/cotizador-app.js?v=19",
+    "/assets/js/functions/cotizador-app.js?v=20",
     "/assets/js/functions/reveal.js?v=3",
   ]}
 >
@@ -53,6 +53,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <button type="button" class="sum-row" data-open="bizBackdrop"><span class="sum-k">Logo</span><span class="sum-logo" id="sumLogoThumb"><i class="fa-regular fa-image"></i></span><span class="sum-v" id="sumLogoTxt">Sin logo</span><i class="fa-solid fa-pen"></i></button>
         </div>
         <button class="btn btn-primary" data-open="bizBackdrop" type="button"><i class="fa-solid fa-pen-to-square"></i> Editar datos del negocio</button>
+        <div class="inline-edit" id="inlineBiz"></div>
       </div>
     </section>
 
@@ -69,6 +70,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <button type="button" class="sum-row" data-open="clientBackdrop"><span class="sum-k">Teléfono</span><span class="sum-v" id="sumClientPhone">Sin completar</span><i class="fa-solid fa-pen"></i></button>
         </div>
         <button class="btn btn-primary" data-open="clientBackdrop" type="button"><i class="fa-solid fa-pen-to-square"></i> Editar datos del cliente</button>
+        <div class="inline-edit" id="inlineClient"></div>
       </div>
     </section>
 
@@ -84,6 +86,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <button class="car-btn" id="iNext" type="button" aria-label="Ítem siguiente"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
         <button class="btn btn-primary" id="openItemModal" type="button"><i class="fa-solid fa-plus"></i> Agregar ítem</button>
+        <div class="inline-edit" id="inlineItem"></div>
         <div class="items-total-bar"><span>Total actual</span><span id="itemsTotalChip">—</span></div>
       </div>
     </section>
@@ -105,6 +108,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <button type="button" class="sum-row" data-open="detailsBackdrop"><span class="sum-k">Notas</span><span class="sum-v" id="sumNotes">Sin notas</span><i class="fa-solid fa-pen"></i></button>
         </div>
         <button class="btn btn-primary" data-open="detailsBackdrop" type="button"><i class="fa-solid fa-pen-to-square"></i> Editar detalles</button>
+        <div class="inline-edit" id="inlineDetails"></div>
       </div>
     </section>
 

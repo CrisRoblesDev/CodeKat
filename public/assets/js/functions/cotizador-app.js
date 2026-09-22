@@ -165,6 +165,7 @@
         panels.forEach(function(p){p.classList.remove('active');});
         newP.classList.add('active');
       }
+      try{if(newP)newP.scrollTop=0;}catch(e){}
       navBtns.forEach(function(b,i){b.classList.toggle('active',i===n);b.setAttribute('aria-selected',i===n?'true':'false');});
       centerTab();
       updateFooter();
@@ -264,20 +265,25 @@
 
     var itemBackdrop=el('itemBackdrop');
     function openItemModal(mode,id){
-      if(!itemBackdrop)return;
       editingItemId=(mode==='edit')?id:null;
       var ttl=el('itemModalTitle');if(ttl)ttl.innerHTML=(mode==='edit')?'<i class="fa-solid fa-pen"></i> Editar ítem':'<i class="fa-solid fa-list-check"></i> Agregar ítem';
       var it=(mode==='edit')?findItem(id):null;
       var nm=el('itemModalName'),ds=el('itemModalDesc'),qy=el('itemModalQty'),pr=el('itemModalPrice');
       if(nm)nm.value=it?it.name:'';if(ds)ds.value=it?it.description:'';
       if(qy)qy.value=it?it.qty:1;if(pr)pr.value=it?it.price:0;
+      if(isMobileLayout()){showInline('inlineItem');return;}
+      if(!itemBackdrop)return;
       itemBackdrop.classList.add('open');itemBackdrop.setAttribute('aria-hidden','false');
       pushModal('itemBackdrop');
       document.body.classList.add('modal-open');lockScroll();
       focusNoScroll(el('itemModalName'));
       setTimeout(function(){safe(fitModalToKeyboard);},80);
     }
-    function closeItemModal(){if(!itemBackdrop)return;itemBackdrop.classList.remove('open');itemBackdrop.setAttribute('aria-hidden','true');popModal('itemBackdrop');clearModalFit(itemBackdrop);unlockScroll();if(!document.querySelector('.fm-backdrop.open'))document.body.classList.remove('modal-open');editingItemId=null;}
+    function closeItemModal(){
+      var inl=el('inlineItem');
+      if(inl&&inl.classList.contains('open')){inl.classList.remove('open');editingItemId=null;return;}
+      if(!itemBackdrop||!itemBackdrop.classList.contains('open')){editingItemId=null;return;}
+      itemBackdrop.classList.remove('open');itemBackdrop.setAttribute('aria-hidden','true');popModal('itemBackdrop');clearModalFit(itemBackdrop);unlockScroll();if(!document.querySelector('.fm-backdrop.open'))document.body.classList.remove('modal-open');editingItemId=null;}
     on('openItemModal','click',function(){openItemModal('add');});
     on('itemClose','click',closeItemModal);
     on('itemCancel','click',closeItemModal);
@@ -347,7 +353,7 @@
     }
     var lmBackdrop=el('lmBackdrop');
     function openLm(){if(!lmBackdrop)return;lmBackdrop.classList.add('open');lmBackdrop.setAttribute('aria-hidden','false');pushModal('lmBackdrop');document.body.classList.add('modal-open');lockScroll();safe(drawLogo);focusNoScroll(el('lmInitials'));setTimeout(function(){safe(fitModalToKeyboard);},80);}
-    function closeLm(){if(!lmBackdrop)return;lmBackdrop.classList.remove('open');lmBackdrop.setAttribute('aria-hidden','true');popModal('lmBackdrop');clearModalFit(lmBackdrop);unlockScroll();if(!document.querySelector('.fm-backdrop.open'))document.body.classList.remove('modal-open');}
+    function closeLm(){if(!lmBackdrop||!lmBackdrop.classList.contains('open'))return;lmBackdrop.classList.remove('open');lmBackdrop.setAttribute('aria-hidden','true');popModal('lmBackdrop');clearModalFit(lmBackdrop);unlockScroll();if(!document.querySelector('.fm-backdrop.open'))document.body.classList.remove('modal-open');}
     on('openLogoMaker','click',openLm);
     on('lmClose','click',closeLm);
     if(lmBackdrop)lmBackdrop.addEventListener('click',function(e){if(e.target===lmBackdrop)closeLm();});
@@ -707,9 +713,11 @@
     if(burger)burger.addEventListener('click',function(e){e.stopPropagation();isMenuOpen()?closeMenu():openMenu();});
     if(menuBack)menuBack.addEventListener('click',closeMenu);
     document.addEventListener('click',function(e){if(isMenuOpen()&&navMenu&&burger&&!navMenu.contains(e.target)&&!burger.contains(e.target))closeMenu();});
-    /* Escape único: cierra el modal superior, si no el menú */
+    /* Escape único: cierra inline abierto, si no el modal superior, si no el menú */
     document.addEventListener('keydown',function(e){
       if(e.key==='Escape'){
+        var inl=anyInlineOpen();
+        if(inl){inl.classList.remove('open');return;}
         if(closeTopModal())return;
         if(isMenuOpen())closeMenu();
       }
@@ -812,9 +820,19 @@
     }
     document.addEventListener('click',function(e){
       var opener=e.target.closest?e.target.closest('[data-open]'):null;
-      if(opener){if(e.preventDefault)e.preventDefault();openBackdrop(opener.getAttribute('data-open'));return;}
+      if(opener){
+        if(e.preventDefault)e.preventDefault();
+        var bid=opener.getAttribute('data-open');
+        if(isMobileLayout()&&inlineMap[bid]){toggleInline(inlineMap[bid]);return;}
+        openBackdrop(bid);return;
+      }
       var closer=e.target.closest?e.target.closest('[data-close]'):null;
-      if(closer){var bd=closer.closest?closer.closest('.fm-backdrop'):null;if(bd)closeBackdrop(bd);return;}
+      if(closer){
+        var bd=closer.closest?closer.closest('.fm-backdrop'):null;
+        if(bd){closeBackdrop(bd);return;}
+        var inl=closer.closest?closer.closest('.inline-edit'):null;
+        if(inl){inl.classList.remove('open');return;}
+      }
       if(e.target.classList&&e.target.classList.contains('fm-backdrop'))closeBackdrop(e.target);
     });
     /* Resúmenes compactos de cada card */
@@ -861,6 +879,51 @@
       on(nextId,'click',function(){step(1);});
     }
 
+    /* ═══════════════════════════════════════════════
+       EDITORES INLINE (móvil): las cajas de formulario se mudan del
+       overlay al interior de la card. Sin overlay no hay guerra con
+       el teclado: todo fluye nativo. En escritorio todo sigue en modal.
+       ═══════════════════════════════════════════════ */
+    var mqMobile=null;
+    try{mqMobile=window.matchMedia('(max-width:640px)');}catch(e){}
+    function isMobileLayout(){return !!(mqMobile&&mqMobile.matches);}
+    var inlineMap={bizBackdrop:'inlineBiz',clientBackdrop:'inlineClient',detailsBackdrop:'inlineDetails'};
+    var inlineIds=['inlineBiz','inlineClient','inlineDetails','inlineItem'];
+    function relocateForms(){
+      var mobile=isMobileLayout();
+      ['bizBackdrop','clientBackdrop','detailsBackdrop','itemBackdrop'].forEach(function(bid){
+        var bd=el(bid);if(!bd)return;
+        var box=bd.querySelector('.fm-box');if(!box)return;
+        if(mobile){
+          var target=el(bid==='itemBackdrop'?'inlineItem':inlineMap[bid]);
+          if(target&&box.parentNode!==target){target.appendChild(box);target.classList.remove('open');}
+        }else if(box.parentNode!==bd){
+          bd.appendChild(box);
+        }
+      });
+      if(!mobile)inlineIds.forEach(function(id){var t=el(id);if(t)t.classList.remove('open');});
+    }
+    function showInline(id){
+      inlineIds.forEach(function(x){var t=el(x);if(t&&x!==id)t.classList.remove('open');});
+      var t=el(id);if(!t)return false;
+      t.classList.add('open');
+      return true;
+    }
+    function toggleInline(id){
+      var t=el(id);if(!t)return false;
+      if(t.classList.contains('open')){t.classList.remove('open');return false;}
+      return showInline(id);
+    }
+    function closeInline(id){
+      var t=el(id);if(t)t.classList.remove('open');
+    }
+    function anyInlineOpen(){
+      for(var i=0;i<inlineIds.length;i++){var t=el(inlineIds[i]);if(t&&t.classList.contains('open'))return t;}
+      return null;
+    }
+    try{
+      if(mqMobile&&(mqMobile.addEventListener?mqMobile.addEventListener('change',function(){safe(relocateForms);}):mqMobile.addListener(function(){safe(relocateForms);})));
+    }catch(e){}
     /* ═══════════════════════════════════════════════
        TECLADO: la API virtualKeyboard da el rect exacto del teclado y
        evita que el layout se reencoga (cero deslizamiento). Fallback:
@@ -961,6 +1024,7 @@
     var qn=el('quoteNumber');if(qn)qn.value=state.number;
     var qd=el('quoteDate');if(qd)qd.value=state.date;
     safe(buildNav);safe(renderPalettes);safe(renderTextures);safe(renderDesignThumbs);safe(drawLogo);
+    safe(relocateForms);
     safe(renderItems);safe(renderTotals);safe(renderPreviewNow);safe(updateFooter);safe(centerTab);safe(renderSummaries);
     wireCarousel('designTrack','dPrev','dNext');
     wireCarousel('paletteTrack','pPrev','pNext');

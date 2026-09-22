@@ -196,7 +196,7 @@
     /* ═ Shell FIJA por viewport: la misma altura en los 7 pasos → la card
        NO se redimensiona al cambiar de paso y se ajusta a cada pantalla.
        El contenido hace scroll vertical interno en .cot-panels. */
-    .cot-shell{--cot-offset:300px;height:calc(100vh - var(--cot-offset));height:calc(100dvh - var(--cot-offset));min-height:min(430px,calc(100vh - 190px));min-height:min(430px,calc(100dvh - 190px));max-height:680px;max-width:780px;margin:.5rem auto 2rem;background:var(--nb-card);border:var(--nb-border);border-radius:20px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:var(--nb-shadow-lg);}
+    .cot-shell{--cot-offset:300px;height:calc(100vh - var(--cot-offset));height:calc(100dvh - var(--cot-offset));min-height:min(430px,calc(100vh - 190px));min-height:min(430px,calc(100dvh - 190px));max-height:680px;max-width:780px;margin:.5rem auto 2rem;background:var(--nb-card);border:var(--nb-border);border-radius:20px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:var(--nb-shadow-lg);isolation:isolate;}
     @media (max-height:740px){
       .cot-shell{--cot-offset:236px;}
     }
@@ -214,14 +214,21 @@
     .app-intro .grad-text{background:var(--nb-yellow);color:var(--nb-ink);padding:.05em .3em;border:var(--nb-border);border-radius:10px;box-shadow:var(--nb-shadow-sm);display:inline-block;transform:rotate(-1.5deg);-webkit-background-clip:border-box;background-clip:border-box;}
     .cot-tabs-wrap{padding:.55rem .7rem .5rem;border-bottom:var(--nb-border);background:var(--nb-yellow);border-radius:17px 17px 0 0;flex-shrink:0;}
     .cot-tabs-wrap .wizard-nav{border:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;padding:.1rem;}
-    .cot-panels{flex:1;min-height:0;position:relative;overflow:hidden;padding:0;overscroll-behavior:contain;}
+    /* Scroll de seguridad: normalmente el contenido cabe y no se nota;
+       si supera la card (pantalla baja o editor inline), se desliza aquí. */
+    .cot-panels{flex:1;min-height:0;position:relative;overflow-y:auto;padding:0;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--nb-ink) transparent;}
+    .cot-panels::-webkit-scrollbar{width:8px;}
+    .cot-panels::-webkit-scrollbar-thumb{background:var(--nb-ink);border-radius:4px;}
     .cot-panels .cot-card{margin-bottom:0;}
     /* Transición deslizante: la saliente se va a un lado y la entrante
-       llega desde el otro (dirección según Atrás/Siguiente). */
-    .wpanel{position:absolute;inset:0;padding:.8rem;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(0);transition:transform .3s var(--ease),opacity .3s var(--ease),visibility 0s .3s;will-change:transform,opacity;-webkit-backface-visibility:hidden;backface-visibility:hidden;}
+       llega desde el otro (dirección según Atrás/Siguiente).
+       Cada panel scrollea por sí mismo si supera la card. */
+    .wpanel{position:absolute;inset:0;padding:.8rem;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--nb-ink) transparent;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(0);transition:transform .3s var(--ease),opacity .3s var(--ease);-webkit-backface-visibility:hidden;backface-visibility:hidden;}
+    .wpanel::-webkit-scrollbar{width:8px;}
+    .wpanel::-webkit-scrollbar-thumb{background:var(--nb-ink);border-radius:4px;}
     .wpanel.enter-right{transform:translateX(100%);}
     .wpanel.enter-left{transform:translateX(-100%);}
-    .wpanel.active{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(0);z-index:2;transition:transform .3s var(--ease),opacity .3s var(--ease),visibility 0s 0s;}
+    .wpanel.active{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(0);z-index:2;}
     .wpanel.exit-left{opacity:0;visibility:visible;transform:translateX(-100%);z-index:1;pointer-events:none;}
     .wpanel.exit-right{opacity:0;visibility:visible;transform:translateX(100%);z-index:1;pointer-events:none;}
     .wtab-num{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:50%;background:var(--nb-yellow);border:2px solid currentColor;font-size:.68rem;font-weight:800;flex-shrink:0;}
@@ -300,6 +307,20 @@
     .sum-logo{width:34px;height:34px;border-radius:9px;border:2px dashed var(--nb-ink);display:grid;place-items:center;overflow:hidden;background:var(--nb-paper);flex-shrink:0;}
     .sum-logo img{width:100%;height:100%;object-fit:contain;}
 
+    /* Editores INLINE (solo móvil): el formulario vive dentro de la card,
+       sin overlay → el teclado se comporta de forma nativa, sin guerra. */
+    .inline-edit{display:none;}
+    @media(max-width:640px){
+      .inline-edit.open{display:block;margin:.65rem 0;animation:panelIn .25s var(--ease);}
+      .inline-edit .fm-box{max-width:none;max-height:none;overflow:visible;box-shadow:var(--nb-shadow-sm);border-radius:12px;transform:none;}
+      .inline-edit .fm-head{border-radius:9px 9px 0 0;padding:.7rem .9rem;}
+      .inline-edit .fm-body{padding:.9rem;}
+      .inline-edit .fm-foot{padding:.7rem .9rem;}
+    }
+    @keyframes panelIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+    @media(min-width:641px){
+      .inline-edit{display:none!important;}
+    }
     .field-grid{display:grid;gap:.65rem;}
     @media(min-width:640px){.field-grid{grid-template-columns:1fr 1fr;}}
     .field{display:flex;flex-direction:column;gap:.3rem;min-width:0;}
