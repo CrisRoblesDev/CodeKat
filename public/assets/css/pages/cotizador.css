@@ -86,9 +86,6 @@
     /* Contención del footer */
     .footer{position:relative;border-top:1px solid var(--border);overflow:hidden;contain:layout style paint;}
     .wizard-nav{contain:layout style paint;}
-    .wizard-footer-wrap{contain:layout style paint;}
-    /* Contención de la vista previa */
-    .quote-preview-wrap{contain:layout style paint;}
     .cot-card{contain:layout style paint;}
     /* Performance: desactivar auroras y degradados cuando el cotizador no está en vista */
     .cotizador-paused .bg-aurora::before{animation:none!important;}
@@ -140,7 +137,6 @@
     .pl-bar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--amb-soft),var(--amb-light));animation:plFill 3.2s ease-in-out forwards;box-shadow:0 0 10px var(--amb-glow);}
     @keyframes plFill{to{width:100%;}}
     @keyframes spin{to{transform:rotate(360deg);}}
-    @keyframes loaderPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
     /* Fin FOUC fix */
 
     .container{width:100%;max-width:920px;margin:0 auto;padding:0 1rem;}
@@ -186,7 +182,6 @@
     /* Tabs en 1 sola línea con scroll horizontal oculto: ahorra alto del header */
     .wizard-nav{position:relative;display:flex;gap:.4rem;overflow-x:auto;padding:.15rem;scrollbar-width:none;scroll-snap-type:x proximity;}
     .wizard-nav::-webkit-scrollbar{display:none;}
-    .wizard-nav::-webkit-scrollbar{display:none;}
     .wtab{scroll-snap-align:start;}
     /* Neo-brutalism: pastillas con borde grueso y sombra dura */
     .wtab{position:relative;z-index:1;flex-shrink:0;display:inline-flex;align-items:center;gap:.4rem;padding:.36rem .6rem;border:2.5px solid var(--nb-ink);border-radius:999px;background:#fff;color:var(--nb-ink);font-size:.72rem;font-weight:800;white-space:nowrap;box-shadow:2px 2px 0 var(--nb-ink);transition:transform .12s,box-shadow .12s;}
@@ -194,9 +189,7 @@
     .wtab.active{color:var(--nb-yellow);background:var(--nb-ink);box-shadow:2px 2px 0 var(--nb-ink);transform:rotate(-1deg);}
     .wtab:hover:not(.active){transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--nb-ink);color:var(--nb-ink);}
 
-    .wpanel{display:none;}
-    .wpanel.active{display:block;}
-
+    /* Paneles absolutos con slide direccional (sin display:none: evita parpadeo) */
     .wizard-footer-wrap{position:static;}
     .cot-foot{flex-shrink:0;border-top:var(--nb-border);padding:.65rem .85rem;background:var(--nb-paper);border-radius:0 0 17px 17px;}
     .cot-foot .wizard-footer{max-width:none;margin:0;background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;border-radius:0;}
@@ -248,8 +241,6 @@
     /* (intro compacta definida arriba junto a la shell; no duplicar para no
        empujar la shell fuera del primer viewport) */
     .btn{min-height:44px;}
-    .btn:disabled{opacity:.45;cursor:not-allowed;}
-    .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible,.btn:focus-visible,.wtab:focus-visible{outline:2px solid var(--amb);outline-offset:2px;}
     @media (prefers-reduced-motion:reduce){
       .wpanel{transition:none;}
       .wf-progress span,.wtab{transition:none;}
@@ -318,7 +309,7 @@
     .field input:focus,.field select:focus,.field textarea:focus{outline:none;transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--nb-ink);background:#FFFEF7;}
     .field textarea{resize:vertical;min-height:52px;}
     /* Sin retardo táctil ni zoom por doble-tap en controles */
-    .btn,.wtab,.sum-row,.car-btn,.icon-btn,.mini-btn,.palette-btn,.design-opt,.fm-close,.pv-toggle button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+    .btn,.wtab,.sum-row,.car-btn,.icon-btn,.mini-btn,.palette-btn,.design-opt,.fm-close{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
     .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:3px dashed var(--nb-purple);outline-offset:2px;}
 
     .logo-drop{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
@@ -349,7 +340,7 @@
     .item-meta b{background:var(--nb-yellow);border:2px solid var(--nb-ink);border-radius:6px;padding:0 .35em;color:var(--nb-ink);}
     .item-side{display:flex;align-items:center;gap:.3rem;flex-shrink:0;}
     .item-arrows{display:flex;flex-direction:column;gap:.2rem;}
-    .mini-btn{width:24px;height:18px;border-radius:6px;display:grid;place-items:center;color:var(--nb-ink);border:2px solid var(--nb-ink);background:#fff;font-size:.55rem;transition:all .15s;}
+    .mini-btn{width:28px;height:22px;border-radius:6px;display:grid;place-items:center;color:var(--nb-ink);border:2px solid var(--nb-ink);background:#fff;font-size:.6rem;transition:all .15s;}
     .mini-btn:hover{background:var(--nb-yellow);}
     .icon-btn{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:var(--nb-ink);border:2.5px solid var(--nb-ink);background:#fff;transition:all var(--t-fast) var(--ease);flex-shrink:0;}
     .icon-btn.edit-btn:hover{background:var(--nb-blue);}
@@ -408,19 +399,8 @@
     .preview-full-doc{border:var(--nb-border);border-radius:12px;overflow-y:auto;max-height:70vh;max-height:70dvh;background:#fff;scrollbar-width:thin;}
     .preview-full-doc .quote-doc{border:0;border-radius:0;box-shadow:none;}
     .quote-doc{background:#fff;color:#1a1a2e;border:var(--nb-border);border-radius:14px;overflow:hidden;box-shadow:var(--nb-shadow);font-size:.85rem;}
-    .preview-mode-row{display:flex;justify-content:flex-end;margin-bottom:.7rem;}
-    .pv-toggle{display:inline-flex;gap:.25rem;background:#fff;border:2.5px solid var(--nb-ink);border-radius:999px;padding:.25rem;box-shadow:var(--nb-shadow-sm);}
-    .pv-toggle button{display:inline-flex;align-items:center;gap:.4rem;padding:.42rem .85rem;border-radius:999px;font-size:.76rem;font-weight:800;color:var(--nb-ink);transition:all var(--t-fast) var(--ease);}
-    .pv-toggle button:hover{background:var(--nb-paper);}
-    .pv-toggle button.on{background:var(--nb-ink);color:var(--nb-yellow);}
-    .quote-preview-wrap{margin:0 auto;transition:max-width .3s var(--ease);max-width:100%;}
-    .quote-preview-wrap.narrow{max-width:420px;}
-    .quote-preview-wrap.narrow .quote-doc{font-size:.8rem;}
-    .quote-preview-wrap.wide .qd-parties{grid-template-columns:1fr 1fr;}
-    .quote-preview-wrap.wide .quote-doc{font-size:.9rem;}
     @media print{
-      .preview-mode-row{display:none;}
-      .quote-preview-wrap{max-width:100% !important;}
+      #quoteDoc{box-shadow:none;}
     }
     .qd-top{padding:1.25rem;display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap;}
     .qd-brand{display:flex;align-items:center;gap:.7rem;}
@@ -430,8 +410,7 @@
     .qd-sub{font-size:.72rem;opacity:.85;}
     .qd-meta{text-align:right;font-size:.72rem;opacity:.9;}
     .qd-body{padding:0 1.25rem 1.25rem;}
-    .texture-row{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.6rem;margin-bottom:.5rem;align-items:center;}
-    .texture-label{font-size:.74rem;color:var(--text-muted);font-weight:600;white-space:nowrap;}
+    .texture-label{font-size:.7rem;font-weight:800;text-transform:uppercase;color:var(--nb-ink);white-space:nowrap;align-self:center;}
     .qd-body.tex-puntos{background-image:radial-gradient(rgba(0,0,0,.07) 1px,transparent 1.3px);background-size:14px 14px;}
     .qd-body.tex-lineas{background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.04) 0 1px,transparent 1px 12px);}
     .qd-body.tex-rejilla{background-image:linear-gradient(rgba(0,0,0,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.045) 1px,transparent 1px);background-size:18px 18px;}
@@ -594,12 +573,8 @@
     .footer-marquee{contain:layout style paint;}
     /* FIX responsive móvil: nada recortado, todo visible */
     @media (max-width:640px){
-      /* Vista previa: 1 columna y scroll horizontal en escritorio */
-      .qd-parties,.quote-preview-wrap.wide .qd-parties{grid-template-columns:1fr;}
-      .quote-preview-wrap{overflow-x:auto;}
-      .quote-preview-wrap.wide .quote-doc{min-width:540px;}
-      .quote-preview-wrap.narrow .quote-doc{min-width:0;}
-      .quote-preview-wrap .quote-doc{font-size:.82rem;}
+      /* Vista previa del documento: 1 columna en móvil */
+      .qd-parties{grid-template-columns:1fr;}
       /* Descarga: botones full-width apilados */
       .actions-grid{grid-template-columns:1fr;}
       /* Wizard footer compacto */
@@ -607,10 +582,8 @@
       .wf-counter{font-size:.7rem;white-space:nowrap;}
       .wf-progress{max-width:110px;}
       .wizard-footer .btn{padding:.55rem .7rem;font-size:.78rem;}
-      /* Toast y flotante abajo (footer ya va dentro de la shell) */
+      /* Toast y flotante abajo */
       .toast{bottom:1.2rem;max-width:calc(100vw - 2rem);white-space:normal;text-align:center;}
-      /* Modales a todo ancho seguro */
-      .fm-backdrop{padding:0 .75rem;}
       /* WhatsApp flotante compacto en móvil */
       .wa-float{bottom:1.4rem;}
       .wa-float .wa-tooltip{display:none;}

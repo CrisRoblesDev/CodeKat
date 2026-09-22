@@ -12,11 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   footerAccent="amber"
   bgVariant="aurora"
   withLoader
-  css={["/assets/css/pages/cotizador.css?v=18"]}
+  css={["/assets/css/pages/cotizador.css?v=19"]}
   scripts={[
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
-    "/assets/js/functions/cotizador-app.js?v=18",
+    "/assets/js/functions/cotizador-app.js?v=19",
     "/assets/js/functions/reveal.js?v=3",
   ]}
 >
@@ -201,11 +201,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="fm-body">
           <div class="field-grid">
-            <div class="field"><label>Nombre / Empresa *</label><input type="text" id="senderName" placeholder="Ej: Comercial Pérez" /></div>
-            <div class="field"><label>Identificación (RUT, NIT, RFC…)</label><input type="text" id="senderTax" placeholder="Ej: 76.123.456-7" /></div>
-            <div class="field"><label>Correo</label><input type="email" id="senderEmail" placeholder="ventas@tunegocio.com" /></div>
-            <div class="field"><label>Teléfono</label><input type="tel" id="senderPhone" placeholder="+56 9 ..." /></div>
-            <div class="field full"><label>Sitio web / Dirección</label><input type="text" id="senderWeb" placeholder="www.tunegocio.com · Av. Siempre Viva 742" /></div>
+            <div class="field"><label>Nombre / Empresa *</label><input type="text" id="senderName" placeholder="Ej: Comercial Pérez" autocomplete="organization" enterkeyhint="next" /></div>
+            <div class="field"><label>Identificación (RUT, NIT, RFC…)</label><input type="text" id="senderTax" placeholder="Ej: 76.123.456-7" enterkeyhint="next" /></div>
+            <div class="field"><label>Correo</label><input type="email" id="senderEmail" placeholder="ventas@tunegocio.com" autocomplete="email" inputmode="email" enterkeyhint="next" /></div>
+            <div class="field"><label>Teléfono</label><input type="tel" id="senderPhone" placeholder="+56 9 ..." autocomplete="tel" enterkeyhint="next" /></div>
+            <div class="field full"><label>Sitio web / Dirección</label><input type="text" id="senderWeb" placeholder="www.tunegocio.com · Av. Siempre Viva 742" autocomplete="url" inputmode="url" enterkeyhint="done" /></div>
             <div class="field full">
               <label>Logo</label>
               <div class="logo-drop">
@@ -231,10 +231,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="fm-body">
           <div class="field-grid">
-            <div class="field"><label>Nombre *</label><input type="text" id="clientName" placeholder="Ej: María González" /></div>
-            <div class="field"><label>Empresa</label><input type="text" id="clientCompany" placeholder="Ej: Café Aurora" /></div>
-            <div class="field"><label>Correo</label><input type="email" id="clientEmail" placeholder="cliente@correo.com" /></div>
-            <div class="field"><label>Teléfono</label><input type="tel" id="clientPhone" placeholder="+56 9 ..." /></div>
+            <div class="field"><label>Nombre *</label><input type="text" id="clientName" placeholder="Ej: María González" autocomplete="name" enterkeyhint="next" /></div>
+            <div class="field"><label>Empresa</label><input type="text" id="clientCompany" placeholder="Ej: Café Aurora" autocomplete="organization" enterkeyhint="next" /></div>
+            <div class="field"><label>Correo</label><input type="email" id="clientEmail" placeholder="cliente@correo.com" autocomplete="email" inputmode="email" enterkeyhint="next" /></div>
+            <div class="field"><label>Teléfono</label><input type="tel" id="clientPhone" placeholder="+56 9 ..." autocomplete="tel" enterkeyhint="done" /></div>
           </div>
         </div>
         <div class="fm-foot">
@@ -251,10 +251,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="fm-body">
           <div class="field-grid">
-            <div class="field"><label>Título</label><input type="text" id="quoteTitle" value="Cotización" /></div>
-            <div class="field"><label>N° de cotización</label><input type="text" id="quoteNumber" /></div>
+            <div class="field"><label>Título</label><input type="text" id="quoteTitle" value="Cotización" enterkeyhint="next" /></div>
+            <div class="field"><label>N° de cotización</label><input type="text" id="quoteNumber" enterkeyhint="next" /></div>
             <div class="field"><label>Fecha</label><input type="date" id="quoteDate" /></div>
-            <div class="field"><label>Válida por (días)</label><input type="number" id="validDays" value="15" min="0" /></div>
+            <div class="field"><label>Válida por (días)</label><input type="number" id="validDays" value="15" min="0" inputmode="numeric" enterkeyhint="next" /></div>
             <div class="field"><label>Moneda</label>
               <select id="currency">
                 <option value="$">$ — Peso</option>
@@ -265,9 +265,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <option value="Bs">Bs — Bolívar</option>
               </select>
             </div>
-            <div class="field"><label>Descuento %</label><input type="number" id="discountInput" value="0" min="0" max="100" /></div>
-            <div class="field"><label>Impuesto % (IVA)</label><input type="number" id="taxInput" value="0" min="0" max="100" /></div>
-            <div class="field full"><label>Notas / condiciones</label><textarea id="quoteNotes" placeholder="Ej: Precios con IVA incluido. Pago 50% al iniciar..."></textarea></div>
+            <div class="field"><label>Descuento %</label><input type="number" id="discountInput" value="0" min="0" max="100" inputmode="decimal" enterkeyhint="next" /></div>
+            <div class="field"><label>Impuesto % (IVA)</label><input type="number" id="taxInput" value="0" min="0" max="100" inputmode="decimal" enterkeyhint="next" /></div>
+            <div class="field full"><label>Notas / condiciones</label><textarea id="quoteNotes" placeholder="Ej: Precios con IVA incluido. Pago 50% al iniciar..." enterkeyhint="done"></textarea></div>
           </div>
         </div>
         <div class="fm-foot">
@@ -334,11 +334,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <button class="fm-close" id="itemClose" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="fm-body">
-          <div class="field modal-field-mb"><label>Concepto *</label><input id="itemModalName" placeholder="Ej: Producto o servicio" /></div>
-          <div class="field modal-field-mb"><label>Descripción</label><input id="itemModalDesc" placeholder="Detalle breve (opcional)" /></div>
+          <div class="field modal-field-mb"><label>Concepto *</label><input id="itemModalName" placeholder="Ej: Producto o servicio" enterkeyhint="next" /></div>
+          <div class="field modal-field-mb"><label>Descripción</label><input id="itemModalDesc" placeholder="Detalle breve (opcional)" enterkeyhint="next" /></div>
           <div class="im-row2">
-            <div class="field"><label>Cantidad</label><input id="itemModalQty" type="number" value="1" min="0" step="any" /></div>
-            <div class="field"><label>Precio unitario</label><input id="itemModalPrice" type="number" value="0" min="0" step="any" /></div>
+            <div class="field"><label>Cantidad</label><input id="itemModalQty" type="number" value="1" min="0" step="any" inputmode="decimal" enterkeyhint="next" /></div>
+            <div class="field"><label>Precio unitario</label><input id="itemModalPrice" type="number" value="0" min="0" step="any" inputmode="decimal" enterkeyhint="done" /></div>
           </div>
         </div>
         <div class="fm-foot">
